@@ -2,17 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.Model.Database
 {
-    public class Employees
+    public class Employees : ApplicationUser
     {
-        [Key]
-        public int Id { get; set; }
-
         public Employees()
         {
             Presence = new HashSet<EmployeePresence>();
@@ -20,9 +18,7 @@ namespace CinemaApplicationProject.Model.Database
             Rent = new HashSet<Rents>();
         }
 
-        public string Name { get; set; }
-
-        public string Address { get; set; }
+        
 
         [DataType(DataType.DateTime)]
         public DateTime Birthday { get; set; }
@@ -33,6 +29,5 @@ namespace CinemaApplicationProject.Model.Database
 
         public ICollection<Rents> Rent { get; set; }
 
-        public virtual ApplicationUser User { get; set; }
     }
 }

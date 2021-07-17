@@ -30,11 +30,13 @@ namespace CinemaApplicationProject.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DatabaseContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                x => x.MigrationsAssembly("CinemaApplicationProject.Model")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole<int>>()
+            services.AddIdentity<ApplicationUser, StatsAndPays>()
                 .AddEntityFrameworkStores<DatabaseContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddRoles<StatsAndPays>();
 
             services.Configure<IdentityOptions>(options =>
             {

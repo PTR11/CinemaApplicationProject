@@ -1,5 +1,6 @@
 ﻿using CinemaApplicationProject.Model.Database;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -13,20 +14,44 @@ namespace CinemaApplicationProject.Model
     {
 		private static DatabaseContext _context;
 		private static UserManager<ApplicationUser> _userManager;
-		private static RoleManager<IdentityRole<int>> _roleManager;
+		private static RoleManager<StatsAndPays> _roleManager;
 
 
 		public static void Initialize(IServiceProvider serviceProvider)
 		{
 			_context = serviceProvider.GetRequiredService<DatabaseContext>();
 			_userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-			_roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+			_roleManager = serviceProvider.GetRequiredService<RoleManager<StatsAndPays>>();
 
 			// Adatbázis migrációk végrehajtása, amennyiben szükséges
 			_context.Database.EnsureCreated();
 
 			// Városok, épületek, apartmanok inicializálás
 			_context.Products.Add(new Products { Name = "Sajt", Price = 100 });
+
+			var adminUser = new Employees
+			{
+				UserName = "admin",
+				Name = "Barnák Péter",
+				Email = "barnak.peter1@gmail.com",
+				Address = "faszomban"
+			};
+
+			var adminUser2 = new Guests
+			{
+				UserName = "admin2",
+				Name = "Barnák Péter2",
+				Email = "barnak.peter12@gmail.com",
+				Address = "faszomban",
+				CreditCardNumber = "KurvaAnyádat"
+			};
+			var adminPassword = "Almafa123";
+			var adminRole = new StatsAndPays("administrator");
+
+			var result1 = _userManager.CreateAsync(adminUser, adminPassword).Result;
+			var result12 = _userManager.CreateAsync(adminUser2, adminPassword).Result;
+			var result2 = _roleManager.CreateAsync(adminRole).Result;
+			var result3 = _userManager.AddToRoleAsync(adminUser, adminRole.Name).Result;
 		}
 	}
 }

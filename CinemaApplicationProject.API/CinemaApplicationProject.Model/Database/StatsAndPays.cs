@@ -10,9 +10,11 @@ namespace CinemaApplicationProject.Model.Database
 {
     public class StatsAndPays : IdentityRole<int>
     {
-        [Key]
-        public int Id { get; set; }
-        public String StatId { get; set; }
+
+        public StatsAndPays(String name) : base(name)
+        {
+            Salary = 0;
+        }
 
         public int Salary { get; set; }
     }
