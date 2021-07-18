@@ -7,24 +7,21 @@ using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.Model.Database
 {
-    public class Opinions
+    public class MoviesStatistics
     {
         [Key]
         public int Id { get; set; }
 
-        public int Ranking { get; set; }
-
         public int MovieId { get; set; }
 
-        public int GuestId { get; set; }
-
-        [DataType(DataType.MultilineText)]
-        public String Description { get; set; }
-
         [DataType(DataType.DateTime)]
-        public DateTime DateTime { get; set; }
+        public DateTime Week { get; set; }
+
+        public int AverageRating { get; set; }
+
+        public int ViewersNumber { get; set; }
+
 
         public Movies Movie { get; set; }
-        public Guests Guest { get; set; }
     }
 }

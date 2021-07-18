@@ -18,7 +18,7 @@ namespace CinemaApplicationProject.Model.Database
 
         public int Y { get; set; }
 
-        public String Type { get; set; }
+        public int TicketId { get; set; }
 
         public int  EmployeeId { get; set; }
 
@@ -27,6 +27,8 @@ namespace CinemaApplicationProject.Model.Database
         public Employees Employee { get; set; }
 
         public Guests Guest { get; set; }
+
+        public Tickets Ticket { get; set; }
 
 
     }

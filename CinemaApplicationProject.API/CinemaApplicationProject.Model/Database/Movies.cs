@@ -19,6 +19,8 @@ namespace CinemaApplicationProject.Model.Database
         [DataType(DataType.MultilineText)]
         public String Description { get; set; }
 
+        public String Trailer { get; set; }
+
         public Movies()
         {
             Actors = new HashSet<Actors>();
