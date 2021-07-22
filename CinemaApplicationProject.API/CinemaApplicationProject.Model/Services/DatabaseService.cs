@@ -44,7 +44,33 @@ namespace CinemaApplicationProject.Model.Services
         #endregion
 
         #region BuffetWarehouse
-        
+        public List<BuffetWarehouse> GetWarehouse() => context.BuffetWarehouse.ToList();
+
+        public int GetQuantityofProductById(int id) => context.BuffetWarehouse.FirstOrDefault(m => m.ProductId == id).Quantity;
+
+        public int GetPriceOfQuantityOfProductById(int id) => context.BuffetWarehouse.FirstOrDefault(m => m.ProductId == id).Quantity * context.Products.FirstOrDefault(m => m.Id == id).Price;
+
+        #endregion
+
+        #region EmployeePresence
+
+        public EmployeePresence GetEmployeePresenceById(int id) => context.EmployeePresence.FirstOrDefault(m => m.Id == id);
+
+        public List<Employees> GetEmployeesFromPresenceByDate(DateTime date) => context.EmployeePresence.Where(m => m.Day.Date.Equals(date.Date)).Select(m =>m.Employee).ToList();
+
+        public List<Employees> GetEmployeesFromPresenceByDateAndStat(DateTime date, StatsAndPays stat) => context.EmployeePresence.Where(m => m.Day.Date.Equals(date.Date)).Select(m => m.Employee).Where(m => m.Stat.Contains(stat)).ToList();
+
+        #endregion
+
+        #region Movies
+
+        public List<Movies> GetMovies() => context.Movies.ToList();
+
+        public Movies GetMovieById(int id) => context.Movies.FirstOrDefault(m => m.Id == id);
+
+        public List<Movies> GetMoviesByNamePart(String name = null) => context.Movies.Where(m => m.Title.StartsWith(name ?? null)).ToList();
+
+
         #endregion
     }
 }
