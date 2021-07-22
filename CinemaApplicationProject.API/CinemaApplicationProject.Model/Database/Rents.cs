@@ -22,7 +22,7 @@ namespace CinemaApplicationProject.Model.Database
 
         public int  EmployeeId { get; set; }
 
-        public String GuestId { get; set; }
+        public int GuestId { get; set; }
 
         public Employees Employee { get; set; }
 
