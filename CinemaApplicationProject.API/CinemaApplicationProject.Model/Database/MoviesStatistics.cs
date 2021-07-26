@@ -15,7 +15,7 @@ namespace CinemaApplicationProject.Model.Database
         public int MovieId { get; set; }
 
         [DataType(DataType.DateTime)]
-        public DateTime Week { get; set; }
+        public DateTime Date { get; set; }
 
         public int AverageRating { get; set; }
 

@@ -15,7 +15,7 @@ namespace CinemaApplicationProject.Model.Database
         public int ProductId { get; set; }
 
         [DataType(DataType.DateTime)]
-        public DateTime Week { get; set; }
+        public DateTime Date { get; set; }
 
         public int BuyersNumber { get; set; }
 
