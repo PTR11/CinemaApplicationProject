@@ -20,8 +20,7 @@ namespace CinemaApplicationProject.Model.Services
         public List<Actors> GetActorsByNameParts(String part) => context.Actors.Where(m => m.Name.StartsWith(part)).ToList();
 
         //TODO rework a little bit that
-        public List<Actors> GetActorsByMovieName(String name) 
-            => context.Actors.Where(m => m.Movies.Contains(new Movies { Title = name })).ToList();
+        public List<Actors> GetActorsByMovieName(String name) => context.Actors.Where(m => m.Movies.Contains(new Movies { Title = name })).ToList();
 
         #endregion
 
@@ -95,7 +94,7 @@ namespace CinemaApplicationProject.Model.Services
 
         #endregion
 
-        #region
+        #region Opinions
         public List<Opinions> GetAllOpinions() => context.Opinions.ToList();
 
         public List<Opinions> GetAllOpinionsByMovie(String name = null) => context.Opinions.Where(m => m.Movie.Title.Equals(name ?? null)).ToList();
@@ -128,6 +127,45 @@ namespace CinemaApplicationProject.Model.Services
         public Products GetTheMostSelledItemLastWeek() => (Products) context.ProductStatistics.Where(m => m.Date >= DateTime.Now.AddDays(-7) && m.Date <= DateTime.Now).OrderBy(m => m.BuyersNumber).GroupBy(m => m.Product).Single().Select(m => m.Product);
 
 
+        #endregion
+
+        #region Rents
+        public List<Rents> GetAllRents() => context.Rents.ToList();
+
+        public List<Rents> GetAllSelledRents() => context.Rents.Where(m => m.Employee != null).ToList();
+
+        public List<Rents> GetAllRentsByGuestId(int id) => context.Rents.Where(m => m.GuestId == id).ToList();
+
+        public List<Rents> GetAllRentsByShowId(int id) => context.Rents.Where(m => m.ShowId == id).ToList();
+
+        #endregion
+
+        #region Rooms
+
+        public List<Rooms> GetAllRooms() => context.Rooms.ToList();
+
+        public Rooms GetRoomById(int id) => context.Rooms.Where(m => m.Id == id).Single();
+
+        #endregion
+
+        #region Shows
+        public List<Shows> GetAllShows() => context.Shows.ToList();
+
+        public List<Shows> GetAllShowsOnNextWeek() => context.Shows.Where(m => m.Date <= DateTime.Now.AddDays(+7) && m.Date >= DateTime.Now).ToList();
+
+        public List<Shows> GetAllShowsByMovieId(int id) => context.Shows.Where(m => m.MovieId == id).ToList();
+
+        public List<Shows> GetAllShowsByRoomId(int id) => context.Shows.Where(m => m.RoomId == id).ToList();
+
+        #endregion
+
+        #region StatsAndPays
+        public int GetSalaryOfStatById(int id) => context.StatsAndPays.Where(m => m.Id == id).Select(m => m.Salary).Single();
+
+        #endregion
+
+        #region Tickets
+        public int GetPriceOfTicketById(int id) => context.Tickets.Where(m => m.Id == id).Select(m => m.Price).Single();
         #endregion
     }
 }

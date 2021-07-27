@@ -18,6 +18,7 @@ namespace CinemaApplicationProject.Model
 			builder.Entity<ApplicationUser>().ToTable("ApplicationUser");
 			builder.Entity<Employees>().ToTable("Employees");
 			builder.Entity<Guests>().ToTable("Guests");
+			builder.Entity<StatsAndPays>().ToTable("Stats");
 		}
 
 		public virtual DbSet<Actors> Actors { get; set; }
@@ -36,6 +37,7 @@ namespace CinemaApplicationProject.Model
 		public virtual DbSet<ProductStatistics> ProductStatistics { get; set; }
 		public virtual DbSet<MoviesStatistics> MoviesStatistics { get; set; }
 		public virtual DbSet<Tickets> Tickets { get; set; }
+		public virtual DbSet<StatsAndPays> StatsAndPays { get; set; }
 
 
 	}

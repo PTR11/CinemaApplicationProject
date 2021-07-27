@@ -14,8 +14,11 @@ namespace CinemaApplicationProject.Model.Database
         public StatsAndPays(String name) : base(name)
         {
             Salary = 0;
+            Employees = new HashSet<Employees>();
         }
 
         public int Salary { get; set; }
+
+        public ICollection<Employees> Employees { get; set; }
     }
 }
