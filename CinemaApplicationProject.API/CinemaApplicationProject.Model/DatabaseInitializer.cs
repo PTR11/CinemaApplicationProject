@@ -47,11 +47,10 @@ namespace CinemaApplicationProject.Model
 			};
 			var adminPassword = "Almafa123";
 			var adminRole = new StatsAndPays("administrator");
-
-			var result1 = _userManager.CreateAsync(adminUser, adminPassword).Result;
-			var result12 = _userManager.CreateAsync(adminUser2, adminPassword).Result;
-			var result2 = _roleManager.CreateAsync(adminRole).Result;
-			var result3 = _userManager.AddToRoleAsync(adminUser, adminRole.Name).Result;
-		}
+            _ = _userManager.CreateAsync(adminUser, adminPassword).Result;
+            _ = _userManager.CreateAsync(adminUser2, adminPassword).Result;
+            _ = _roleManager.CreateAsync(adminRole).Result;
+            _ = _userManager.AddToRoleAsync(adminUser, adminRole.Name).Result;
+        }
 	}
 }

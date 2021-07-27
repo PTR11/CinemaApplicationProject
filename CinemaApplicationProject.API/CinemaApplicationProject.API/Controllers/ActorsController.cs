@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CinemaApplicationProject.Model;
 using CinemaApplicationProject.Model.Database;
+using CinemaApplicationProject.Model.Services;
 
 namespace CinemaApplicationProject.API.Controllers
 {
@@ -14,25 +15,26 @@ namespace CinemaApplicationProject.API.Controllers
     [ApiController]
     public class ActorsController : ControllerBase
     {
-        private readonly DatabaseContext _context;
+        private readonly IDatabaseService _service;
 
-        public ActorsController(DatabaseContext context)
+        public ActorsController(IDatabaseService service)
         {
-            _context = context;
+           _service = service;
         }
 
         // GET: api/Actors
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Actors>>> GetActors()
+        public ActionResult<IEnumerable<Actors>> GetActors()
         {
-            return await _context.Actors.ToListAsync();
+            return _service.GetActors();
         }
+
 
         // GET: api/Actors/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Actors>> GetActors(int id)
+        public ActionResult<Actors> GetActors(int id)
         {
-            var actors = await _context.Actors.FindAsync(id);
+            var actors = _service.GetActorById(id);
 
             if (actors == null)
             {
@@ -45,64 +47,44 @@ namespace CinemaApplicationProject.API.Controllers
         // PUT: api/Actors/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutActors(int id, Actors actors)
+        public IActionResult PutActors(int id, Actors actors)
         {
             if (id != actors.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(actors).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ActorsExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            DatabaseManipulation.UpdateElement(actors);
             return NoContent();
         }
 
         // POST: api/Actors
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Actors>> PostActors(Actors actors)
+        public ActionResult<Actors> PostActors(Actors actors)
         {
-            _context.Actors.Add(actors);
-            await _context.SaveChangesAsync();
+            DatabaseManipulation.AddElement(actors);
+            //_context.Actors.Add(actors);
+            //await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetActors", new { id = actors.Id }, actors);
         }
 
         // DELETE: api/Actors/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteActors(int id)
+        public IActionResult DeleteActors(int id)
         {
-            var actors = await _context.Actors.FindAsync(id);
+            var actors = _service.GetActorById(id);
             if (actors == null)
             {
                 return NotFound();
             }
 
-            _context.Actors.Remove(actors);
-            await _context.SaveChangesAsync();
+            DatabaseManipulation.DeleteElement(actors);
+            //_context.Actors.Remove(actors);
+            //await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool ActorsExists(int id)
-        {
-            return _context.Actors.Any(e => e.Id == id);
         }
     }
 }

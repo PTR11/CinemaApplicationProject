@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CinemaApplicationProject.Model;
 using CinemaApplicationProject.Model.Database;
+using CinemaApplicationProject.Model.Services;
 
 namespace CinemaApplicationProject.API.Controllers
 {
@@ -14,25 +15,25 @@ namespace CinemaApplicationProject.API.Controllers
     [ApiController]
     public class ShowsController : ControllerBase
     {
-        private readonly DatabaseContext _context;
+        private readonly IDatabaseService _service;
 
-        public ShowsController(DatabaseContext context)
+        public ShowsController(IDatabaseService service)
         {
-            _context = context;
+            _service = service;
         }
 
         // GET: api/Shows
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Shows>>> GetShows()
+        public ActionResult<IEnumerable<Shows>> GetShows()
         {
-            return await _context.Shows.ToListAsync();
+            return _service.GetAllShows();
         }
 
         // GET: api/Shows/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Shows>> GetShows(int id)
+        [HttpGet("movie/{id}")]
+        public ActionResult<IEnumerable<Shows>> GetShowsByMovieId(int id)
         {
-            var shows = await _context.Shows.FindAsync(id);
+            var shows = _service.GetAllShowsByMovieId(id);
 
             if (shows == null)
             {
@@ -45,30 +46,15 @@ namespace CinemaApplicationProject.API.Controllers
         // PUT: api/Shows/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutShows(int id, Shows shows)
+        public IActionResult PutShows(int id, Shows shows)
         {
             if (id != shows.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(shows).State = EntityState.Modified;
+            DatabaseManipulation.UpdateElement(shows);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ShowsExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
 
             return NoContent();
         }
@@ -76,33 +62,25 @@ namespace CinemaApplicationProject.API.Controllers
         // POST: api/Shows
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Shows>> PostShows(Shows shows)
+        public ActionResult<Shows> PostShows(Shows shows)
         {
-            _context.Shows.Add(shows);
-            await _context.SaveChangesAsync();
+            DatabaseManipulation.AddElement(shows);
 
             return CreatedAtAction("GetShows", new { id = shows.Id }, shows);
         }
 
         // DELETE: api/Shows/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteShows(int id)
+        public IActionResult DeleteShows(int id)
         {
-            var shows = await _context.Shows.FindAsync(id);
+            var shows = _service.GetShowById(id);
             if (shows == null)
             {
                 return NotFound();
             }
-
-            _context.Shows.Remove(shows);
-            await _context.SaveChangesAsync();
+            DatabaseManipulation.DeleteElement(shows);
 
             return NoContent();
-        }
-
-        private bool ShowsExists(int id)
-        {
-            return _context.Shows.Any(e => e.Id == id);
         }
     }
 }

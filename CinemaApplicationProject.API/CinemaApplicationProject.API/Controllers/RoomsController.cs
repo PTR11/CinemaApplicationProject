@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CinemaApplicationProject.Model;
 using CinemaApplicationProject.Model.Database;
+using CinemaApplicationProject.Model.Services;
 
 namespace CinemaApplicationProject.API.Controllers
 {
@@ -14,25 +15,26 @@ namespace CinemaApplicationProject.API.Controllers
     [ApiController]
     public class RoomsController : ControllerBase
     {
-        private readonly DatabaseContext _context;
+        
+        private readonly IDatabaseService _service;
 
-        public RoomsController(DatabaseContext context)
+        public RoomsController(IDatabaseService service)
         {
-            _context = context;
+            _service = service;
         }
 
         // GET: api/Rooms
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Rooms>>> GetRooms()
+        public ActionResult<IEnumerable<Rooms>> GetRooms()
         {
-            return await _context.Rooms.ToListAsync();
+            return _service.GetAllRooms();
         }
 
         // GET: api/Rooms/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Rooms>> GetRooms(int id)
+        public ActionResult<Rooms> GetRooms(int id)
         {
-            var rooms = await _context.Rooms.FindAsync(id);
+            var rooms = _service.GetRoomById(id);
 
             if (rooms == null)
             {
@@ -45,30 +47,14 @@ namespace CinemaApplicationProject.API.Controllers
         // PUT: api/Rooms/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRooms(int id, Rooms rooms)
+        public IActionResult PutRooms(int id, Rooms rooms)
         {
             if (id != rooms.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(rooms).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RoomsExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            DatabaseManipulation.UpdateElement(rooms);
 
             return NoContent();
         }
@@ -76,33 +62,26 @@ namespace CinemaApplicationProject.API.Controllers
         // POST: api/Rooms
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Rooms>> PostRooms(Rooms rooms)
+        public ActionResult<Rooms> PostRooms(Rooms rooms)
         {
-            _context.Rooms.Add(rooms);
-            await _context.SaveChangesAsync();
+            DatabaseManipulation.AddElement(rooms);
 
             return CreatedAtAction("GetRooms", new { id = rooms.Id }, rooms);
         }
 
         // DELETE: api/Rooms/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRooms(int id)
+        public IActionResult DeleteRooms(int id)
         {
-            var rooms = await _context.Rooms.FindAsync(id);
+            var rooms = _service.GetRoomById(id);
             if (rooms == null)
             {
                 return NotFound();
             }
 
-            _context.Rooms.Remove(rooms);
-            await _context.SaveChangesAsync();
+            DatabaseManipulation.DeleteElement(rooms);
 
             return NoContent();
-        }
-
-        private bool RoomsExists(int id)
-        {
-            return _context.Rooms.Any(e => e.Id == id);
         }
     }
 }

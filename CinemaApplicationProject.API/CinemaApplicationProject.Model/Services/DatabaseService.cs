@@ -40,7 +40,7 @@ namespace CinemaApplicationProject.Model.Services
         
         public int GetIncomeOnLastWeek()
         {
-            Dictionary<Products, int> tmp = new Dictionary<Products, int>();
+            Dictionary<Products, int> tmp = new();
 
             foreach(Products product in context.BuffetSales.Where(m => m.Date >= DateTime.Now.AddDays(-7) && m.Date <= DateTime.Now).Select(m => m.Product).Distinct())
             {
@@ -103,7 +103,7 @@ namespace CinemaApplicationProject.Model.Services
 
         public Dictionary<Movies, float> GetAvarageRatingOfMovies()
         {
-            Dictionary<Movies, float> dict = new Dictionary<Movies, float>();
+            Dictionary<Movies, float> dict = new();
             foreach (Movies movie in context.Opinions.Select(m => m.Movie).Distinct())
             {
                 float value = context.Opinions.Where(m => m.Movie.Equals(movie)).Sum(m => m.Ranking) / context.Opinions.Where(m => m.Movie.Equals(movie)).Count();
@@ -151,6 +151,8 @@ namespace CinemaApplicationProject.Model.Services
         #region Shows
         public List<Shows> GetAllShows() => context.Shows.ToList();
 
+        public Shows GetShowById(int id) => context.Shows.FirstOrDefault(m=> m.Id == id);
+
         public List<Shows> GetAllShowsOnNextWeek() => context.Shows.Where(m => m.Date <= DateTime.Now.AddDays(+7) && m.Date >= DateTime.Now).ToList();
 
         public List<Shows> GetAllShowsByMovieId(int id) => context.Shows.Where(m => m.MovieId == id).ToList();
@@ -160,6 +162,10 @@ namespace CinemaApplicationProject.Model.Services
         #endregion
 
         #region StatsAndPays
+        public List<StatsAndPays> GetStats() => context.StatsAndPays.ToList();
+
+        public StatsAndPays GetStatById(int id) => context.StatsAndPays.FirstOrDefault(m => m.Id == id);
+
         public int GetSalaryOfStatById(int id) => context.StatsAndPays.Where(m => m.Id == id).Select(m => m.Salary).Single();
 
         #endregion

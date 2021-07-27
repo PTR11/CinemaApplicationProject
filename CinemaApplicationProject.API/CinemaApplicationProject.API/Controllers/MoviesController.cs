@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CinemaApplicationProject.Model;
 using CinemaApplicationProject.Model.Database;
+using CinemaApplicationProject.Model.Services;
 
 namespace CinemaApplicationProject.API.Controllers
 {
@@ -14,25 +15,25 @@ namespace CinemaApplicationProject.API.Controllers
     [ApiController]
     public class MoviesController : ControllerBase
     {
-        private readonly DatabaseContext _context;
+        private readonly IDatabaseService _service;
 
-        public MoviesController(DatabaseContext context)
+        public MoviesController(IDatabaseService service)
         {
-            _context = context;
+            _service = service;
         }
 
         // GET: api/Movies
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Movies>>> GetMovies()
+        public ActionResult<IEnumerable<Movies>> GetMovies()
         {
-            return await _context.Movies.ToListAsync();
+            return _service.GetMovies();
         }
 
         // GET: api/Movies/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Movies>> GetMovies(int id)
+        public ActionResult<Movies> GetMovies(int id)
         {
-            var movies = await _context.Movies.FindAsync(id);
+            var movies = _service.GetMovieById(id);
 
             if (movies == null)
             {
@@ -45,30 +46,14 @@ namespace CinemaApplicationProject.API.Controllers
         // PUT: api/Movies/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMovies(int id, Movies movies)
+        public IActionResult PutMovies(int id, Movies movies)
         {
             if (id != movies.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(movies).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MoviesExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            DatabaseManipulation.UpdateElement(movies);
 
             return NoContent();
         }
@@ -76,33 +61,26 @@ namespace CinemaApplicationProject.API.Controllers
         // POST: api/Movies
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Movies>> PostMovies(Movies movies)
+        public ActionResult<Movies> PostMovies(Movies movies)
         {
-            _context.Movies.Add(movies);
-            await _context.SaveChangesAsync();
+            DatabaseManipulation.AddElement(movies);
 
             return CreatedAtAction("GetMovies", new { id = movies.Id }, movies);
         }
 
         // DELETE: api/Movies/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMovies(int id)
+        public IActionResult DeleteMovies(int id)
         {
-            var movies = await _context.Movies.FindAsync(id);
+            var movies = _service.GetMovieById(id);
             if (movies == null)
             {
                 return NotFound();
             }
 
-            _context.Movies.Remove(movies);
-            await _context.SaveChangesAsync();
+            DatabaseManipulation.DeleteElement(movies);
 
             return NoContent();
-        }
-
-        private bool MoviesExists(int id)
-        {
-            return _context.Movies.Any(e => e.Id == id);
         }
     }
 }

@@ -31,9 +31,8 @@ namespace CinemaApplicationProject.Model.Services
             return element;
         }
 
-        public static bool DeleteElement<T>(int id) where T : class
+        public static bool DeleteElement<T>(T element) where T : class
         {
-            var element = context.Set<T>().Find(id);
             try
             {
                 context.Set<T>().Remove(element);
@@ -55,6 +54,7 @@ namespace CinemaApplicationProject.Model.Services
             try
             {
                 context.Set<T>().Update(element);
+                context.Entry(element).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
