@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CinemaApplicationProject.Desktop.View.Pages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,53 +22,41 @@ namespace CinemaApplicationProject.Desktop
     /// </summary>
     public partial class MainWindow : Window
     {
-
-        DispatcherTimer timer;
-        double panelwidth;
-        bool hidden;
         public MainWindow()
         {
             InitializeComponent();
-            timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
-            timer.Tick += Timer_Tick;
-
-            panelwidth = sidepanel.Width;
+        }
+        private void ButtonOpenMenu_Click(object sender, RoutedEventArgs e)
+        {
+            ButtonCloseMenu.Visibility = Visibility.Visible;
+            ButtonOpenMenu.Visibility = Visibility.Collapsed;
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private void ButtonCloseMenu_Click(object sender, RoutedEventArgs e)
         {
-            if (hidden)
-            {
-                sidepanel.Width += 1;
-                if(sidepanel.Width >= panelwidth)
-                {
-                    timer.Stop();
-                    hidden = false;
-                }
-            }
-            else
-            {
-                sidepanel.Width -= 1;
-                if (sidepanel.Width <= 10)
-                {
-                    timer.Stop();
-                    hidden = true;
-                }
-            }
+            ButtonCloseMenu.Visibility = Visibility.Collapsed;
+            ButtonOpenMenu.Visibility = Visibility.Visible;
         }
 
-        private void panelHeader_MouseDown(object sender, MouseButtonEventArgs e)
+        private void ListViewMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(e.LeftButton == MouseButtonState.Pressed)
-            {
-                DragMove();
-            }
-        }
+            UserControl usc = null;
+            GridMain.Children.Clear();
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            timer.Start();
+            switch (((ListViewItem)((ListView)sender).SelectedItem).Name)
+            {
+                case "ItemHome":
+                    usc = new MainPage();
+                    usc.DataContext = this.DataContext;
+                    GridMain.Children.Add(usc);
+                    break;
+                case "ItemCreate":
+                    //usc = new UserControlCreate();
+                    //GridMain.Children.Add(usc);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CinemaApplicationProject.Desktop.Viewmodel.Models;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,22 @@ namespace CinemaApplicationProject.Desktop
     /// </summary>
     public partial class App : Application
     {
+        private MainWindow _view;
+        private MainViewModel _mainViewModel;
+        public App()
+        {
+            Startup += App_Startup;
+        }
+
+        private void App_Startup(object sender, StartupEventArgs e)
+        {
+            
+            _mainViewModel = new MainViewModel();
+            _view = new MainWindow
+            {
+                DataContext = _mainViewModel
+            };
+            _view.Show();
+        }
     }
 }
