@@ -51,8 +51,9 @@ namespace CinemaApplicationProject.Desktop
                     GridMain.Children.Add(usc);
                     break;
                 case "ItemCreate":
-                    //usc = new UserControlCreate();
-                    //GridMain.Children.Add(usc);
+                    usc = new ProfilesPage();
+                    usc.DataContext = this.DataContext;
+                    GridMain.Children.Add(usc);
                     break;
                 default:
                     break;

@@ -1,9 +1,8 @@
-﻿using CinemaApplicationProject.Desktop.Viewmodel.Models;
-using LiveCharts;
-using LiveCharts.Wpf;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -17,16 +16,13 @@ using System.Windows.Shapes;
 namespace CinemaApplicationProject.Desktop.View.Pages
 {
     /// <summary>
-    /// Interaction logic for MainPage.xaml
+    /// Interaction logic for ProfilesPage.xaml
     /// </summary>
-    public partial class MainPage : UserControl
+    public partial class ProfilesPage : UserControl
     {
-        
-
-        public MainPage()
+        public ProfilesPage()
         {
             InitializeComponent();
         }
-        
     }
 }
