@@ -1,6 +1,7 @@
 ﻿using CinemaApplicationProject.Desktop.View.Pages;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,16 +43,22 @@ namespace CinemaApplicationProject.Desktop
         {
             UserControl usc = null;
             GridMain.Children.Clear();
-
+            Debug.WriteLine(((ListViewItem)((ListView)sender).SelectedItem).Name);
             switch (((ListViewItem)((ListView)sender).SelectedItem).Name)
             {
-                case "ItemHome":
+                case "MainPage":
+                    
                     usc = new MainPage();
                     usc.DataContext = this.DataContext;
                     GridMain.Children.Add(usc);
                     break;
-                case "ItemCreate":
+                case "ProfilesPage":
                     usc = new ProfilesPage();
+                    usc.DataContext = this.DataContext;
+                    GridMain.Children.Add(usc);
+                    break;
+                case "ShowsPage":
+                    usc = new ShowsPage();
                     usc.DataContext = this.DataContext;
                     GridMain.Children.Add(usc);
                     break;

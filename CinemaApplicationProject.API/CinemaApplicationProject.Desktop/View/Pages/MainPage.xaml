@@ -16,6 +16,7 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
+
         <ListView Grid.Row="0" Grid.Column="0" ItemsSource="{Binding People}" VerticalContentAlignment="Stretch" Foreground="Black">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">

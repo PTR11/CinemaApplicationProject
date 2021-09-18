@@ -12,6 +12,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
     {
 
         private ObservableCollection<PeopleViewModel> _people = new ObservableCollection<PeopleViewModel>();
+        private ObservableCollection<TabItem> _tabs = new ObservableCollection<TabItem>();
+
         public SeriesCollection SeriesCollection { get; set; }
         public string[] Labels { get; set; }
         public Func<double, string> Formatter { get; set; }
@@ -21,6 +23,13 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             get { return _people; }
             set { _people = value; OnPropertyChanged(); }
         }
+
+        public ObservableCollection<TabItem> Tabs
+        {
+            get { return _tabs; }
+            set { _tabs = value; OnPropertyChanged(); }
+        }
+
         private String _name;
 
         public String Name
@@ -56,6 +65,10 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             });
             People = new ObservableCollection<PeopleViewModel>(tmpPrograms);
             Name = "Sajt";
+
+            Tabs.Add(new TabItem { Header = "One", Content = "One's content" });
+            Tabs.Add(new TabItem { Header = "Two", Content = "Two's content" });
+
 
             SeriesCollection = new SeriesCollection
             {
