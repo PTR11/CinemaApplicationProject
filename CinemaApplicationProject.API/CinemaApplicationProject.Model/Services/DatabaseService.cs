@@ -9,6 +9,12 @@ namespace CinemaApplicationProject.Model.Services
     public class DatabaseService : IDatabaseService
     {
         private readonly DatabaseContext context;
+
+        public DatabaseService(DatabaseContext dc)
+        {
+            context = dc;
+        }
+
         #region Actors
 
         public List<Actors> GetActors() => context.Actors.ToList();

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31129.286
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CinemaApplicationProject.API", "CinemaApplicationProject.API\CinemaApplicationProject.API.csproj", "{F6B94047-F5B1-4457-9560-6C21BBFA070A}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -10,7 +10,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CinemaApplicationProject.AP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CinemaApplicationProject.Model", "CinemaApplicationProject.Model\CinemaApplicationProject.Model.csproj", "{F16C475B-EF23-46E1-9944-349A98912C77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinemaApplicationProject.Desktop", "CinemaApplicationProject.Desktop\CinemaApplicationProject.Desktop.csproj", "{F7EED63C-8DD1-4CF9-A8A8-17E2426895F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CinemaApplicationProject.Desktop", "CinemaApplicationProject.Desktop\CinemaApplicationProject.Desktop.csproj", "{F7EED63C-8DD1-4CF9-A8A8-17E2426895F2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

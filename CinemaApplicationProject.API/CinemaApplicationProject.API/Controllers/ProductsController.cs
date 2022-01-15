@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CinemaApplicationProject.Model;
 using CinemaApplicationProject.Model.Database;
+using Microsoft.AspNetCore.Cors;
 
 namespace CinemaApplicationProject.API.Controllers
 {
@@ -22,6 +23,7 @@ namespace CinemaApplicationProject.API.Controllers
         }
 
         // GET: api/Products
+        [EnableCors("_myAllowSpecificOrigins")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Products>>> GetProducts()
         {

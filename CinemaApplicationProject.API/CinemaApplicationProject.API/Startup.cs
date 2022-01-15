@@ -1,5 +1,6 @@
 using CinemaApplicationProject.Model;
 using CinemaApplicationProject.Model.Database;
+using CinemaApplicationProject.Model.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -19,6 +20,8 @@ namespace CinemaApplicationProject.API
 {
     public class Startup
     {
+
+        string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -37,7 +40,15 @@ namespace CinemaApplicationProject.API
                 .AddEntityFrameworkStores<DatabaseContext>()
                 .AddDefaultTokenProviders()
                 .AddRoles<StatsAndPays>();
-
+            
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("http://localhost:8080");
+                                  });
+            });
             services.Configure<IdentityOptions>(options =>
             {
                 // Jelszó komplexitására vonatkozó konfiguráció
@@ -56,6 +67,7 @@ namespace CinemaApplicationProject.API
                 // Felhasználókezelésre vonatkozó konfiguráció
                 options.User.RequireUniqueEmail = true;
             });
+            services.AddTransient<IDatabaseService, DatabaseService>();
             services.AddControllers();
         }
 
@@ -66,8 +78,13 @@ namespace CinemaApplicationProject.API
             {
                 app.UseDeveloperExceptionPage();
             }
+            
 
             app.UseRouting();
+
+
+            app.UseCors(MyAllowSpecificOrigins);
+
 
             app.UseAuthorization();
 
