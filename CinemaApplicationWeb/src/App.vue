@@ -1,0 +1,67 @@
+<template>
+  <div id="background">
+    <SideMenu />
+    <Slider />
+    <NavbarComponent/>
+    <div id="app">
+      <router-view></router-view>
+    </div>
+  </div>
+</template>
+
+<script>
+import SideMenu from "./components/SideMenu.vue";
+import Slider from "./components/Slider.vue";
+import NavbarComponent from "./components/NavbarComponent";
+export default {
+  name: "App",
+  components: {
+    SideMenu,
+    Slider,
+    NavbarComponent
+  },
+  data() {
+    return {
+      windowHeight: window.innerWidth,
+      txt: '',
+      number: 6
+    };
+  },
+  watch: {
+    windowHeight(newHeight, oldHeight) {
+      this.txt = `it changed to ${newHeight} from ${oldHeight}`;
+    },
+  },
+  mounted() {
+    this.$nextTick(() => {
+      window.addEventListener("resize", this.onResize);
+    });
+  },
+
+  beforeDestroy() {
+    window.removeEventListener("resize", this.onResize);
+  },
+
+  methods: {
+    onResize() {
+      this.windowHeight = window.innerHeight;
+    },
+  },
+};
+</script>
+
+<style>
+#app {
+  margin: 30px;
+  color: white;
+}
+
+body {
+  background-image: url("assets/background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  margin: 0px;
+  min-width: 1000px !important;
+}
+</style>

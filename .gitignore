@@ -348,3 +348,20 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+CinemaApplicationWeb/.DS_Store
+CinemaApplicationWeb/node_modules
+CinemaApplicationWeb/dist
+
+
+# local env files
+CinemaApplicationWeb/.env.local
+CinemaApplicationWeb/.env.*.local
+
+# Log files
+CinemaApplicationWeb/npm-debug.log*
+CinemaApplicationWeb/yarn-debug.log*
+CinemaApplicationWeb/yarn-error.log*
+CinemaApplicationWeb/pnpm-debug.log*
+
+CinemaApplicationWeb/.idea
