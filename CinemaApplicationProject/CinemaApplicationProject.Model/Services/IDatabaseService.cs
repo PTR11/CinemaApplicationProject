@@ -66,7 +66,11 @@ namespace CinemaApplicationProject.Model.Services
 
         public Movies GetMovieById(int id);
 
+        public List<Movies> GetTodaysMovies();
+
         public List<Movies> GetMoviesByNamePart(String name = null);
+
+        public List<Movies> GetMoviesByCategory(String category);
 
         #endregion
 
@@ -129,6 +133,8 @@ namespace CinemaApplicationProject.Model.Services
         #region Shows
         public List<Shows> GetAllShows();
 
+        public List<Shows> GetTodaysShows();
+
         public Shows GetShowById(int id);
 
         public List<Shows> GetAllShowsOnNextWeek();
@@ -136,6 +142,10 @@ namespace CinemaApplicationProject.Model.Services
         public List<Shows> GetAllShowsByMovieId(int id);
 
         public List<Shows> GetAllShowsByRoomId(int id);
+
+        public List<DateTime> GetAvailableDates();
+
+        public List<Movies> GetShowsByDate(String date);
 
         #endregion
 
@@ -150,6 +160,12 @@ namespace CinemaApplicationProject.Model.Services
 
         #region Tickets
         public int GetPriceOfTicketById(int id);
+        #endregion
+
+        #region Categories
+
+        public List<Categories> GetCategories();
+
         #endregion
     }
 }

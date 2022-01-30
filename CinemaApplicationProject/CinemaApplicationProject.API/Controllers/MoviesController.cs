@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using CinemaApplicationProject.Model;
 using CinemaApplicationProject.Model.Database;
 using CinemaApplicationProject.Model.Services;
+using Microsoft.AspNetCore.Cors;
+using CinemaApplicationProject.Model.DTOs;
 
 namespace CinemaApplicationProject.API.Controllers
 {
@@ -23,24 +25,48 @@ namespace CinemaApplicationProject.API.Controllers
         }
 
         // GET: api/Movies
+        [EnableCors("_myAllowSpecificOrigins")]
         [HttpGet]
-        public ActionResult<IEnumerable<Movies>> GetMovies()
+        public ActionResult<IEnumerable<MoviesDTO>> GetMovies()
         {
-            return _service.GetMovies();
+            return _service.GetMovies().Select(list => (MoviesDTO)list).ToList();
         }
+
+        [EnableCors("_myAllowSpecificOrigins")]
+        [HttpGet("today")]
+        public ActionResult<IEnumerable<MoviesDTO>> GetTodaysMovies()
+        {
+            return _service.GetTodaysMovies().Select(list => (MoviesDTO)list).ToList();
+        }
+
 
         // GET: api/Movies/5
         [HttpGet("{id}")]
-        public ActionResult<Movies> GetMovies(int id)
+        [EnableCors("_myAllowSpecificOrigins")]
+        public ActionResult<MoviesDTO> GetMovies(int id)
         {
-            var movies = _service.GetMovieById(id);
+            var movie = (MoviesDTO)_service.GetMovieById(id);
 
-            if (movies == null)
+            if (movie == null)
             {
                 return NotFound();
             }
 
-            return movies;
+            return movie;
+        }
+
+        [EnableCors("_myAllowSpecificOrigins")]
+        [HttpGet("title/{title}")]
+        public ActionResult<IEnumerable<MoviesDTO>> GetMoviesByTitlePart(string title)
+        {
+            return _service.GetMoviesByNamePart(title).Select(m => (MoviesDTO)m).ToList();
+        }
+
+        [EnableCors("_myAllowSpecificOrigins")]
+        [HttpGet("category/{category}")]
+        public ActionResult<IEnumerable<MoviesDTO>> GetMoviesByCategory(string category)
+        {
+            return _service.GetMoviesByCategory(category).Select(m => (MoviesDTO)m).ToList();
         }
 
         // PUT: api/Movies/5

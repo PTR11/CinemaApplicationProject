@@ -46,7 +46,7 @@ namespace CinemaApplicationProject.API
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   builder =>
                                   {
-                                      builder.WithOrigins("http://localhost:8080");
+                                      builder.WithOrigins("http://localhost:8080", "http://localhost:7384");
                                   });
             });
             services.Configure<IdentityOptions>(options =>
@@ -65,7 +65,6 @@ namespace CinemaApplicationProject.API
                 options.Lockout.AllowedForNewUsers = true;
 
                 // Felhasználókezelésre vonatkozó konfiguráció
-                options.User.RequireUniqueEmail = true;
             });
             services.AddTransient<IDatabaseService, DatabaseService>();
             services.AddControllers();

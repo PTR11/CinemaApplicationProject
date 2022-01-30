@@ -1,37 +1,83 @@
 <template>
-    <div class="card col-sm-5 m-2 mx-auto m-1 border-3 border-light bg-warning text-light">
-        <form>
+    <div class="card col-sm-5 m-2 mx-auto m-2 p-3 border-1 border-dark bg-warning text-dark">
             <h3 class="">Sign Up</h3>
 
             <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" class="form-control form-control-lg"/>
+                <label>User Name</label>
+                <input type="text" v-model="user.UserName" class="form-control form-control-lg"/>
+            </div>
+
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" v-model="user.Name" class="form-control form-control-lg"/>
             </div>
 
             <div class="form-group">
                 <label>Email address</label>
-                <input type="email" class="form-control form-control-lg" />
+                <input type="email" v-model="user.Email" class="form-control form-control-lg" />
+            </div>
+
+            <div class="form-group">
+              <label>Address</label>
+              <input type="text" v-model="user.Address" class="form-control form-control-lg" />
             </div>
 
             <div class="form-group">
                 <label>Password</label>
-                <input type="password" class="form-control form-control-lg" />
+                <input type="password" v-model="user.Password" class="form-control form-control-lg" />
             </div>
 
-            <button type="submit" class="btn btn-dark btn-lg btn-block">Sign Up</button>
+            <div class="form-group">
+              <label>Credit card number</label>
+              <input type="text" v-model="user.CreditCardNumber" class="form-control form-control-lg" />
+            </div>
 
-            <p class="forgot-password text-right">
+            <button @click="signupUser" class="btn btn-dark btn-lg btn-block">Sign Up</button>
+
+            <p class="forgot-password text-right pt-2">
                 Already registered 
                 <router-link :to="{name: 'Login'}">sign in?</router-link>
             </p>
-        </form>
     </div>
 </template>
 
 <script>
+    import axios from "axios";
+
     export default {
         data() {
-            return {}
-        }
+            return {
+              user:{
+                UserName: "",
+                Name: "",
+                Email: "",
+                Address: "",
+                Password: "",
+                CreditCardNumber: "",
+              }
+            }
+        },
+      methods:{
+          signupUser(){
+            const headers = {
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
+            }
+            axios.interceptors.response.use((response) => {
+              if(response.data.statusCode === 302){
+                if(response.data.headers[0].value[0]){
+                  window.location.href = response.data.headers[0].value[0]
+                }
+              }
+            })
+            axios
+                .post("http://localhost:7384/api/Users/register/", this.user, {headers: headers})
+                .then((result) => {
+                  console.log(result)
+                  this.programs = result.data;
+                });
+          }
+      }
     }
 </script>

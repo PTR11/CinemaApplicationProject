@@ -1,15 +1,15 @@
 <template>
   <div>
-    <b-navbar toggleable="sm" type="dark" variant="warning" class="col-sm-7 mx-auto mt-3 text-white" align="center" v-model="active">
+    <b-navbar toggleable="sm" type="dark" variant="warning" class="col-sm-7 mx-auto mt-3 text-dark border b-1 border-dark" align="center" v-model="active">
       <b-navbar-brand href="#">NavBar</b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav >
-          <b-nav-item to="/"><div class="text-white">Home</div></b-nav-item>
-          <b-nav-item to="/movies"><div class="text-white">Movies</div></b-nav-item>
-          <b-nav-item to="/program"><div class="text-white">Programs</div></b-nav-item>
+          <b-nav-item to="/"><div class="text-dark">Home</div></b-nav-item>
+          <b-nav-item to="/movies"><div class="text-dark">Movies</div></b-nav-item>
+          <b-nav-item to="/program"><div class="text-dark">Programs</div></b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
@@ -24,7 +24,7 @@
             <template #button-content>
               <em>User</em>
             </template>
-            <b-dropdown-item href="#">Log In</b-dropdown-item>
+            <b-dropdown-item to="/login">Log In</b-dropdown-item>
             <b-dropdown-item to="/sign">Sign In</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>

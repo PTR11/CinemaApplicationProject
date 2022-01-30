@@ -1,7 +1,9 @@
 ﻿using CinemaApplicationProject.Model.Database;
+using CinemaApplicationProject.Model.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace CinemaApplicationProject.Model.Services
@@ -36,23 +38,23 @@ namespace CinemaApplicationProject.Model.Services
 
         public List<BuffetSale> GetBuffetSaleByProductId(int id) => context.BuffetSales.Where(m => m.Id == id).ToList();
 
-        public int GetAverageSaleOfProductOnAWeek(int id) => context.BuffetSales.Where(m => m.Id == id && m.Date >= DateTime.Now.AddDays(-7) && m.Date <= DateTime.Now ).Sum(m => m.Quantity);
+        public int GetAverageSaleOfProductOnAWeek(int id) => context.BuffetSales.Where(m => m.Id == id && m.Date >= DateTime.Now.AddDays(-7) && m.Date <= DateTime.Now).Sum(m => m.Quantity);
 
         public List<BuffetSale> GetBuffetSalesByEmployeeId(int id) => context.BuffetSales.Where(m => m.EmployeeId == id).ToList();
 
         public List<BuffetSale> GetBuffetSalesOfADay() => context.BuffetSales.Where(m => m.Date.Day.Equals(DateTime.Now.Day)).ToList();
 
         public List<BuffetSale> GetBuffetSalesOfADayByEmployeeId(int id) => context.BuffetSales.Where(m => m.Date.Day.Equals(DateTime.Now.Day) && m.EmployeeId == id).ToList();
-        
+
         public int GetIncomeOnLastWeek()
         {
             Dictionary<Products, int> tmp = new();
 
-            foreach(Products product in context.BuffetSales.Where(m => m.Date >= DateTime.Now.AddDays(-7) && m.Date <= DateTime.Now).Select(m => m.Product).Distinct())
+            foreach (Products product in context.BuffetSales.Where(m => m.Date >= DateTime.Now.AddDays(-7) && m.Date <= DateTime.Now).Select(m => m.Product).Distinct())
             {
                 int piece = context.BuffetSales.Where(m => m.Product.Equals(product) && m.Date >= DateTime.Now.AddDays(-7) && m.Date <= DateTime.Now).Count();
                 int price = context.Products.Where(m => m.Name.Equals(product.Name)).Select(m => m.Price).Single();
-                tmp.Add(product,price*price);
+                tmp.Add(product, price * price);
             }
 
             return tmp.Values.Sum();
@@ -73,7 +75,7 @@ namespace CinemaApplicationProject.Model.Services
 
         public EmployeePresence GetEmployeePresenceById(int id) => context.EmployeePresence.FirstOrDefault(m => m.Id == id);
 
-        public List<Employees> GetEmployeesFromPresenceByDate(DateTime date) => context.EmployeePresence.Where(m => m.Day.Date.Equals(date.Date)).Select(m =>m.Employee).ToList();
+        public List<Employees> GetEmployeesFromPresenceByDate(DateTime date) => context.EmployeePresence.Where(m => m.Day.Date.Equals(date.Date)).Select(m => m.Employee).ToList();
 
         public List<Employees> GetEmployeesFromPresenceByDateAndStat(DateTime date, StatsAndPays stat) => context.EmployeePresence.Where(m => m.Day.Date.Equals(date.Date)).Select(m => m.Employee).Where(m => m.Stat.Contains(stat)).ToList();
 
@@ -81,12 +83,24 @@ namespace CinemaApplicationProject.Model.Services
 
         #region Movies
 
-        public List<Movies> GetMovies() => context.Movies.ToList();
+        public List<Movies> GetMovies() => context.Movies.Include(m => m.Actors).ToList();
 
-        public Movies GetMovieById(int id) => context.Movies.FirstOrDefault(m => m.Id == id);
+        public List<Movies> GetTodaysMovies() {
+
+            var shows = this.GetTodaysShows().Select(x => x.MovieId).Distinct().ToList();
+            return context.Movies.Where(x => shows.Contains(x.Id)).ToList();
+        }
+
+        public Movies GetMovieById(int id) => context.Movies.Include(m => m.Actors).Include(m => m.Shows).FirstOrDefault(m => m.Id == id);
 
         public List<Movies> GetMoviesByNamePart(String name = null) => context.Movies.Where(m => m.Title.StartsWith(name ?? null)).ToList();
 
+        public List<Movies> GetMoviesByCategory(String category)
+        {
+            Categories cat = context.Categories.FirstOrDefault(m => m.Category.Equals(category));
+
+            return context.Movies.Include(m => m.Categories).Include(m => m.Actors).Where(m => m.Categories.Contains(cat)).ToList();
+        }
         #endregion
 
         #region MoviesStatistics
@@ -130,7 +144,7 @@ namespace CinemaApplicationProject.Model.Services
         #region ProductsStatistics
         public List<ProductStatistics> GetAllSellsOnLastWeek() => context.ProductStatistics.Where(m => m.Date >= DateTime.Now.AddDays(-7) && m.Date <= DateTime.Now).ToList();
 
-        public Products GetTheMostSelledItemLastWeek() => (Products) context.ProductStatistics.Where(m => m.Date >= DateTime.Now.AddDays(-7) && m.Date <= DateTime.Now).OrderBy(m => m.BuyersNumber).GroupBy(m => m.Product).Single().Select(m => m.Product);
+        public Products GetTheMostSelledItemLastWeek() => (Products)context.ProductStatistics.Where(m => m.Date >= DateTime.Now.AddDays(-7) && m.Date <= DateTime.Now).OrderBy(m => m.BuyersNumber).GroupBy(m => m.Product).Single().Select(m => m.Product);
 
 
         #endregion
@@ -157,7 +171,9 @@ namespace CinemaApplicationProject.Model.Services
         #region Shows
         public List<Shows> GetAllShows() => context.Shows.ToList();
 
-        public Shows GetShowById(int id) => context.Shows.FirstOrDefault(m=> m.Id == id);
+        public List<Shows> GetTodaysShows() => context.Shows.Where(x => x.Date.Date == DateTime.Now.Date).ToList();
+
+        public Shows GetShowById(int id) => context.Shows.FirstOrDefault(m => m.Id == id);
 
         public List<Shows> GetAllShowsOnNextWeek() => context.Shows.Where(m => m.Date <= DateTime.Now.AddDays(+7) && m.Date >= DateTime.Now).ToList();
 
@@ -165,6 +181,34 @@ namespace CinemaApplicationProject.Model.Services
 
         public List<Shows> GetAllShowsByRoomId(int id) => context.Shows.Where(m => m.RoomId == id).ToList();
 
+        public List<DateTime> GetAvailableDates() => new List<DateTime>() { context.Shows.Where(m => m.Date.Date >= DateTime.Now.Date && m.IsActiveShow).Select(m => m.Date).OrderBy(m => m.Date).ToList().First(), context.Shows.Where(m => m.Date.Date >= DateTime.Now.Date && m.IsActiveShow).Select(m => m.Date).OrderBy(m => m.Date).ToList().Last() };
+
+        public List<Movies> GetShowsByDate(String date)
+        {
+           
+            var shows = context.Shows.Where(m => m.Date.Date == DateTime.Parse(date).Date).Select(m => m.Id).ToList(); //Shows ids
+
+
+            List<Movies> movies = new List<Movies>();
+            movies.AddRange(context.Movies.Include(m => m.Shows).AsNoTracking().ToList());
+            List<Movies> tmps = new List<Movies>();
+            foreach (var movie in movies)
+            {
+                foreach(var show in movie.Shows)
+                {
+                    if (!shows.Contains(show.Id))
+                    {
+                        movie.Shows.Remove(show);
+                        
+                    }
+                }
+                if (movie.Shows.Count != 0)
+                {
+                    tmps.Add(movie);
+                }
+            }
+            return tmps;
+        }
         #endregion
 
         #region StatsAndPays
@@ -178,6 +222,12 @@ namespace CinemaApplicationProject.Model.Services
 
         #region Tickets
         public int GetPriceOfTicketById(int id) => context.Tickets.Where(m => m.Id == id).Select(m => m.Price).Single();
+        #endregion
+
+        #region Categories
+
+        public List<Categories> GetCategories() => context.Categories.ToList();
+
         #endregion
     }
 }

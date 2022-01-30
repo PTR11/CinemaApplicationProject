@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using CinemaApplicationProject.Model;
 using CinemaApplicationProject.Model.Database;
 using CinemaApplicationProject.Model.Services;
+using Microsoft.AspNetCore.Cors;
+using CinemaApplicationProject.Model.DTOs;
+using System.Net.Http;
+using System.Net;
 
 namespace CinemaApplicationProject.API.Controllers
 {
@@ -23,10 +27,30 @@ namespace CinemaApplicationProject.API.Controllers
         }
 
         // GET: api/Shows
-        [HttpGet]
-        public ActionResult<IEnumerable<Shows>> GetShows()
+        [EnableCors("_myAllowSpecificOrigins")]
+        [HttpGet("{date}")]
+        public ActionResult<IEnumerable<MoviesDTO>> GetShows(String date)
         {
-            return _service.GetAllShows();
+            //var respone = new HttpResponseMessage();
+            //respone.Headers.Location = new Uri("http://google.com");
+            //return respone;
+            return _service.GetShowsByDate(date).Select(m => (MoviesDTO)m).ToList();
+        }
+
+        // GET: api/Shows
+        [EnableCors("_myAllowSpecificOrigins")]
+        [HttpPost("availableDates")]
+        public ActionResult<IEnumerable<DateTime>> GetAvailableDates()
+        {
+            return _service.GetAvailableDates();
+        }
+
+        // GET: api/Shows/today
+        [EnableCors("_myAllowSpecificOrigins")]
+        [HttpGet("today")]
+        public ActionResult<IEnumerable<Shows>> GetTodaysShows()
+        {
+            return _service.GetTodaysShows();
         }
 
         // GET: api/Shows/5

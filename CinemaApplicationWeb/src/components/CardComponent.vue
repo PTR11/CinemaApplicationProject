@@ -1,25 +1,24 @@
 <template>
-  <b-card img-src="https://placekitten.com/300/300" center img-alt="Card image" img-left class="mb-3 bg-warning text-white h-25">
+  <b-card img-src="https://placekitten.com/300/300" center img-alt="Card image" img-left class="mb-3 bg-warning text-dark h-25 border-dark rounded-30 mh-10">
     <b-card-title >
-      <router-link v-if="site == 'Main'" :to="'movie/'+1" class="text-white text-decoration-none">
+      <router-link :to="'movie/'+element.id" class="text-dark text-decoration-none">
         <div >{{ element.title }} <span v-if="element.length != nil">({{ element.length }} min)</span></div>
       </router-link>
-      <div v-else>
-        {{ element.title }}
-      </div>
     </b-card-title>
     <b-card-text v-if="site != 'Main'">
       Length: {{ element.length }}
     </b-card-text>
 
     <b-card-text>
-      Some quick example text to build on the <em>card title</em> and make up the bulk of the card's
-      content.
+      Szereplők: {{actorsList}}
+    </b-card-text>
+
+    <b-card-text class="short-text">
+        {{element.description}}
     </b-card-text>
     <div v-if="site == 'Main'">
-      <b-button variant="warning" class="border border-2 border-light circle" @click="visible = !visible">Tonight's availability</b-button>
+      <b-button variant="warning" class="border border-1 border-dark circle" @click="visible = !visible">Tonight's availability</b-button>
       <b-collapse :visible="!visible">
-        <v-card-title>Tonight's availability</v-card-title>
         <v-card-text>
           <div class="vertical-scroll">
             <v-chip-group
@@ -27,18 +26,13 @@
                 active-class="orange accent-4 white--text"
                 column
             >
-              <v-chip v-for="ti in element.times" :key="ti">{{ti}}</v-chip>
+              <router-link :to="'reserve/'+1" class="text-decoration-none">
+              <v-chip v-for="ti in element.shows" :key="ti">{{ timeChange(ti.date) }}</v-chip>
+              </router-link>
             </v-chip-group>
           </div>
 
         </v-card-text>
-        <v-card-actions>
-          <router-link :to="'reserve/'+1" >
-            <v-btn color="lighten-2" class="border border-2 border-light circle" text @click="reserve">
-              Reserve
-            </v-btn>
-          </router-link>
-        </v-card-actions>
       </b-collapse>
 
     </div>
@@ -47,15 +41,37 @@
 
 <script>
 export default {
-  props: ["element", "time", "site"],
+  props: ["element", "site"],
   data(){
     return{
       visible : 'false',
+      actorsString : "",
+    }
+  },
+  computed:{
+    actorsList(){
+      this.clearString();
+      this.element.actors.forEach(e => {
+        this.actorsString = this.actorsString.concat('',e.name, ', ');
+      });
+
+      return this.actorsString.slice(0, -2);
     }
   },
   methods:{
+    clearString(){
+      this.actorsString = "";
+    },
     asd(){
       this.visible = this.visible ? 'false' : 'true'
+    },
+    timeChange(time){
+      var date = new Date(time);
+      if(date.getMinutes() < 10) {
+        return date.getHours()+":0"+date.getMinutes();
+      }else{
+        return date.getHours()+":"+date.getMinutes();
+      }
     }
   }
 
@@ -93,7 +109,15 @@ export default {
   overflow: auto;
   border-radius: 1em;
   position: relative;
-  border: 2px solid white;
+  border: 1px solid black;
   height: 7em;
+}
+
+.short-text{
+  text-align: left;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 </style>
