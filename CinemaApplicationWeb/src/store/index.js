@@ -7,7 +7,8 @@ export default new Vuex.Store({
     state: {
         selectedCategory : "",
         searchText:"",
-        filterDate: new Date()
+        filterDate: new Date(),
+        user: null,
     },
     mutations: {
         setCategory(state, category){
@@ -17,7 +18,10 @@ export default new Vuex.Store({
             state.searchText = text;
         },
         setFilterDate(state,date){
-            state.filterDate = date
+            state.filterDate = date;
+        },
+        setUser(state,loggedUser){
+            state.user = loggedUser;
         }
     },
     actions: {
@@ -30,11 +34,15 @@ export default new Vuex.Store({
         setFilterDate(state, date){
             state.commit("setFilterDate",date);
         },
+        setUser(state, loggedUser){
+            state.commit("setUser",loggedUser);
+        },
     },
     modules: {},
     getters: {
         getCategory: (state) => state.selectedCategory,
         getText: (state) => state.searchText,
         getDate: (state) => state.filterDate,
+        getLoggedUser: (state) => state.user
     }
 })

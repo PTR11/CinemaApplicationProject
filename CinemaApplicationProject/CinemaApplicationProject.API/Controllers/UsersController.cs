@@ -7,6 +7,8 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
+using CinemaApplicationProject.Model.Services;
+using System.Net;
 
 namespace CinemaApplicationProject.API.Controllers
 {
@@ -24,9 +26,27 @@ namespace CinemaApplicationProject.API.Controllers
             _signInManager = signInManager;
         }
 
+
         [EnableCors("_myAllowSpecificOrigins")]
-        [HttpPost("register/")]
-        public async Task<RedirectResult> Register(GuestsDTO newUser)
+        [HttpPost("login")]
+        public async Task<HttpResponseMessage> Login(GuestsDTO login)
+            //A login ne redirecteljen, old meg úgy,hogy modelstateel működjön
+        {
+            var result = await _signInManager.PasswordSignInAsync(login.UserName, login.Password, false, false);
+            if (result.Succeeded)
+            {
+                ModelState.AddModelError("", "Sikertelen bejelentkezés");
+                return RedirectService.RedirectMethod("Successfully logged in", HttpStatusCode.Redirect, new Uri("http://localhost:8080/"));
+            }
+            return RedirectService.RedirectMethod("Something went wrong", HttpStatusCode.BadRequest);
+
+
+        }
+
+
+        [EnableCors("_myAllowSpecificOrigins")]
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(GuestsDTO newUser)
         {
             var user = new Guests { UserName = newUser.UserName,
                 Name = newUser.Name,
@@ -37,14 +57,17 @@ namespace CinemaApplicationProject.API.Controllers
             var result = await _userManager.CreateAsync(user, newUser.Password);
             if (result.Succeeded)
             {
-                var respone = new HttpResponseMessage();
-                //respone.StatusCode = System.Net.HttpStatusCode.Redirect;
-                //respone.Headers.Location = new Uri("http://google.com");
-               // return respone;
-                return Redirect("http://google.com");
+                return Ok("request is incorrect");
+                Ok("Str");
+                //return RedirectService.RedirectMethod("Successfully created", HttpStatusCode.Redirect, new Uri("http://localhost:8080/"));
             }
-            return Redirect("http://facebook.com");
-            
+            if (!ModelState.IsValid)
+            {
+                int A = 1;
+                String c = A.ToString();
+            }
+            return BadRequest();
+            //return RedirectService.RedirectMethod("Not able to create the requested user", HttpStatusCode.BadRequest);
         }
     }
 }

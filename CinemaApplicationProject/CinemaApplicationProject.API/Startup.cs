@@ -47,6 +47,9 @@ namespace CinemaApplicationProject.API
                                   builder =>
                                   {
                                       builder.WithOrigins("http://localhost:8080", "http://localhost:7384");
+                                      builder.AllowAnyMethod();
+                                      builder.AllowAnyHeader();
+                                      builder.AllowAnyOrigin();
                                   });
             });
             services.Configure<IdentityOptions>(options =>
@@ -63,6 +66,7 @@ namespace CinemaApplicationProject.API
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
                 options.Lockout.MaxFailedAccessAttempts = 10;
                 options.Lockout.AllowedForNewUsers = true;
+
 
                 // Felhasználókezelésre vonatkozó konfiguráció
             });

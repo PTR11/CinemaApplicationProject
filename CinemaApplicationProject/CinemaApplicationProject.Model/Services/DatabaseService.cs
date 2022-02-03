@@ -183,6 +183,8 @@ namespace CinemaApplicationProject.Model.Services
 
         public List<DateTime> GetAvailableDates() => new List<DateTime>() { context.Shows.Where(m => m.Date.Date >= DateTime.Now.Date && m.IsActiveShow).Select(m => m.Date).OrderBy(m => m.Date).ToList().First(), context.Shows.Where(m => m.Date.Date >= DateTime.Now.Date && m.IsActiveShow).Select(m => m.Date).OrderBy(m => m.Date).ToList().Last() };
 
+        public String DateTimeToString(DateTime date) => date.Date.ToString("MM/dd/yyyy");
+
         public List<Movies> GetShowsByDate(String date)
         {
            

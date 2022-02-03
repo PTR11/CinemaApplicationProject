@@ -19,7 +19,9 @@
             <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
           </b-nav-form>
 
-          <b-nav-item-dropdown right>
+
+          <b-avatar variant="light" v-if="userLoggedIn"></b-avatar>
+          <b-nav-item-dropdown right v-else>
             <!-- Using 'button-content' slot -->
             <template #button-content>
               <em>User</em>

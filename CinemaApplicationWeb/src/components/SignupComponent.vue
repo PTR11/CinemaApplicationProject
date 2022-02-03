@@ -62,15 +62,23 @@
             const headers = {
               'Content-Type': 'application/json',
               'Access-Control-Allow-Origin': '*',
-              'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
-            }
+              'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+              'Access-Control-Allow-Methods': "GET, POST, PUT, DELETE, OPTIONS",
+              'Access-Control-Allow-Credentials': true
+            };
             axios.interceptors.response.use((response) => {
+              console.log(response);
               if(response.data.statusCode === 302){
                 if(response.data.headers[0].value[0]){
-                  window.location.href = response.data.headers[0].value[0]
+                  alert(response.data.headers[1].value[0]);
+                  window.location.href = response.data.headers[0].value[0];
                 }
+              }else if(response.data.statusCode === 400){
+                alert(response.data.headers[0].value[0]);
+                window.location.reload(true);
               }
-            })
+            });
+
             axios
                 .post("http://localhost:7384/api/Users/register/", this.user, {headers: headers})
                 .then((result) => {

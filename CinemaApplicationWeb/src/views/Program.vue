@@ -47,8 +47,9 @@ export default {
       console.log("ITTEN HAL EL")
 
       axios
-          .post("http://localhost:7384/api/Users/register/PTR1")
+          .get("http://localhost:7384/api/Shows/"+this.filterDate.toDateString())
           .then((result) => {
+
             //window.location.href = result.data.headers[0].value[0]
             this.programs = result.data;
           });
