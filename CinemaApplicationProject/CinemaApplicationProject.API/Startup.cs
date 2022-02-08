@@ -1,8 +1,10 @@
 using CinemaApplicationProject.Model;
 using CinemaApplicationProject.Model.Database;
 using CinemaApplicationProject.Model.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +16,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.API
@@ -40,7 +43,7 @@ namespace CinemaApplicationProject.API
                 .AddEntityFrameworkStores<DatabaseContext>()
                 .AddDefaultTokenProviders()
                 .AddRoles<StatsAndPays>();
-            
+
             services.AddCors(options =>
             {
                 options.AddPolicy(name: MyAllowSpecificOrigins,
@@ -55,18 +58,12 @@ namespace CinemaApplicationProject.API
             services.Configure<IdentityOptions>(options =>
             {
                 // Jelszó komplexitására vonatkozó konfiguráció
-                options.Password.RequireDigit = true;
-                options.Password.RequiredLength = 8;
                 options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = true;
-                options.Password.RequireLowercase = false;
-                options.Password.RequiredUniqueChars = 3;
 
                 // Hibás bejelentkezés esetén az (ideiglenes) kizárásra vonatkozó konfiguráció
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
                 options.Lockout.MaxFailedAccessAttempts = 10;
                 options.Lockout.AllowedForNewUsers = true;
-
 
                 // Felhasználókezelésre vonatkozó konfiguráció
             });
@@ -85,11 +82,13 @@ namespace CinemaApplicationProject.API
 
             app.UseRouting();
 
-
             app.UseCors(MyAllowSpecificOrigins);
 
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
+
 
             app.UseEndpoints(endpoints =>
             {

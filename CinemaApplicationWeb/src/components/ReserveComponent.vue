@@ -32,6 +32,7 @@
 <script>
 import reservedPlace from "../assets/reservedPlace.png"
 import emptyPlace from "../assets/emptyPlace.png"
+import axios from "axios";
 
 export default {
   data() {
@@ -50,9 +51,16 @@ export default {
   created: function() {
     this.image = '"@/assets/emptyPlace.png"';
     this.initializeGame();
-    console.log(this.$route.params);
+    this.fetchShow();
   },
   methods: {
+    fetchShow(){
+      axios
+          .get("http://localhost:7384/api/Shows/show/"+this.$route.params.id)
+          .then((result) => {
+            console.log(result);
+          });
+    },
     checkItem(row,col){
       this.isLoading = !this.isLoading;
       const idx = row * this.sudokuMatrix.length + col;

@@ -34,10 +34,13 @@
     },
     methods:{
       fetchShows(){
+        console.log("kukiii")
+        console.log(this.$cookies.keys());
+        console.log(document.cookie);
         axios
             .get("http://localhost:7384/api/Movies/today")
             .then((result) => {
-
+              console.log(result);
               console.log("Darth Vader")
               this.movies = result.data;
               console.log("Darth Vader")

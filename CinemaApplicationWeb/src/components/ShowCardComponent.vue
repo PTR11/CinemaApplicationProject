@@ -14,9 +14,12 @@
               active-class="orange accent-4 white--text"
               column
           >
-            <router-link :to="'reserve/'+1" class="text-decoration-none">
-              <v-chip v-for="ti in element.shows" :key="ti">{{ timeChange(ti.date) }}</v-chip>
-            </router-link>
+
+              <v-chip v-for="ti in element.shows" :key="ti">
+                <router-link :to="'reserve/'+ti.id" >
+                  <span> {{ timeChange(ti.date) }} </span>
+                </router-link>
+              </v-chip>
           </v-chip-group>
         </div>
       </b-card-text>
@@ -48,6 +51,16 @@ export default {
 </script>
 
 <style scoped>
+
+a{
+  text-decoration: none;
+  color: black;
+}
+
+a:hover{
+  text-decoration: none;
+  color: black;
+}
 
 .vertical-scroll::-webkit-scrollbar {
   width: 1em;

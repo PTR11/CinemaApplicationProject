@@ -4,12 +4,12 @@
 
             <div class="form-group">
                 <label>Email address</label>
-                <input type="email" v-model="user.UserName" class="form-control form-control-lg" />
+                <input type="email" v-model="loggedInUser.UserName" class="form-control form-control-lg" />
             </div>
 
             <div class="form-group">
                 <label>Password</label>
-                <input type="password" v-model="user.Password" class="form-control form-control-lg" />
+                <input type="password" v-model="loggedInUser.Password" class="form-control form-control-lg" />
             </div>
 
             <button @click="loginUser" class="btn btn-dark btn-lg border border-1 border-dark btn-block border-rounded">Sign In</button>
@@ -21,51 +21,36 @@
 </template>
 
 <script>
-    import axios from "axios";
 
+    import axios from "axios";
+    import {mapState} from "vuex";
     export default {
+        name:"LoginComponent",
         data() {
             return {
-              user: {
+              loggedInUser: {
                 UserName: "",
                 Password: ""
-              },
-              loggedInUser:{}
+              }
             }
         },
+        computed:
+          mapState({
+            user: (state) => state.user
+          }),
         methods:{
-          setUser(id){
-            axios
-                .get("http://localhost:7384/api/Users/guest/"+id)
-                .then((result) => {
-                  this.loggedInUser = result.data;
-                });
-          },
           loginUser(){
-            const headers = {
-              'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*',
-              'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-              'Access-Control-Allow-Methods': "GET, POST, PUT, DELETE, OPTIONS",
-              'Access-Control-Allow-Credentials': true
-            };
-            axios.interceptors.response.use((response) => {
-              console.log(response);
-              if(response.data.statusCode === 302){
-                if(response.data.headers[0].value[0]){
-                  alert(response.data.headers[1].value[0]);
-                  //window.location.href = response.data.headers[0].value[0];
-                }
-              }else if(response.data.statusCode === 400){
-                alert(response.data.headers[0].value[0]);
-                window.location.reload();
-              }
-            });
 
             axios
-                .post("http://localhost:7384/api/Users/login/", this.user, {headers: headers})
+                .post("http://localhost:7384/api/Users/login/", this.loggedInUser, {withCredentials: true})
                 .then((result) => {
-                  this.programs = result.data;
+                    console.log(result.headers);
+                    this.$store.dispatch("setUser",result.data);
+                    if(result.status === 200){
+                      this.$router.push({name: 'Home', path:"/"})
+                      this.$store.dispatch("setUser",result.data);
+
+                    }
                 });
           }
         }

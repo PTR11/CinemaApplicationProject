@@ -1,20 +1,24 @@
 ﻿using CinemaApplicationProject.Model.Database;
 using CinemaApplicationProject.Model.DTOs;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.Model.Services
 {
     public class DatabaseService : IDatabaseService
     {
         private readonly DatabaseContext context;
+        private readonly UserManager<ApplicationUser> guestManager;
 
-        public DatabaseService(DatabaseContext dc)
+        public DatabaseService(DatabaseContext dc, UserManager<ApplicationUser> um)
         {
             context = dc;
+            guestManager = um;
         }
 
         #region Actors
@@ -117,7 +121,7 @@ namespace CinemaApplicationProject.Model.Services
         #region Opinions
         public List<Opinions> GetAllOpinions() => context.Opinions.ToList();
 
-        public List<Opinions> GetAllOpinionsByMovie(String name = null) => context.Opinions.Where(m => m.Movie.Title.Equals(name ?? null)).ToList();
+        public List<Opinions> GetAllOpinionsByMovie(int id) => context.Opinions.Where(m => m.Movie.Id == id).ToList();
 
         public List<Opinions> GetAllOpinionsByUser(String username = null) => context.Opinions.Where(m => m.Guest.UserName.Equals(username ?? null)).ToList();
 
@@ -132,10 +136,48 @@ namespace CinemaApplicationProject.Model.Services
             return dict;
         }
 
-        #endregion
+        public async Task<Boolean> SaveOpinionAsync(OpinionsDTO rfg)
+        {
+            if (rfg.GuestId == 0 || rfg.MovieId == 0)
+            {
+                return false;
+            }
+            Guests guest = context.Guests.FirstOrDefault(m => m.Id == rfg.GuestId);
+            //Guests guest = (Guests)await guestManager.FindByIdAsync(rfg.UserId.ToString());
 
-        #region Products
-        public List<Products> GetAllProducts() => context.Products.ToList();
+            if (guest == null)
+            {
+                return false;
+            }
+
+            Opinions opinion = new Opinions
+            {
+                Guest = guest,
+                Movie = context.Movies.FirstOrDefault(m => m.Id == rfg.MovieId),
+                Anonymus = rfg.Anonymus,
+                Description = rfg.Description,
+                DateTime = DateTime.Now,
+                Ranking = rfg.Ranking,
+            };
+
+            context.Opinions.Add(opinion);
+            
+            try
+            {
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                return false;
+            }
+            return true;
+        }
+
+            #endregion
+
+            #region Products
+            public List<Products> GetAllProducts() => context.Products.ToList();
 
         public int GetProductPrice(String name = null) => context.Products.Where(m => m.Name.Equals(name)).Select(m => m.Price).Single();
 
@@ -158,6 +200,53 @@ namespace CinemaApplicationProject.Model.Services
 
         public List<Rents> GetAllRentsByShowId(int id) => context.Rents.Where(m => m.ShowId == id).ToList();
 
+        public Boolean IfReservedPlace(int showid, int x, int y) => context.Rents.Where(m => m.ShowId == showid).Where(m => m.X == x && m.Y == y).Any();
+
+        public async Task<Boolean> SaveRentsAsync(RentFromGuestDTO rfg)
+        {
+            if (rfg.UserId == 0 || rfg.ShowId == 0)
+            {
+                return false;
+            }
+            Guests guest = context.Guests.FirstOrDefault(m => m.Id == rfg.UserId);
+            //Guests guest = (Guests)await guestManager.FindByIdAsync(rfg.UserId.ToString());
+
+            if (guest == null)
+            {
+                return false;
+            }
+
+            foreach (var place in rfg.Places)
+            {
+                if (this.IfReservedPlace(rfg.ShowId, place.X, place.Y))
+                {
+                    return false;
+                }
+            }
+            foreach (var place in rfg.Places)
+            {
+                Rents rent = new Rents
+                {
+                    Guest = guest,
+                    ShowId = rfg.ShowId,
+                    X = place.X,
+                    Y = place.Y,
+                    Ticket = context.Tickets.FirstOrDefault(m => m.Type == place.TicketCategory)
+                };
+
+                context.Rents.Add(rent); 
+            }
+            try
+            {
+                context.SaveChanges();
+            }catch(Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                return false;
+            }
+            return true;
+        }
+
         #endregion
 
         #region Rooms
@@ -173,7 +262,7 @@ namespace CinemaApplicationProject.Model.Services
 
         public List<Shows> GetTodaysShows() => context.Shows.Where(x => x.Date.Date == DateTime.Now.Date).ToList();
 
-        public Shows GetShowById(int id) => context.Shows.FirstOrDefault(m => m.Id == id);
+        public Shows GetShowById(int id) => context.Shows.Include(m => m.Room).Include(m => m.Movie).FirstOrDefault(m => m.Id == id);
 
         public List<Shows> GetAllShowsOnNextWeek() => context.Shows.Where(m => m.Date <= DateTime.Now.AddDays(+7) && m.Date >= DateTime.Now).ToList();
 
@@ -231,5 +320,12 @@ namespace CinemaApplicationProject.Model.Services
         public List<Categories> GetCategories() => context.Categories.ToList();
 
         #endregion
+
+        #region Guest
+
+        public Guests GetGuestByUserName(String username) => context.Guests.FirstOrDefault(g => g.UserName.Equals(username));
+
+        #endregion
+
     }
 }

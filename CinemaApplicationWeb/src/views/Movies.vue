@@ -47,7 +47,7 @@ export default {
   },
   components: {
     Category: CategoryAndSearchComponent,
-    Card: CardComponent,
+    Card: CardComponent
   },
   created() {
     this.fetchMovies();

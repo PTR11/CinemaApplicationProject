@@ -1,4 +1,5 @@
 ﻿using CinemaApplicationProject.Model.Database;
+using CinemaApplicationProject.Model.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace CinemaApplicationProject.Model.Services
 {
     public interface IDatabaseService
     {
+
         #region Actors
 
         public List<Actors> GetActors();
@@ -88,11 +90,13 @@ namespace CinemaApplicationProject.Model.Services
         #region Opinions
         public List<Opinions> GetAllOpinions();
 
-        public List<Opinions> GetAllOpinionsByMovie(String name = null);
+        public List<Opinions> GetAllOpinionsByMovie(int id);
 
         public List<Opinions> GetAllOpinionsByUser(String username = null);
 
         public Dictionary<Movies, float> GetAvarageRatingOfMovies();
+
+        public Task<Boolean> SaveOpinionAsync(OpinionsDTO rfg);
 
         #endregion
 
@@ -119,6 +123,10 @@ namespace CinemaApplicationProject.Model.Services
         public List<Rents> GetAllRentsByGuestId(int id);
 
         public List<Rents> GetAllRentsByShowId(int id);
+
+        public Boolean IfReservedPlace(int showid, int x, int y);
+
+        public Task<Boolean> SaveRentsAsync(RentFromGuestDTO rfg);
 
         #endregion
 
@@ -165,6 +173,12 @@ namespace CinemaApplicationProject.Model.Services
         #region Categories
 
         public List<Categories> GetCategories();
+
+        #endregion
+
+        #region Gues
+
+        public Guests GetGuestByUserName(String username);
 
         #endregion
     }

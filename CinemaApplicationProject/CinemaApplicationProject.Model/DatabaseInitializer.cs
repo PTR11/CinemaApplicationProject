@@ -268,12 +268,41 @@ namespace CinemaApplicationProject.Model
 
 			_context.Shows.AddRange(shows);
 
+			List<Tickets> tickets = new List<Tickets>
+			{
+				new Tickets
+				{
+					Price = 1200,
+					Type = "normal"
+				},
+				new Tickets
+				{
+					Price = 900,
+					Type = "student"
+				},
+				new Tickets
+				{
+					Price = 700,
+					Type = "retired"
+				},
+			};
+
+			_context.AddRange(tickets);
+
+			var guest = new Guests
+			{
+				UserName = "ptr1",
+				Name = "Sanyi",
+				Email = "s.p@asd.com",
+				Address = "anyadban",
+				CreditCardNumber = "123asd321"
+			};
 			
 
 			var adminUser = new Employees
 			{
 				UserName = "admin",
-				Name = "Barnák Péter",
+				Name = "Péter",
 				Email = "barnak.peter1@gmail.com",
 				Address = "faszomban"
 			};
@@ -281,7 +310,7 @@ namespace CinemaApplicationProject.Model
 			var adminUser2 = new Guests
 			{
 				UserName = "admin2",
-				Name = "Barnák Péter2",
+				Name = "Barn",
 				Email = "barnak.peter12@gmail.com",
 				Address = "faszomban",
 				CreditCardNumber = "KurvaAnyádat"
@@ -290,7 +319,8 @@ namespace CinemaApplicationProject.Model
 			var adminRole = new StatsAndPays("administrator");
             _ = _userManager.CreateAsync(adminUser, adminPassword).Result;
             _ = _userManager.CreateAsync(adminUser2, adminPassword).Result;
-            _ = _roleManager.CreateAsync(adminRole).Result;
+			_ = _userManager.CreateAsync(guest, adminPassword).Result;
+			_ = _roleManager.CreateAsync(adminRole).Result;
             _ = _userManager.AddToRoleAsync(adminUser, adminRole.Name).Result;
         }
 	}

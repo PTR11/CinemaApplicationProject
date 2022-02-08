@@ -4,32 +4,38 @@
 
             <div class="form-group">
                 <label>User Name</label>
-                <input type="text" v-model="user.UserName" class="form-control form-control-lg"/>
+                <b-form-input type="text" v-model="user.UserName" class="form-control form-control-lg"/>
+                <InputError :errors="Errors.UserName"/>
             </div>
 
             <div class="form-group">
               <label>Full Name</label>
               <input type="text" v-model="user.Name" class="form-control form-control-lg"/>
+              <InputError :errors="Errors.Name"/>
             </div>
 
             <div class="form-group">
                 <label>Email address</label>
                 <input type="email" v-model="user.Email" class="form-control form-control-lg" />
+                <InputError :errors="Errors.Email"/>
             </div>
 
             <div class="form-group">
-              <label>Address</label>
-              <input type="text" v-model="user.Address" class="form-control form-control-lg" />
+                <label>Address</label>
+                <input type="text" v-model="user.Address" class="form-control form-control-lg" />
+                <InputError :errors="Errors.Address"/>
             </div>
 
             <div class="form-group">
                 <label>Password</label>
                 <input type="password" v-model="user.Password" class="form-control form-control-lg" />
+                <InputError :errors="Errors.Password"/>
             </div>
 
             <div class="form-group">
               <label>Credit card number</label>
               <input type="text" v-model="user.CreditCardNumber" class="form-control form-control-lg" />
+              <InputError :errors="Errors.CreditCardNumber"/>
             </div>
 
             <button @click="signupUser" class="btn btn-dark btn-lg btn-block">Sign Up</button>
@@ -43,10 +49,23 @@
 
 <script>
     import axios from "axios";
-
+    import InputErrorComponent from "@/components/InputErrorComponent";
+    import headers from "@/headers";
     export default {
+        name:"SignupComponent",
+        components:{
+          InputError: InputErrorComponent
+        },
         data() {
             return {
+              Errors:{
+                UserName: [],
+                Name: [],
+                Email: [],
+                Address: [],
+                Password: [],
+                CreditCardNumber: []
+              },
               user:{
                 UserName: "",
                 Name: "",
@@ -57,34 +76,51 @@
               }
             }
         },
-      methods:{
-          signupUser(){
-            const headers = {
-              'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*',
-              'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-              'Access-Control-Allow-Methods': "GET, POST, PUT, DELETE, OPTIONS",
-              'Access-Control-Allow-Credentials': true
-            };
-            axios.interceptors.response.use((response) => {
-              console.log(response);
-              if(response.data.statusCode === 302){
-                if(response.data.headers[0].value[0]){
-                  alert(response.data.headers[1].value[0]);
-                  window.location.href = response.data.headers[0].value[0];
-                }
-              }else if(response.data.statusCode === 400){
-                alert(response.data.headers[0].value[0]);
-                window.location.reload(true);
+        methods:{
+            signupUser(){
+              this.clearErrors();
+              axios
+                  .post("http://localhost:7384/api/Users/register/", this.user, {headers: headers})
+                  .then((result) => {
+                    console.log(result)
+                    this.programs = result.data;
+                  }).catch(err => {
+                    this.AddErrors(err.response.data.errors)
+                  });
+          },
+          AddErrors(errors){
+            Object.keys(errors).forEach((errorName) => {
+              switch (errorName){
+                case "UserName":
+                  errors.UserName.forEach((error) => {this.Errors.UserName.push(error)});
+                  break;
+                case "Name":
+                  errors.Name.forEach((error) => {this.Errors.Name.push(error)});
+                  break;
+                case "Email":
+                  errors.Email.forEach((error) => {this.Errors.Email.push(error)});
+                  break;
+                case "Address":
+                  errors.Address.forEach((error) => {this.Errors.Address.push(error)});
+                  break;
+                case "Password":
+                  errors.Password.forEach((error) => {this.Errors.Password.push(error)});
+                  break;
+                case "CreditCardNumber":
+                  errors.CreditCardNumber.forEach((error) => {this.Errors.CreditCardNumber.push(error)});
+                  break;
               }
             });
-
-            axios
-                .post("http://localhost:7384/api/Users/register/", this.user, {headers: headers})
-                .then((result) => {
-                  console.log(result)
-                  this.programs = result.data;
-                });
+          },
+          clearErrors(){
+              this.Errors = {
+                UserName: [],
+                Name: [],
+                Email: [],
+                Address: [],
+                Password: [],
+                CreditCardNumber: []
+            }
           }
       }
     }

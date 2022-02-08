@@ -8,7 +8,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using CinemaApplicationProject.Model.Services;
-using System.Net;
 
 namespace CinemaApplicationProject.API.Controllers
 {
@@ -19,26 +18,46 @@ namespace CinemaApplicationProject.API.Controllers
 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IDatabaseService _service;
 
-        public UsersController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public UsersController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IDatabaseService service)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _service = service;
         }
 
 
         [EnableCors("_myAllowSpecificOrigins")]
         [HttpPost("login")]
-        public async Task<HttpResponseMessage> Login(GuestsDTO login)
-            //A login ne redirecteljen, old meg úgy,hogy modelstateel működjön
+        public async Task<IActionResult> Login(LoginGuestDTO login)
         {
-            var result = await _signInManager.PasswordSignInAsync(login.UserName, login.Password, false, false);
-            if (result.Succeeded)
+            //A login ne redirecteljen, old meg úgy,hogy modelstateel működjön
+            if (ModelState.IsValid)
             {
+                var result = await _signInManager.PasswordSignInAsync(login.UserName, login.Password, false, false);
+                
+                if (result.Succeeded)
+                {
+                    var user = _service.GetGuestByUserName(login.UserName);
+                    var tmp = (GuestsDTO)user;
+                    tmp.RedirectUrl = "http://localhost:8080";
+
+                    Response.Cookies.Append("userId", user.Id.ToString(), new CookieOptions()
+                    {
+                        HttpOnly = false,
+                        //Expires = HttpContext.Current.Session.Timout,
+                        SameSite = SameSiteMode.Lax
+                    }) ;
+                    
+                    return Ok(tmp);
+                    //return RedirectService.RedirectMethod("Successfully logged in", HttpStatusCode.Redirect, new Uri("http://localhost:8080/"));
+                }
                 ModelState.AddModelError("", "Sikertelen bejelentkezés");
-                return RedirectService.RedirectMethod("Successfully logged in", HttpStatusCode.Redirect, new Uri("http://localhost:8080/"));
             }
-            return RedirectService.RedirectMethod("Something went wrong", HttpStatusCode.BadRequest);
+            return BadRequest(ModelState);
+
+            //return RedirectService.RedirectMethod("Something went wrong", HttpStatusCode.BadRequest);
 
 
         }
@@ -48,26 +67,25 @@ namespace CinemaApplicationProject.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(GuestsDTO newUser)
         {
-            var user = new Guests { UserName = newUser.UserName,
-                Name = newUser.Name,
-                Email = newUser.Email,
-                Address = newUser.Address,
-                CreditCardNumber = newUser.CreditCardNumber
-            };
-            var result = await _userManager.CreateAsync(user, newUser.Password);
-            if (result.Succeeded)
+            if (ModelState.IsValid)
             {
-                return Ok("request is incorrect");
-                Ok("Str");
-                //return RedirectService.RedirectMethod("Successfully created", HttpStatusCode.Redirect, new Uri("http://localhost:8080/"));
+                var user = new Guests
+                {
+                    UserName = newUser.UserName,
+                    Name = newUser.Name,
+                    Email = newUser.Email,
+                    Address = newUser.Address,
+                    CreditCardNumber = newUser.CreditCardNumber
+                };
+
+                var result = await _userManager.CreateAsync(user, newUser.Password);
+                if (result.Succeeded)
+                {
+                    return Ok(new Uri("http://localhost:8080/"));
+                }
+                ModelState.AddModelError("", "Sikertelen regisztráció");
             }
-            if (!ModelState.IsValid)
-            {
-                int A = 1;
-                String c = A.ToString();
-            }
-            return BadRequest();
-            //return RedirectService.RedirectMethod("Not able to create the requested user", HttpStatusCode.BadRequest);
+            return BadRequest(ModelState);
         }
     }
 }

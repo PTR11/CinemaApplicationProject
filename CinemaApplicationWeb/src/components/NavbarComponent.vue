@@ -14,13 +14,17 @@
 
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto" align="center">
-          <b-nav-form>
-            <b-form-input size="sm" class="mr-sm-2" placeholder="Search"></b-form-input>
-            <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
-          </b-nav-form>
 
 
-          <b-avatar variant="light" v-if="userLoggedIn"></b-avatar>
+          <b-nav-item-dropdown right v-if="user">
+            <!-- Using 'button-content' slot -->
+            <template #button-content>
+              <b-avatar variant="light" class="mr-2" ></b-avatar>
+              <span>{{user.userName}}</span>
+            </template>
+            <b-dropdown-item to="/login">Rents</b-dropdown-item>
+            <b-dropdown-item @click="clickItem">Log out</b-dropdown-item>
+          </b-nav-item-dropdown>
           <b-nav-item-dropdown right v-else>
             <!-- Using 'button-content' slot -->
             <template #button-content>
@@ -36,14 +40,25 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: "NavbarComponent",
   data: () => ({
     active: "",
   }),
+  computed:
+      mapState({
+        user: (state) => state.user,
+      }),
   created() {
     this.active = this.$route.name.toLowerCase();
   },
+  methods:{
+    clickItem(){
+      alert("Log out");
+    }
+  }
 }
 </script>
 

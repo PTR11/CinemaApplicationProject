@@ -23,7 +23,7 @@ const routes = [
     component: Program
   },
   {
-    path: '/addOpinion',
+    path: '/addOpinion/:id',
     name: 'AddOpinion',
     component: AddOpinion,
   },

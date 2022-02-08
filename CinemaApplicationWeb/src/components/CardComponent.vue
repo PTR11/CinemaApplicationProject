@@ -22,12 +22,13 @@
         <v-card-text>
           <div class="vertical-scroll">
             <v-chip-group
-                v-model="selection"
                 active-class="orange accent-4 white--text"
                 column
             >
               <router-link :to="'reserve/'+1" class="text-decoration-none">
-              <v-chip v-for="ti in element.shows" :key="ti">{{ timeChange(ti.date) }}</v-chip>
+              <v-chip v-for="ti in element.shows" :key="ti">
+                {{ timeChange(ti.date) }}
+              </v-chip>
               </router-link>
             </v-chip-group>
           </div>

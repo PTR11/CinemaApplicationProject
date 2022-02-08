@@ -37,6 +37,13 @@ namespace CinemaApplicationProject.API.Controllers
             return _service.GetShowsByDate(date).Select(m => (MoviesDTO)m).ToList();
         }
 
+        [EnableCors("_myAllowSpecificOrigins")]
+        [HttpGet("show/{id}")]
+        public ActionResult<ShowsDTO> GetShowById(int id)
+        {
+            return (ShowsDTO)_service.GetShowById(id);
+        }
+
         // GET: api/Shows
         [EnableCors("_myAllowSpecificOrigins")]
         [HttpPost("availableDates")]

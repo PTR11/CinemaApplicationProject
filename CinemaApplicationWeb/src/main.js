@@ -8,12 +8,12 @@ import vuetify from './plugins/vuetify'
 import Vuetify from 'vuetify/lib/framework';
 import 'bootstrap/dist/css/bootstrap.css';
 import store from './store'
+import VueCookies from 'vue-cookies'
 Vue.use(Vuetify);
-
+Vue.use(VueCookies);
 Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)
 Vue.config.productionTip = false
-
 
 new Vue({
   router,

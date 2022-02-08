@@ -25,15 +25,24 @@
       Leírás: <br>
       {{movie.description}}
     </b-card-text>
+
+    <router-link :to="'/addOpinion/'+movie.id" tag="button" class="btn btn-dark mt-5 mb-2">Add Opinion</router-link>
+    <Opinions :opinions="opinions"/>
   </b-card>
 
 </template>
 <script>
+import OpinionsComponent from "@/components/OpinionsComponent";
 import axios from "axios";
 export default {
+  name: 'MovieDetails',
+  components:{
+    Opinions:  OpinionsComponent
+  },
   data() {
     return {
       movie: {},
+      opinions:[],
     };
   },
   created: function () {
@@ -47,8 +56,15 @@ export default {
             this.movie = result.data;
           })
           .catch();
-
     },
+    fetchOpinions(){
+      axios
+          .get("http://localhost:7384/api/Opinions/" + this.$route.params.id)
+          .then((result) => {
+            this.opinions.push(result.data);
+          })
+          .catch();
+    }
   },
 };
 </script>

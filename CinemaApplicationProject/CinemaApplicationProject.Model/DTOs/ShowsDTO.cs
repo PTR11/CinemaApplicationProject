@@ -15,7 +15,9 @@ namespace CinemaApplicationProject.Model.DTOs
 
         public int MovieId { get; set; }
 
-        public MoviesDTO Movies { get; set; } 
+        public MoviesDTO Movie { get; set; } 
+
+        public RoomDTO Room { get; set; }
         
         public DateTime Date { get; set; }
 
@@ -24,7 +26,14 @@ namespace CinemaApplicationProject.Model.DTOs
             Id = m.Id,
             RoomId = m.RoomId,
             MovieId = m.MovieId,
-            Date = m.Date
+            Date = m.Date,
+            Movie = new MoviesDTO
+            {
+                Id = m.Movie.Id,
+                Title = m.Movie.Title,
+                Length = m.Movie.Length
+            },
+            Room = m.Room != null ? (RoomDTO)m.Room : null,
         };
     }
 }
