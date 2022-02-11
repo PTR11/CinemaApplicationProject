@@ -1,52 +1,60 @@
 <template>
+  <div>
+    <ErrorCard :error-message="error" class="col-sm-6 mx-auto" v-if="error.length > 0"/>
+    <b-card img-src="https://placekitten.com/1000/300" img-alt="Card image" img-top class="col-sm-6 p-2 mx-auto m-1 bg-warning text-dark border border-dark">
+      <b-card-title style="font-size: 32px">
+        {{movie.title}}
+        <br>
+        ({{movie.length}} perc)
+      </b-card-title>
+      <b-card-sub-title>
 
-  <b-card img-src="https://placekitten.com/1000/300" img-alt="Card image" img-top class="col-sm-6 p-2 mx-auto m-1 bg-warning text-dark">
-    <b-card-title style="font-size: 40px">
-      {{movie.title}} ({{movie.length}} perc)
-    </b-card-title>
-    <b-card-sub-title>
+      </b-card-sub-title>
+      <br>
+      <b-card-text style="font-size: 20px">
+        Rendező: {{movie.director}}
+      </b-card-text>
+      <br>
+      <b-card-text style="font-size: 20px">
+        Szereplők:
+        <ul>
+          <li v-for="actor in movie.actors" :key="actor.name">
+            {{actor.name}}
+          </li>
+        </ul>
+      </b-card-text>
+      <br>
+      <b-card-text style="font-size: 20px">
+        Leírás: <br>
+        {{movie.description}}
+      </b-card-text>
 
-    </b-card-sub-title>
-    <br>
-    <b-card-text style="font-size: 20px">
-      Rendező: {{movie.director}}
-    </b-card-text>
-    <br>
-    <b-card-text style="font-size: 20px">
-      Szereplők:
-      <ul>
-        <li v-for="actor in movie.actors" :key="actor.name">
-          {{actor.name}}
-        </li>
-      </ul>
-    </b-card-text>
-    <br>
-    <b-card-text style="font-size: 20px">
-      Leírás: <br>
-      {{movie.description}}
-    </b-card-text>
-
-    <router-link :to="'/addOpinion/'+movie.id" tag="button" class="btn btn-dark mt-5 mb-2">Add Opinion</router-link>
-    <Opinions :opinions="opinions"/>
-  </b-card>
+      <router-link :to="'/addOpinion/'+movie.id"  tag="button" class="btn btn-dark mt-5 mb-2">Add Opinion</router-link>
+      <Opinions :opinions="opinions[0]"/>
+    </b-card>
+  </div>
 
 </template>
 <script>
 import OpinionsComponent from "@/components/OpinionsComponent";
 import axios from "axios";
+import ErrorcardComponent from "@/components/ErrorcardComponent";
 export default {
   name: 'MovieDetails',
   components:{
-    Opinions:  OpinionsComponent
+    Opinions:  OpinionsComponent,
+    ErrorCard: ErrorcardComponent
   },
   data() {
     return {
+      error: "",
       movie: {},
       opinions:[],
     };
   },
   created: function () {
     this.fetchMovies();
+    this.fetchOpinions()
   },
   methods: {
     fetchMovies() {
@@ -55,7 +63,10 @@ export default {
           .then((result) => {
             this.movie = result.data;
           })
-          .catch();
+          .catch((err) => {
+            console.log(err);
+            this.error = "Something went wrong with fetching movie details";
+          });
     },
     fetchOpinions(){
       axios
@@ -63,7 +74,10 @@ export default {
           .then((result) => {
             this.opinions.push(result.data);
           })
-          .catch();
+          .catch((err) => {
+            console.log(err);
+            this.error = "Something went wrong with fetching movie details";
+          });
     }
   },
 };

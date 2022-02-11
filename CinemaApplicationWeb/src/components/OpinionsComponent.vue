@@ -2,9 +2,9 @@
   <div class="overflow-auto" v-if="opinions.length > 0" >
       <div v-for="item in itemsForList" :key="item.id" class="card mb-2 border border-dark">
         <div class="card-body"  >
-          <h5 class="card-title">{{item.first_name}}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          <h5 class="card-title">User: {{ item.anonymus ? "Anonymus" : item.guest.userName }}</h5>
+          <h6 class="card-subtitle mb-2">Rating: {{item.ranking}}</h6>
+          <p class="card-text">Comment: {{item.description}}</p>
 
         </div>
     </div>
@@ -28,20 +28,7 @@ export default {
   data() {
     return {
       perPage: 3,
-      currentPage: 1,
-      items: [
-        {id: 1, first_name: 'Fred', last_name: 'Flintstone'},
-        {id: 2, first_name: 'Wilma', last_name: 'Flintstone'},
-        {id: 3, first_name: 'Barney', last_name: 'Rubble'},
-        {id: 4, first_name: 'Betty', last_name: 'Rubble'},
-        {id: 5, first_name: 'Pebbles', last_name: 'Flintstone'},
-        {id: 6, first_name: 'Bamm Bamm', last_name: 'Rubble'},
-        {id: 7, first_name: 'The Great', last_name: 'Gazzoo'},
-        {id: 8, first_name: 'Rockhead', last_name: 'Slate'},
-        {id: 9, first_name: 'Pearl', last_name: 'Slaghoople'},{id: 11, first_name: 'The Great', last_name: 'Gazzoo'},
-        {id: 12, first_name: 'Rockhead', last_name: 'Slate'},
-        {id: 13, first_name: 'Pearl', last_name: 'Slaghoople'}
-      ]
+      currentPage: 1
     }
   },
   computed: {

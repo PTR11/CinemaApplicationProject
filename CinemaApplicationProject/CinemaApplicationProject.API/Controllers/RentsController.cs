@@ -44,8 +44,7 @@ namespace CinemaApplicationProject.API.Controllers
 
         //POST: api/Rents
         //To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[EnableCors("_myAllowSpecificOrigins")]
-        [Authorize]
+        [EnableCors("_myAllowSpecificOrigins")]
         [HttpPost]
         public async Task<ActionResult<Rents>> PostRents(RentFromGuestDTO rfg)
         {

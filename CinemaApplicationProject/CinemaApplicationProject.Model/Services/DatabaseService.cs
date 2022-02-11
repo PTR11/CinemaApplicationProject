@@ -121,7 +121,7 @@ namespace CinemaApplicationProject.Model.Services
         #region Opinions
         public List<Opinions> GetAllOpinions() => context.Opinions.ToList();
 
-        public List<Opinions> GetAllOpinionsByMovie(int id) => context.Opinions.Where(m => m.Movie.Id == id).ToList();
+        public List<Opinions> GetAllOpinionsByMovie(int id) => context.Opinions.Where(m => m.Movie.Id == id).Include(m => m.Guest).ToList();
 
         public List<Opinions> GetAllOpinionsByUser(String username = null) => context.Opinions.Where(m => m.Guest.UserName.Equals(username ?? null)).ToList();
 

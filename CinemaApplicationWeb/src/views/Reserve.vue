@@ -107,7 +107,7 @@ export default {
           }
         }
         axios
-            .post("http://localhost:7384/api/Rents/", response)
+            .post("http://localhost:7384/api/Rents/", response, {withCredentials: true})
             .then((result) => {
               if(result.status === 302){
                 console.log("dadas")

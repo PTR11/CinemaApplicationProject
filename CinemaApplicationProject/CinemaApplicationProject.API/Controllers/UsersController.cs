@@ -53,7 +53,7 @@ namespace CinemaApplicationProject.API.Controllers
                     return Ok(tmp);
                     //return RedirectService.RedirectMethod("Successfully logged in", HttpStatusCode.Redirect, new Uri("http://localhost:8080/"));
                 }
-                ModelState.AddModelError("", "Sikertelen bejelentkezés");
+                ModelState.AddModelError("loginError","Sikertelen bejelentkezés");
             }
             return BadRequest(ModelState);
 

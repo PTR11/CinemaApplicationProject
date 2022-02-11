@@ -30,6 +30,7 @@ namespace CinemaApplicationProject.API.Controllers
         [HttpGet("{id}")]
         public ActionResult<IEnumerable<Opinions>> GetOpinions(int id)
         {
+
             return _service.GetAllOpinionsByMovie(id);
         }
 
@@ -58,12 +59,6 @@ namespace CinemaApplicationProject.API.Controllers
                     ModelState.AddModelError("", "Something went wrong with the process");
                     return BadRequest(ModelState);
                 }
-                //Response.Cookies.Append("userId", user.Id.ToString(), new CookieOptions()
-                //{
-                //    HttpOnly = false,
-                //    Expires = DateTime.Now.AddMinutes(15),
-                //    SameSite = SameSiteMode.Lax
-                //});
                 return Ok("Successfull reservation");
             }
         }

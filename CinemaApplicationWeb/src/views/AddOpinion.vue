@@ -1,16 +1,11 @@
 <template>
-  <div class="card col-sm-5 m-2 mx-auto m-2 p-3 border-1 border-dark bg-warning text-dark" >
-    <div v-if="user">
+  <div v-if="user">
+    <div class="card col-sm-5 m-2 mx-auto m-2 p-3 border-1 border-dark bg-warning text-dark" >
+
         <h3 class="">Opinion</h3>
 
-        <div class="form-group">
-          <label>User Name</label>
-          <input type="text" v-model="user.UserName" class="form-control form-control-lg"/>
-        </div>
-
-
         <div class="form-check">
-          <input type="checkbox" class="form-check-input" id="exampleCheck1" @change="isAnonim">
+          <input type="checkbox" class="form-check-input" id="exampleCheck1" v-model="anonymus">
           <label class="form-check-label" for="exampleCheck1">Would you like to add anonymous comment? </label>
         </div>
         <br>
@@ -27,20 +22,24 @@
 
         <button @click="addOpinion()" class="btn btn-dark btn-lg btn-block">Rate</button>
       </div>
-      <div class="mx-auto justify-content-center text-danger" v-else>
-        <h3 >You need to login to add opinion</h3>
-      </div>
-    </div>
 
+    </div>
+    <div class="mx-auto col-sm-6" v-else>
+      <ErrorCard error-message="You need to login to add your opinion"/>
+    </div>
 
 </template>
 
 <script>
 import axios from "axios";
 import {mapState} from "vuex";
+import ErrorcardComponent from "@/components/ErrorcardComponent";
 
 export default {
   name:"OpinionAdder",
+  components:{
+    ErrorCard: ErrorcardComponent
+  },
   data() {
     return {
       rating: 0,
@@ -53,32 +52,22 @@ export default {
         user: (state) => state.user,
       }),
   methods: {
-    isAnonim(){
-      if(!this.anonymus){
-        this.user.UserName="Anonymus";
-        document.getElementById("userName").value = 'Anonymus';
-        document.getElementById("userName").disabled = true;
-        this.anonymus = !this.anonymus;
-      }else{
-        this.user.UserName="";
-        document.getElementById("userName").value = '';
-        document.getElementById("userName").disabled = false;
-        this.anonymus = !this.anonymus;
-      }
-    },
     addOpinion(){
       let response = {
         GuestId: this.user?.id,
         MovieId: this.$route.params.id,
         Anonymus: this.anonymus,
-        Description: this.description
+        Description: this.description,
+        Ranking: this.rating
       };
 
       axios
-          .post("http://localhost:7384/api/Opinions/", response)
+          .post("http://localhost:7384/api/Opinions/", response, {withCredentials: true})
           .then((result) => {
-            console.log(result);
-          });
+            if(result.status === 200){
+              this.$router.push({name: 'Movie', path:"/"+this.$route.params.id})
+            }
+          }).catch(() => {});
     }
   },
 };
