@@ -1,56 +1,84 @@
 <template>
+  <div>
+    <ErrorCard :error-message="error" class="col-sm-6 mx-auto" v-if="error.length > 0"/>
+    <b-card img-src="https://placekitten.com/1000/300" img-alt="Card image" img-top class="col-sm-6 p-2 mx-auto m-1 bg-warning text-dark border border-dark">
+      <b-card-title style="font-size: 32px">
+        {{movie.title}}
+        <br>
+        ({{movie.length}} perc)
+      </b-card-title>
+      <b-card-sub-title>
 
-  <b-card img-src="https://placekitten.com/1000/300" img-alt="Card image" img-top class="col-sm-6 p-2 mx-auto m-1 bg-warning text-light">
-    <b-card-title>
-      {{movie.title}} ({{movie.length}} perc)
-    </b-card-title>
-    <b-card-sub-title>
+      </b-card-sub-title>
+      <br>
+      <b-card-text style="font-size: 20px">
+        Rendező: {{movie.director}}
+      </b-card-text>
+      <br>
+      <b-card-text style="font-size: 20px">
+        Szereplők:
+        <ul>
+          <li v-for="actor in movie.actors" :key="actor.name">
+            {{actor.name}}
+          </li>
+        </ul>
+      </b-card-text>
+      <br>
+      <b-card-text style="font-size: 20px">
+        Leírás: <br>
+        {{movie.description}}
+      </b-card-text>
 
-    </b-card-sub-title>
-    <br>
-    <b-card-text>
-      Rendező: {{movie.director}}
-    </b-card-text>
-    <br>
-    <b-card-text>
-      Szereplők: {{movie.actors}}
-    </b-card-text>
-    <br>
-    <b-card-text>
-      Leírás: {{movie.description}}
-    </b-card-text>
-  </b-card>
+      <router-link :to="'/addOpinion/'+movie.id"  tag="button" class="btn btn-dark mt-5 mb-2">Add Opinion</router-link>
+      <Opinions :opinions="opinions[0]"/>
+    </b-card>
+  </div>
 
 </template>
 <script>
+import OpinionsComponent from "@/components/OpinionsComponent";
 import axios from "axios";
+import ErrorcardComponent from "@/components/ErrorcardComponent";
 export default {
+  name: 'MovieDetails',
+  components:{
+    Opinions:  OpinionsComponent,
+    ErrorCard: ErrorcardComponent
+  },
   data() {
     return {
-      id: 0,
-      movie: {
-        title: "asd",
-        length: "120",
-        description: "faszfaszfasz faszfaszfasz faszfaszfaszfaszfaszfasz faszfaszfaszfaszfaszfasz faszfaszfasz faszfaszfaszfaszfaszfasz faszfaszfaszfaszfaszfaszfaszfaszfasz",
-        director: "",
-      },
-      times: ["08:00", "09:30", "11:45", "19:30", "20:00", "22:05","08:00", "09:30", "11:45", "19:30", "20:00", "22:05"],
+      error: "",
+      movie: {},
+      opinions:[],
     };
   },
   created: function () {
     this.fetchMovies();
+    this.fetchOpinions()
   },
   methods: {
     fetchMovies() {
       axios
-          .get("http://127.0.0.1:3000/api/movies/" + this.$route.params.id)
+          .get("http://localhost:7384/api/Movies/" + this.$route.params.id)
           .then((result) => {
-            this.movie = result.data.movie;
-            console.log(this.movie);
+            this.movie = result.data;
           })
-          .catch();
-
+          .catch((err) => {
+            console.log(err);
+            this.error = "Something went wrong with fetching movie details";
+          });
     },
+    fetchOpinions(){
+      axios
+          .get("http://localhost:7384/api/Opinions/" + this.$route.params.id)
+          .then((result) => {
+            this.opinions.push(result.data);
+          })
+          .catch((err) => {
+            console.log(err);
+            this.error = "Something went wrong with fetching movie details";
+          });
+    }
   },
 };
 </script>

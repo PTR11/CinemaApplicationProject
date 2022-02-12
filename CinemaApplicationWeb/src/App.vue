@@ -13,6 +13,9 @@
 import SideMenu from "./components/SideMenu.vue";
 import Slider from "./components/Slider.vue";
 import NavbarComponent from "./components/NavbarComponent";
+
+
+
 export default {
   name: "App",
   components: {

@@ -19,6 +19,7 @@ namespace CinemaApplicationProject.Model
 			builder.Entity<Employees>().ToTable("Employees");
 			builder.Entity<Guests>().ToTable("Guests");
 			builder.Entity<StatsAndPays>().ToTable("Stats");
+			builder.Entity<Categories>().HasIndex(u => u.Category).IsUnique();
 		}
 
 		public virtual DbSet<Actors> Actors { get; set; }
@@ -38,6 +39,8 @@ namespace CinemaApplicationProject.Model
 		public virtual DbSet<MoviesStatistics> MoviesStatistics { get; set; }
 		public virtual DbSet<Tickets> Tickets { get; set; }
 		public virtual DbSet<StatsAndPays> StatsAndPays { get; set; }
+
+		public virtual DbSet<Categories> Categories { get; set; }
 
 
 	}

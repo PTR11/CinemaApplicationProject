@@ -24,9 +24,14 @@ namespace CinemaApplicationProject.Model.Database
         public Movies()
         {
             Actors = new HashSet<Actors>();
+            Shows = new HashSet<Shows>();
+            Categories = new HashSet<Categories>();
         }
 
         public ICollection<Actors> Actors { get; set; }
 
+        public ICollection<Shows> Shows { get; set; }
+
+        public ICollection<Categories> Categories { get; set; }
     }
 }

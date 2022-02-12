@@ -23,7 +23,7 @@ const routes = [
     component: Program
   },
   {
-    path: '/addOpinion',
+    path: '/addOpinion/:id',
     name: 'AddOpinion',
     component: AddOpinion,
   },
@@ -48,7 +48,7 @@ const routes = [
     component: SignupComponent
   },
   {
-    path: 'login',  
+    path: '/login',
     name: 'Login',
     component: LoginComponent,
   }

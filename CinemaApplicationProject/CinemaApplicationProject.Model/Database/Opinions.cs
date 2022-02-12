@@ -18,6 +18,8 @@ namespace CinemaApplicationProject.Model.Database
 
         public int GuestId { get; set; }
 
+        public bool Anonymus { get; set; }
+
         [DataType(DataType.MultilineText)]
         public String Description { get; set; }
 

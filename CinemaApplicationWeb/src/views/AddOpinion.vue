@@ -1,100 +1,74 @@
 <template>
-  <div class="container-fluid col-sm-6 bg-primary p-5">
+  <div v-if="user">
+    <div class="card col-sm-5 m-2 mx-auto m-2 p-3 border-1 border-dark bg-warning text-dark" >
 
-    <div class="bg-light">
-      <b-form @submit="onSubmit" @reset="onReset" v-if="show" style="color: black">
-        <b-form-group
-          id="input-group-1"
-          label="Email address:"
-          label-for="input-1"
-          description="We'll never share your email with anyone else."
-        >
-          <b-form-input
-            id="input-1"
-            v-model="form.email"
-            type="email"
-            placeholder="Enter email"
-            class="input-element"
-            required
-          ></b-form-input>
-        </b-form-group>
+        <h3 class="">Opinion</h3>
 
-        <b-form-group id="input-group-2" label="Your Name:" label-for="input-2">
-          <b-form-input
-            id="input-2"
-            v-model="form.name"
-            placeholder="Enter name"
-             class="input-element"
-            required
-          ></b-form-input>
-        </b-form-group>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="exampleCheck1" v-model="anonymus">
+          <label class="form-check-label" for="exampleCheck1">Would you like to add anonymous comment? </label>
+        </div>
+        <br>
 
-        <b-form-group id="input-group-3" label="Food:" label-for="input-3">
-          <b-form-select
-            id="input-3"
-            v-model="form.food"
-            :options="foods"
-             class="input-element"
-            required
-          ></b-form-select>
-        </b-form-group>
+        <div class="form-group">
+          <label>Comment message</label>
+          <input type="email" v-model="description" class="form-control form-control-lg" />
+        </div>
 
-        <b-form-group id="input-group-4" v-slot="{ ariaDescribedby }">
-          <b-form-checkbox-group
-            v-model="form.checked"
-            id="checkboxes-4"
-             class="input-element"
-            :aria-describedby="ariaDescribedby"
-          >
-            <b-form-checkbox value="me">Check me out</b-form-checkbox>
-            <b-form-checkbox value="that">Check that out</b-form-checkbox>
-          </b-form-checkbox-group>
-        </b-form-group>
-        <b-button type="submit" variant="primary">Submit</b-button>
-        <b-button type="reset" variant="danger">Reset</b-button>
-      </b-form>
+        <div class="form-group">
+          <label>Rating</label>
+          <b-form-rating variant="warning" class="border border-dark form-control form-control-lg" v-model="rating"></b-form-rating>
+        </div>
+
+        <button @click="addOpinion()" class="btn btn-dark btn-lg btn-block">Rate</button>
+      </div>
+
     </div>
-  </div>
+    <div class="mx-auto col-sm-6" v-else>
+      <ErrorCard error-message="You need to login to add your opinion"/>
+    </div>
+
 </template>
 
 <script>
+import axios from "axios";
+import {mapState} from "vuex";
+import ErrorcardComponent from "@/components/ErrorcardComponent";
+
 export default {
+  name:"OpinionAdder",
+  components:{
+    ErrorCard: ErrorcardComponent
+  },
   data() {
     return {
-      form: {
-        email: "",
-        name: "",
-        food: null,
-        checked: [],
-      },
-      foods: [
-        { text: "Select One", value: null },
-        "Carrots",
-        "Beans",
-        "Tomatoes",
-        "Corn",
-      ],
-      show: true,
+      rating: 0,
+      description: "",
+      anonymus: false
     };
   },
+  computed:
+      mapState({
+        user: (state) => state.user,
+      }),
   methods: {
-    onSubmit(event) {
-      event.preventDefault();
-      alert(JSON.stringify(this.form));
-    },
-    onReset(event) {
-      event.preventDefault();
-      // Reset our form values
-      this.form.email = "";
-      this.form.name = "";
-      this.form.food = null;
-      this.form.checked = [];
-      // Trick to reset/clear native browser form validation state
-      this.show = false;
-      this.$nextTick(() => {
-        this.show = true;
-      });
-    },
+    addOpinion(){
+      let response = {
+        GuestId: this.user?.id,
+        MovieId: this.$route.params.id,
+        Anonymus: this.anonymus,
+        Description: this.description,
+        Ranking: this.rating
+      };
+
+      axios
+          .post("http://localhost:7384/api/Opinions/", response, {withCredentials: true})
+          .then((result) => {
+            if(result.status === 200){
+              this.$router.push({name: 'Movie', path:"/"+this.$route.params.id})
+            }
+          }).catch(() => {});
+    }
   },
 };
 </script>

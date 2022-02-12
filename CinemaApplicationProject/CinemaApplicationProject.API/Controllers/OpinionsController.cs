@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CinemaApplicationProject.Model;
 using CinemaApplicationProject.Model.Database;
+using CinemaApplicationProject.Model.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using CinemaApplicationProject.Model.DTOs;
 
 namespace CinemaApplicationProject.API.Controllers
 {
@@ -14,95 +18,126 @@ namespace CinemaApplicationProject.API.Controllers
     [ApiController]
     public class OpinionsController : ControllerBase
     {
-        private readonly DatabaseContext _context;
-
-        public OpinionsController(DatabaseContext context)
+        private readonly IDatabaseService _service;
+        private readonly UserManager<ApplicationUser> _userManager;
+        public OpinionsController(IDatabaseService service, UserManager<ApplicationUser> userManager)
         {
-            _context = context;
+           _service = service;
+            _userManager = userManager;
         }
 
         // GET: api/Opinions
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Opinions>>> GetOpinions()
-        {
-            return await _context.Opinions.ToListAsync();
-        }
-
-        // GET: api/Opinions/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Opinions>> GetOpinions(int id)
+        public ActionResult<IEnumerable<Opinions>> GetOpinions(int id)
         {
-            var opinions = await _context.Opinions.FindAsync(id);
 
-            if (opinions == null)
-            {
-                return NotFound();
-            }
-
-            return opinions;
+            return _service.GetAllOpinionsByMovie(id);
         }
 
-        // PUT: api/Opinions/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutOpinions(int id, Opinions opinions)
+        [HttpPost]
+        public async Task<ActionResult<Opinions>> PostOpinions(OpinionsDTO rfg)
         {
-            if (id != opinions.Id)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest("Something went wrong");
             }
-
-            _context.Entry(opinions).State = EntityState.Modified;
-
-            try
+            else
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OpinionsExists(id))
+                ApplicationUser user;
+                if (User.Identity.IsAuthenticated)
                 {
-                    return NotFound();
+                    user = await _userManager.FindByNameAsync(User.Identity.Name);
                 }
                 else
                 {
-                    throw;
+                    ModelState.AddModelError("", "You need to login the reserve places!");
+                    return BadRequest(ModelState);
                 }
+                
+                if (!await _service.SaveOpinionAsync(rfg))
+                {
+                    ModelState.AddModelError("", "Something went wrong with the process");
+                    return BadRequest(ModelState);
+                }
+                return Ok("Successfull reservation");
             }
-
-            return NoContent();
         }
 
-        // POST: api/Opinions
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Opinions>> PostOpinions(Opinions opinions)
-        {
-            _context.Opinions.Add(opinions);
-            await _context.SaveChangesAsync();
+        //// GET: api/Opinions/5
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<Opinions>> GetOpinions(int id)
+        //{
+        //    var opinions = await _context.Opinions.FindAsync(id);
 
-            return CreatedAtAction("GetOpinions", new { id = opinions.Id }, opinions);
-        }
+        //    if (opinions == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-        // DELETE: api/Opinions/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOpinions(int id)
-        {
-            var opinions = await _context.Opinions.FindAsync(id);
-            if (opinions == null)
-            {
-                return NotFound();
-            }
+        //    return opinions;
+        //}
 
-            _context.Opinions.Remove(opinions);
-            await _context.SaveChangesAsync();
+        //// PUT: api/Opinions/5
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutOpinions(int id, Opinions opinions)
+        //{
+        //    if (id != opinions.Id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            return NoContent();
-        }
+        //    _context.Entry(opinions).State = EntityState.Modified;
 
-        private bool OpinionsExists(int id)
-        {
-            return _context.Opinions.Any(e => e.Id == id);
-        }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!OpinionsExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
+
+        //    return NoContent();
+        //}
+
+        //// POST: api/Opinions
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPost]
+        //public async Task<ActionResult<Opinions>> PostOpinions(Opinions opinions)
+        //{
+        //    _context.Opinions.Add(opinions);
+        //    await _context.SaveChangesAsync();
+
+        //    return CreatedAtAction("GetOpinions", new { id = opinions.Id }, opinions);
+        //}
+
+        //// DELETE: api/Opinions/5
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteOpinions(int id)
+        //{
+        //    var opinions = await _context.Opinions.FindAsync(id);
+        //    if (opinions == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    _context.Opinions.Remove(opinions);
+        //    await _context.SaveChangesAsync();
+
+        //    return NoContent();
+        //}
+
+        //private bool OpinionsExists(int id)
+        //{
+        //    return _context.Opinions.Any(e => e.Id == id);
+        //}
     }
 }

@@ -1,134 +1,68 @@
 <template>
-  <Program/>
+
+  <div class="mx-auto col-sm-7">
+    <Datepicker/>
+    <Card
+        v-for="program in programs"
+        :key="program.title"
+        :element="program"
+        :site="'Main'"
+    />
+  </div>
 </template>
 
 <script>
-import ProgramListComponent from "../components/ProgramListComponent";
+import ShowCardComponent from "@/components/ShowCardComponent";
+import DatePickerComponent from "@/components/DatePickerComponent";
+import axios from "axios";
+import {mapState} from 'vuex';
+
+
 export default {
-  name: "Home",
+  name: "Program",
   components: {
-    Program: ProgramListComponent,
+    Datepicker: DatePickerComponent,
+    Card: ShowCardComponent,
   },
   data() {
     return {
-      selectedMovie: "",
-      movies: [
-
-      ],
-      opinions: [
-        {
-          author: "John",
-          result: 4,
-          title: "Star Wars",
-          description: "It was a very good movie, recommended for everyone",
-          date: "2021. 03. 15",
-        },
-        {
-          author: "Phil",
-          result: 1,
-          title: "Lego Movie",
-          description:
-              "I thought it's a document movie about the Lego company, but in the cinema, I should realise it's not.",
-          date: "2021. 06. 32",
-        },
-        {
-          author: "George",
-          result: 5,
-          title: "Star Wars",
-          description:
-              "It was awesome. I love Star Wars. May the force be with you",
-          date: "2021. 04. 03",
-        },
-        {
-          author: "John",
-          result: 4,
-          title: "Star Wars",
-          description: "It was a very good movie, recommended for everyone",
-          date: "2021. 03. 15",
-        },
-        {
-          author: "Phil",
-          result: 1,
-          title: "Lego Movie",
-          description:
-              "I thought it's a document movie about the Lego company, but in the cinema, I should realise it's not.",
-          date: "2021. 06. 32",
-        },
-        {
-          author: "George",
-          result: 5,
-          title: "Star Wars",
-          decription:
-              "It was awesome. I love Star Wars. May the force be with you",
-          date: "2021. 04. 03",
-        },
-        {
-          author: "John",
-          result: 4,
-          title: "Star Wars",
-          description: "It was a very good movie, recommended for everyone",
-          date: "2021. 03. 15",
-        },
-        {
-          author: "Phil",
-          result: 1,
-          title: "Lego Movie",
-          description:
-              "I thought it's a document movie about the Lego company, but in the cinema, I should realise it's not.",
-          date: "2021. 06. 32",
-        },
-        {
-          author: "George",
-          result: 5,
-          title: "Star Wars",
-          description:
-              "It was awesome. I love Star Wars. May the force be with you",
-          date: "2021. 04. 03",
-        },
-        {
-          author: "John",
-          result: 4,
-          title: "Star Wars",
-          decription: "It was a very good movie, recommended for everyone",
-          date: "2021. 03. 15",
-        },
-        {
-          author: "Phil",
-          result: 1,
-          title: "Lego Movie",
-          description:
-              "I thought it's a document movie about the Lego company, but in the cinema, I should realise it's not.",
-          date: "2021. 06. 32",
-        },
-        {
-          author: "George",
-          result: 5,
-          title: "Star Wars",
-          description:
-              "It was awesome. I love Star Wars. May the force be with you",
-          date: "2021. 04. 03",
-        },
-      ],
+      programs: []
     };
   },
-  created(){
-    this.fetchMovieNames();
+  computed:
+      mapState({
+        filterDate: (state) => state.filterDate
+      }),
+  watch:{
+    filterDate(){
+      console.log("Kurva anyádat")
+      this.fetchShows()
+    }
   },
-  computed: {
-    filterProductsByCategory: function() {
-      return this.opinions.filter(
-          (opinion) => opinion.movie === this.selectedMovie
-      );
-    },
+  created() {
+    this.fetchShows()
   },
   methods: {
-    fetchMovieNames: function() {
-      this.movies = this.opinions.map(e => e.title);
-    },
+    fetchShows() {
+      console.log("ITTEN HAL EL")
 
-    onlyUnique: function(value, index, self) {
-      return self.indexOf(value) === index;
-    },
-  },
+      axios
+          .get("http://localhost:7384/api/Shows/"+this.filterDate.toDateString())
+          .then((result) => {
+
+            //window.location.href = result.data.headers[0].value[0]
+            this.programs = result.data;
+          });
+    }
+  }
+
 };
 </script>
+<style>
+input,select {
+  padding: 0.2em;
+  font-size: 100%;
+  border: 1px solid black !important;
+  width: 100%;
+}
+</style>

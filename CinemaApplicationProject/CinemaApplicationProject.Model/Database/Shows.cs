@@ -16,14 +16,14 @@ namespace CinemaApplicationProject.Model.Database
 
         public int MovieId { get; set; }
 
+        public Boolean IsActiveShow { get; set; }
+
         [DataType(DataType.DateTime)]
         public DateTime Date { get; set; }
 
         public Rooms Room { get; set; }
 
         public Movies Movie { get; set; }
-
-
 
     }
 }

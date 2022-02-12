@@ -1,4 +1,5 @@
 ﻿using CinemaApplicationProject.Model.Database;
+using CinemaApplicationProject.Model.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace CinemaApplicationProject.Model.Services
 {
     public interface IDatabaseService
     {
+
         #region Actors
 
         public List<Actors> GetActors();
@@ -66,7 +68,11 @@ namespace CinemaApplicationProject.Model.Services
 
         public Movies GetMovieById(int id);
 
+        public List<Movies> GetTodaysMovies();
+
         public List<Movies> GetMoviesByNamePart(String name = null);
+
+        public List<Movies> GetMoviesByCategory(String category);
 
         #endregion
 
@@ -84,11 +90,13 @@ namespace CinemaApplicationProject.Model.Services
         #region Opinions
         public List<Opinions> GetAllOpinions();
 
-        public List<Opinions> GetAllOpinionsByMovie(String name = null);
+        public List<Opinions> GetAllOpinionsByMovie(int id);
 
         public List<Opinions> GetAllOpinionsByUser(String username = null);
 
         public Dictionary<Movies, float> GetAvarageRatingOfMovies();
+
+        public Task<Boolean> SaveOpinionAsync(OpinionsDTO rfg);
 
         #endregion
 
@@ -116,6 +124,10 @@ namespace CinemaApplicationProject.Model.Services
 
         public List<Rents> GetAllRentsByShowId(int id);
 
+        public Boolean IfReservedPlace(int showid, int x, int y);
+
+        public Task<Boolean> SaveRentsAsync(RentFromGuestDTO rfg);
+
         #endregion
 
         #region Rooms
@@ -129,6 +141,8 @@ namespace CinemaApplicationProject.Model.Services
         #region Shows
         public List<Shows> GetAllShows();
 
+        public List<Shows> GetTodaysShows();
+
         public Shows GetShowById(int id);
 
         public List<Shows> GetAllShowsOnNextWeek();
@@ -136,6 +150,10 @@ namespace CinemaApplicationProject.Model.Services
         public List<Shows> GetAllShowsByMovieId(int id);
 
         public List<Shows> GetAllShowsByRoomId(int id);
+
+        public List<DateTime> GetAvailableDates();
+
+        public List<Movies> GetShowsByDate(String date);
 
         #endregion
 
@@ -150,6 +168,18 @@ namespace CinemaApplicationProject.Model.Services
 
         #region Tickets
         public int GetPriceOfTicketById(int id);
+        #endregion
+
+        #region Categories
+
+        public List<Categories> GetCategories();
+
+        #endregion
+
+        #region Gues
+
+        public Guests GetGuestByUserName(String username);
+
         #endregion
     }
 }

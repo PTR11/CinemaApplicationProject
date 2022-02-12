@@ -1,8 +1,11 @@
 using CinemaApplicationProject.Model;
 using CinemaApplicationProject.Model.Database;
 using CinemaApplicationProject.Model.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +17,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.API
@@ -22,6 +26,7 @@ namespace CinemaApplicationProject.API
     {
 
         string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -40,24 +45,22 @@ namespace CinemaApplicationProject.API
                 .AddEntityFrameworkStores<DatabaseContext>()
                 .AddDefaultTokenProviders()
                 .AddRoles<StatsAndPays>();
-            
+
             services.AddCors(options =>
             {
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   builder =>
                                   {
-                                      builder.WithOrigins("http://localhost:8080");
+                                      builder.WithOrigins("http://localhost:8080", "http://localhost:7384");
+                                      builder.AllowAnyMethod();
+                                      builder.AllowAnyHeader();
+                                      builder.AllowAnyOrigin();
                                   });
             });
             services.Configure<IdentityOptions>(options =>
             {
                 // Jelszó komplexitására vonatkozó konfiguráció
-                options.Password.RequireDigit = true;
-                options.Password.RequiredLength = 8;
                 options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = true;
-                options.Password.RequireLowercase = false;
-                options.Password.RequiredUniqueChars = 3;
 
                 // Hibás bejelentkezés esetén az (ideiglenes) kizárásra vonatkozó konfiguráció
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
@@ -65,10 +68,11 @@ namespace CinemaApplicationProject.API
                 options.Lockout.AllowedForNewUsers = true;
 
                 // Felhasználókezelésre vonatkozó konfiguráció
-                options.User.RequireUniqueEmail = true;
             });
             services.AddTransient<IDatabaseService, DatabaseService>();
             services.AddControllers();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,13 +82,12 @@ namespace CinemaApplicationProject.API
             {
                 app.UseDeveloperExceptionPage();
             }
-            
 
             app.UseRouting();
 
-
             app.UseCors(MyAllowSpecificOrigins);
 
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
