@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.Model.DTOs
 {
-    public class GuestsDTO : MainDTO
+    public class GuestsDTO : RespondDTO
     {
-        public int Id { get; set; }
 
         [Required(ErrorMessage = "User Name is required")]
         public String UserName { get; set; }

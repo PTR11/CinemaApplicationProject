@@ -40,11 +40,7 @@
         axios
             .get("http://localhost:7384/api/Movies/today")
             .then((result) => {
-              console.log(result);
-              console.log("Darth Vader")
               this.movies = result.data;
-              console.log("Darth Vader")
-              console.log(result)
             });
       }
     }

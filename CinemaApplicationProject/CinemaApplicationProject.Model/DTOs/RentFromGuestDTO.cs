@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.Model.DTOs
 {
-    public class Place
+    public class Place : RespondDTO
     {
         [Required]
         public int X { get; set; }

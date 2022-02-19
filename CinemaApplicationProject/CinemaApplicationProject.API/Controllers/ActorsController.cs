@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using CinemaApplicationProject.Model;
 using CinemaApplicationProject.Model.Database;
 using CinemaApplicationProject.Model.Services;
+using CinemaApplicationProject.Model.DTOs;
 
 namespace CinemaApplicationProject.API.Controllers
 {
@@ -27,6 +28,12 @@ namespace CinemaApplicationProject.API.Controllers
         public ActionResult<IEnumerable<Actors>> GetActors()
         {
             return _service.GetActors();
+        }
+
+        [HttpGet("movie/{id}")]
+        public ActionResult<IEnumerable<ActorsDTO>> GetActorsByMovieId(int id)
+        {
+            return _service.GetActorsByMovie(id).Select(m => (ActorsDTO)m).ToList();
         }
 
 
@@ -61,11 +68,17 @@ namespace CinemaApplicationProject.API.Controllers
         // POST: api/Actors
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public ActionResult<Actors> PostActors(Actors actors)
+        public ActionResult<Actors> PostActors(ActorsDTO actors)
         {
-            DatabaseManipulation.AddElement(actors);
-            //_context.Actors.Add(actors);
-            //await _context.SaveChangesAsync();
+            DatabaseManipulation.context = _service.GetContext();
+            Actors actor = (Actors)actors;
+
+            Actors find = _service.GetActorsByName(actors.Name);
+            if(find == null)
+            {
+                DatabaseManipulation.AddElement(actor);
+            }
+            _service.ConnectMovieWithActor(actors.MovieId, actor.Id);
 
             return CreatedAtAction("GetActors", new { id = actors.Id }, actors);
         }

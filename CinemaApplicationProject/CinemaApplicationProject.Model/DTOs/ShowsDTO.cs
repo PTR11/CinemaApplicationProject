@@ -9,7 +9,6 @@ namespace CinemaApplicationProject.Model.DTOs
 {
     public class ShowsDTO : RespondDTO
     {
-        public int Id { get; set; }
 
         public int RoomId { get; set; }
 
@@ -17,7 +16,7 @@ namespace CinemaApplicationProject.Model.DTOs
 
         public MoviesDTO Movie { get; set; } 
 
-        public RoomDTO Room { get; set; }
+        public RoomsDTO Room { get; set; }
         
         public DateTime Date { get; set; }
 
@@ -27,13 +26,19 @@ namespace CinemaApplicationProject.Model.DTOs
             RoomId = m.RoomId,
             MovieId = m.MovieId,
             Date = m.Date,
-            Movie = new MoviesDTO
+            Movie = m.Movie!= null ? new MoviesDTO
             {
                 Id = m.Movie.Id,
                 Title = m.Movie.Title,
                 Length = m.Movie.Length
-            },
-            Room = m.Room != null ? (RoomDTO)m.Room : null,
+            } : null,
+            Room = m.Room != null ? new RoomsDTO
+            {
+                Id = m.Room.Id,
+                Name = m.Room.Name,
+                Width = m.Room.Width,
+                Heigth = m.Room.Heigth,
+            } : null,
         };
     }
 }

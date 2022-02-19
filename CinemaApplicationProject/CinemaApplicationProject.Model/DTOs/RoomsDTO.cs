@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.Model.DTOs
 {
-    public class RoomDTO
+    public class RoomsDTO : RespondDTO
     {
-
-        public int Id { get; set; }
 
         public string Name { get; set; }
 
@@ -18,7 +16,7 @@ namespace CinemaApplicationProject.Model.DTOs
 
         public int Heigth { get; set; }
 
-        public static explicit operator RoomDTO(Rooms m) => new RoomDTO
+        public static explicit operator RoomsDTO(Rooms m) => new RoomsDTO
         {
             Id = m.Id,
             Name = m.Name,

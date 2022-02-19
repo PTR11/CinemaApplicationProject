@@ -12,7 +12,7 @@ namespace CinemaApplicationProject.Model.Services
 {
     public class DatabaseService : IDatabaseService
     {
-        private readonly DatabaseContext context;
+        private DatabaseContext context;
         private readonly UserManager<ApplicationUser> guestManager;
 
         public DatabaseService(DatabaseContext dc, UserManager<ApplicationUser> um)
@@ -20,6 +20,8 @@ namespace CinemaApplicationProject.Model.Services
             context = dc;
             guestManager = um;
         }
+
+        public DatabaseContext GetContext() => this.context;
 
         #region Actors
 
@@ -29,11 +31,18 @@ namespace CinemaApplicationProject.Model.Services
 
         public Actors GetActorById(int id) => context.Actors.FirstOrDefault(m => m.Id == id);
 
-        public List<Actors> GetActorsByNameParts(String part) => context.Actors.Where(m => m.Name.StartsWith(part)).ToList();
+        public Actors GetActorsByName(String name) => context.Actors.FirstOrDefault(m => m.Name.Equals(name));
 
-        //TODO rework a little bit that
-        public List<Actors> GetActorsByMovieName(String name) => context.Actors.Where(m => m.Movies.Contains(new Movies { Title = name })).ToList();
+        public List<Actors> GetActorsByMovie(int movieId)
+        {
+            Movies movie = context.Movies.FirstOrDefault(m => m.Id == movieId);
+            return context.Actors.Where(a => a.Movies.Contains(movie)).ToList();
+        }
 
+        public void ConnectMovieWithActor(int movieId, int actorId) {
+            context.Movies.FirstOrDefault(m => m.Id == movieId).Actors.Add(context.Actors.FirstOrDefault(m => m.Id == actorId));
+            context.SaveChanges();
+        }
         #endregion
 
         #region BuffetSales
@@ -105,6 +114,8 @@ namespace CinemaApplicationProject.Model.Services
 
             return context.Movies.Include(m => m.Categories).Include(m => m.Actors).Where(m => m.Categories.Contains(cat)).ToList();
         }
+
+        
         #endregion
 
         #region MoviesStatistics
@@ -176,7 +187,7 @@ namespace CinemaApplicationProject.Model.Services
 
             #endregion
 
-            #region Products
+        #region Products
             public List<Products> GetAllProducts() => context.Products.ToList();
 
         public int GetProductPrice(String name = null) => context.Products.Where(m => m.Name.Equals(name)).Select(m => m.Price).Single();
@@ -258,7 +269,7 @@ namespace CinemaApplicationProject.Model.Services
         #endregion
 
         #region Shows
-        public List<Shows> GetAllShows() => context.Shows.ToList();
+        public List<Shows> GetAllShows() => context.Shows.Include(m => m.Movie).Include(m => m.Room).ToList();
 
         public List<Shows> GetTodaysShows() => context.Shows.Where(x => x.Date.Date == DateTime.Now.Date).ToList();
 

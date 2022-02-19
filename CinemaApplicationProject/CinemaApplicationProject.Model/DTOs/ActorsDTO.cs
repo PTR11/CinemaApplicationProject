@@ -9,12 +9,18 @@ namespace CinemaApplicationProject.Model.DTOs
 {
     public class ActorsDTO : RespondDTO
     {
-        public int Id { get; set; }
 
         public String Name { get; set; }
 
+        public int MovieId { get; set; }
+
         public static explicit operator ActorsDTO(Actors m) => new ActorsDTO
         {
+            Id = m.Id,
+            Name = m.Name
+        };
+
+        public static explicit operator Actors(ActorsDTO m) => new Actors { 
             Id = m.Id,
             Name = m.Name
         };

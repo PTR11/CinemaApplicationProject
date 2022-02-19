@@ -11,6 +11,8 @@ namespace CinemaApplicationProject.Model.Services
     public interface IDatabaseService
     {
 
+        public DatabaseContext GetContext();
+
         #region Actors
 
         public List<Actors> GetActors();
@@ -19,9 +21,11 @@ namespace CinemaApplicationProject.Model.Services
 
         public Actors GetActorById(int id);
 
-        public List<Actors> GetActorsByNameParts(String part);
+        public Actors GetActorsByName(String name);
 
-        public List<Actors> GetActorsByMovieName(String name);
+        public List<Actors> GetActorsByMovie(int id);
+
+        public void ConnectMovieWithActor(int movieId, int actorId);
 
         #endregion
 

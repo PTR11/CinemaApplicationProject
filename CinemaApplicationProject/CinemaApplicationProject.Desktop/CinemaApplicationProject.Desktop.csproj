@@ -13,20 +13,23 @@
 
   <ItemGroup>
     <PackageReference Include="LiveCharts.WPF" Version="0.9.7" />
-    <PackageReference Include="MaterialDesignColors" Version="2.0.1" />
-    <PackageReference Include="MaterialDesignThemes" Version="4.1.0" />
+    <PackageReference Include="MaterialDesignColors" Version="2.0.4" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.3.0" />
   </ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="DotNetProjects.Extended.Wpf.Toolkit" Version="4.6.97" />
+		<PackageReference Include="DotNetProjects.Extended.Wpf.Toolkit" Version="5.0.100" />
 		<PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.13">
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.2">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.31" />
-		<PackageReference Include="Syncfusion.SfScheduler.WPF" Version="19.2.0.62" />
-		<PackageReference Include="Syncfusion.SfSunburstChart.WPF" Version="19.2.0.56" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+		<PackageReference Include="Syncfusion.SfScheduler.WPF" Version="19.4.0.50" />
+		<PackageReference Include="Syncfusion.SfSunburstChart.WPF" Version="19.4.0.50" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\CinemaApplicationProject.Model\CinemaApplicationProject.Model.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Resource Include="Assets\doksi.jpg">

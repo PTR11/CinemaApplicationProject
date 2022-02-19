@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.Model.DTOs
 {
-    public class OpinionsDTO
+    public class OpinionsDTO : RespondDTO
     {
         [Required]
         public int MovieId { get; set; }

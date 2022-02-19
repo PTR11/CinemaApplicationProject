@@ -26,10 +26,22 @@ namespace CinemaApplicationProject.API.Controllers
             _service = service;
         }
 
+
+        [EnableCors("_myAllowSpecificOrigins")]
+        [HttpGet]
+        public ActionResult<IEnumerable<ShowsDTO>> GetShows()
+        {
+            //var respone = new HttpResponseMessage();
+            //respone.Headers.Location = new Uri("http://google.com");
+            //return respone;
+            return _service.GetAllShows().Select(m => (ShowsDTO)m).ToList();
+        }
+
+
         // GET: api/Shows
         [EnableCors("_myAllowSpecificOrigins")]
         [HttpGet("{date}")]
-        public ActionResult<IEnumerable<MoviesDTO>> GetShows(String date)
+        public ActionResult<IEnumerable<MoviesDTO>> GetShowsByDate(String date)
         {
             //var respone = new HttpResponseMessage();
             //respone.Headers.Location = new Uri("http://google.com");
@@ -55,9 +67,9 @@ namespace CinemaApplicationProject.API.Controllers
         // GET: api/Shows/today
         [EnableCors("_myAllowSpecificOrigins")]
         [HttpGet("today")]
-        public ActionResult<IEnumerable<Shows>> GetTodaysShows()
+        public ActionResult<IEnumerable<ShowsDTO>> GetTodaysShows()
         {
-            return _service.GetTodaysShows();
+            return _service.GetTodaysShows().Select(m => (ShowsDTO)m).ToList();
         }
 
         // GET: api/Shows/5

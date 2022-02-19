@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.Model.DTOs
 {
-    public class MoviesDTO
+    public class MoviesDTO : RespondDTO
     {
-        public int Id { get; set; }
 
         public String Title { get; set; }
 
@@ -25,7 +24,13 @@ namespace CinemaApplicationProject.Model.DTOs
 
         public List<ActorsDTO> Actors { get; set; }
 
-        private static List<ShowsDTO> ConvertShowsToDTO(ICollection<Shows> m) => new(m.ToList().Select(x => (ShowsDTO)x));
+        private static List<ShowsDTO> ConvertShowsToDTO(ICollection<Shows> m) => new(m.ToList().Select(x => new ShowsDTO
+        {
+            Id = x.Id,
+            Date = x.Date,
+            RoomId = x.RoomId,
+            MovieId = x.MovieId,
+        }));
 
         private static List<ActorsDTO> ConvertActorsToDTO(ICollection<Actors> m) => new(m.ToList().Select(x => (ActorsDTO)x));
 

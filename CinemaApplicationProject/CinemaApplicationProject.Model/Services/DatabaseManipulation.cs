@@ -11,8 +11,10 @@ namespace CinemaApplicationProject.Model.Services
 {
     public static class DatabaseManipulation
     {
-        private static readonly DatabaseContext context;
+        public static DatabaseContext context;
 
+        
+        
         public static T  AddElement<T>(T element) where T : class
         {
             try

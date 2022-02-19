@@ -9,7 +9,6 @@ namespace CinemaApplicationProject.Model.DTOs
 {
     public class CategoriesDTO : RespondDTO
     {
-        public int Id { get; set; }
 
         public string Category { get; set; }
 

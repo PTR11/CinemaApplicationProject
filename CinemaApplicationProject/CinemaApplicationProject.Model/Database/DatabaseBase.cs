@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.Model.Database
 {
-    public class Products : DatabaseBase
+    public class DatabaseBase
     {
-
-        public String Name { get; set; }
-
-        public int Price { get; set; }
+        [Key]
+        public int Id { get; set; }
     }
 }

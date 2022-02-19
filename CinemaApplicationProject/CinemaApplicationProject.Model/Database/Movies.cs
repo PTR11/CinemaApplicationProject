@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.Model.Database
 {
-    public class Movies
+    public class Movies : DatabaseBase
     {
-        [Key]
-        public int Id { get; set; }
 
         public String Title { get; set; }
 
@@ -33,5 +31,20 @@ namespace CinemaApplicationProject.Model.Database
         public ICollection<Shows> Shows { get; set; }
 
         public ICollection<Categories> Categories { get; set; }
+
+        public override bool Equals(Object obj)
+        {
+            //Check for null and compare run-time types.
+            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                Movies movie = (Movies)obj;
+                return (Title == movie.Title) && (Length == movie.Length);
+            }
+        }
     }
+
 }

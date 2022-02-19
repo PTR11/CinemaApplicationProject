@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.Model.Database
 {
-    public class EmployeePresence
+    public class EmployeePresence : DatabaseBase
     {
-        [Key]
-        public int Id { get; set; }
 
         public int EmployeeId { get; set; }
         public int StatId { get; set; }

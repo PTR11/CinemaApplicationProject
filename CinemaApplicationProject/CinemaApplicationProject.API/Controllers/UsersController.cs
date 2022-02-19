@@ -41,7 +41,6 @@ namespace CinemaApplicationProject.API.Controllers
                 {
                     var user = _service.GetGuestByUserName(login.UserName);
                     var tmp = (GuestsDTO)user;
-                    tmp.RedirectUrl = "http://localhost:8080";
 
                     Response.Cookies.Append("userId", user.Id.ToString(), new CookieOptions()
                     {
