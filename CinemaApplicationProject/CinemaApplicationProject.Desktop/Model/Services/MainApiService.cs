@@ -3,6 +3,7 @@ using CinemaApplicationProject.Model.Database;
 using CinemaApplicationProject.Model.DTOs;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -44,10 +45,19 @@ namespace CinemaApplicationProject.Desktop.Model.Services
         }
 
 
-        public async Task CreateAsync<T>(T entity) where T : RespondDTO
+        public async Task CreateAsync<T>(String route,T entity) where T : RespondDTO
         {
-            HttpResponseMessage response = await _client.PostAsJsonAsync("api/Actors/", entity);
-            entity.Id = (await response.Content.ReadAsAsync<T>()).Id;
+            HttpResponseMessage response = await _client.PostAsJsonAsync(route, entity);
+            entity.Id = (await response.Content.ReadAsAsync<ActorsDTO>()).Id;
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new NetworkException("Service returned response: " + response.StatusCode);
+            }
+        }
+
+        public async Task UpdateAsync<T>(String route,T entity) where T : RespondDTO
+        {
+            HttpResponseMessage response = await _client.PutAsJsonAsync(route+"/"+ entity.Id, entity);
 
             if (!response.IsSuccessStatusCode)
             {

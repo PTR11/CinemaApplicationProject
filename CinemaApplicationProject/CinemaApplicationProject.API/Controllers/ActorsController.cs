@@ -21,6 +21,7 @@ namespace CinemaApplicationProject.API.Controllers
         public ActorsController(IDatabaseService service)
         {
            _service = service;
+           DatabaseManipulation.context = _service.GetContext();
         }
 
         // GET: api/Actors
@@ -39,7 +40,7 @@ namespace CinemaApplicationProject.API.Controllers
 
         // GET: api/Actors/5
         [HttpGet("{id}")]
-        public ActionResult<Actors> GetActors(int id)
+        public ActionResult<Actors> GetActor(int id)
         {
             var actors = _service.GetActorById(id);
 
@@ -70,17 +71,22 @@ namespace CinemaApplicationProject.API.Controllers
         [HttpPost]
         public ActionResult<Actors> PostActors(ActorsDTO actors)
         {
-            DatabaseManipulation.context = _service.GetContext();
+            
             Actors actor = (Actors)actors;
 
             Actors find = _service.GetActorsByName(actors.Name);
             if(find == null)
             {
-                DatabaseManipulation.AddElement(actor);
+                var entity = DatabaseManipulation.AddElement(actor);
+                if (entity == null)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError);
+                }
+                actor = entity;
             }
             _service.ConnectMovieWithActor(actors.MovieId, actor.Id);
 
-            return CreatedAtAction("GetActors", new { id = actors.Id }, actors);
+            return CreatedAtAction(nameof(GetActor), new { id = actor.Id }, (ActorsDTO)actor);
         }
 
         // DELETE: api/Actors/5

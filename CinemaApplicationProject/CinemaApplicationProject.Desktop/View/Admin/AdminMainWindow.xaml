@@ -4,13 +4,38 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:local="clr-namespace:CinemaApplicationProject.Desktop.View.Admin.Pages"
+        xmlns:local="clr-namespace:CinemaApplicationProject.Desktop.View.Admin"
         xmlns:ForView="clr-namespace:CinemaApplicationProject.Desktop.Viewmodel.Models.ForView"
         xmlns:Models="clr-namespace:CinemaApplicationProject.Desktop.Viewmodel.Models"
-        xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
-        x:Class="CinemaApplicationProject.Desktop.View.Admin.AdminMainWindow"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf" xmlns:local1="clr-namespace:CinemaApplicationProject.Desktop.View.Admin.Pages"
+    x:Class="CinemaApplicationProject.Desktop.View.Admin.AdminMainWindow"
         mc:Ignorable="d"
-        Title="AdminMainWindow" Height="600" Width="1400">
+        Title="AdminMainWindow" Height="700" Width="1400">
+    <Window.Resources>
+        <Style TargetType="Border" x:Key="DaysBorder">
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Margin" Value="5,5"/>
+
+        </Style>
+        <DataTemplate x:Key="DaysCard">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Border BorderBrush="Black" BorderThickness="1" Margin="0,5,0,0">
+                    <Label Width="150" Padding="5,5,5,5">
+                        <ScrollViewer Padding="0,10,0,0" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                            <TextBlock  Foreground="Black" FontSize="12">
+                                <TextBlock Text="{Binding MovieTitle}" Foreground="Black"/>
+                                <LineBreak/>
+                                <TextBlock Text="{Binding Date}" Foreground="Black"/>
+                            </TextBlock>
+                        </ScrollViewer>
+                    </Label>
+
+                </Border>
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
         <DockPanel>
             <Menu DockPanel.Dock="Top" Height="20">
@@ -22,20 +47,20 @@
                     <TabItem Header="Movies">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
 
                             <!--#region MoviesSection -->
                             <Grid Grid.Row="0" Height="250" VerticalAlignment="Top">
                                 <GroupBox Padding="0" Background="Wheat">
-                                    <GroupBox.Header>
+                                    <GroupBox.Header >
                                         <Grid Background="Wheat">
                                             <Label Content="Movies:" FontSize="24" Height="50" BorderBrush="Black" BorderThickness="3" />
                                             <Button FontSize="20" Margin="0,0,10,0" Padding="10,0,10,0" HorizontalAlignment="Right" Command="{Binding AddNewMovie}" Content="Add Movie" Foreground="Black" BorderBrush="Black" BorderThickness="3" Background="Wheat"/>
                                         </Grid>
-                                        
-                                        
+
+
                                     </GroupBox.Header>
                                     <Border>
                                         <Grid>
@@ -71,7 +96,7 @@
 
                             <!--#region DetailsSection -->
                             <Grid Grid.Row="1" Visibility="Hidden" x:Name="Menu" Background="White" Margin="0,10,0,0">
-                                <GroupBox Padding="0">
+                                <GroupBox Padding="0" >
                                     <GroupBox.Header>
                                         <Label Content="Details:" Background="Wheat" BorderBrush="Black" BorderThickness="3" />
                                     </GroupBox.Header>
@@ -129,26 +154,29 @@
                                                     <Label Grid.Column="0" Grid.Row="5" Margin="0,10,0,10">
                                                         <TextBlock Text="New actor: " FontSize="24"/>
                                                     </Label>
-                                                    <TextBox Grid.Column="1" HorizontalAlignment="Left" Grid.Row="5" Width="200" Margin="0,10,10,10" Text="{Binding NewActor.Name, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
+                                                    <ComboBox BorderBrush="Black" FontSize="24" SelectedItem="{Binding NewActor.Name}" Text="{Binding NewActor.Name}" Margin="0,10,10,10" BorderThickness="1" Height="50" IsEditable="True" Padding="0" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="5" Width="290" ItemsSource="{Binding ActorsList}">
+                                                    </ComboBox>
+                                                    <!--<TextBox Grid.Column="1" HorizontalAlignment="Left" Grid.Row="5" Width="200" Margin="0,10,10,10" Text="{Binding NewActor.Name, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>-->
                                                     <Button Grid.Column="2" Grid.Row="5" HorizontalAlignment="Left" Background="Wheat" BorderBrush="Black" BorderThickness="3" Foreground="Black" Content="Add Actor" Command="{Binding AddNewActor}"/>
 
-                                                    <Button Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="6" HorizontalAlignment="Center" Background="Wheat" BorderBrush="Black" BorderThickness="3" Foreground="Black" Content="Update Movie" Margin="0,10,0,15" Command="{Binding AddNewActor}"/>
+                                                    <Button Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="6" HorizontalAlignment="Center" Background="Wheat" BorderBrush="Black" BorderThickness="3" Foreground="Black" Content="Update Movie" Margin="0,10,0,15" Command="{Binding UpdateMovie}"/>
                                                 </Grid>
                                                 <!--#endregion-->
 
                                                 <!--#region ActorsList -->
                                                 <Grid Grid.Column="1">
-                                                    <GroupBox Padding="0" Width="200" Margin="100,10,0,10" Height="210" HorizontalAlignment="Left" VerticalAlignment="Center">
+
+                                                    <GroupBox Padding="0" Width="200" Margin="100,10,0,10" Height="210" HorizontalAlignment="Left" VerticalAlignment="Center" BorderBrush="{x:Null}">
                                                         <GroupBox.Header >
-                                                            <Label Content="Actors:" Background="White" FontSize="24"/>
+                                                            <Label BorderBrush="Black" BorderThickness="3" Padding="0" Content="Actors:" Background="Wheat" FontSize="24"/>
                                                         </GroupBox.Header>
                                                         <Border>
                                                             <Grid>
-                                                                <Border CornerRadius="0" BorderThickness="3" BorderBrush="Black">
-                                                                    <DataGrid ItemsSource="{Binding Actors}"
+                                                                <Border CornerRadius="0" BorderThickness="3,0,3,3" BorderBrush="Black">
+                                                                    <DataGrid ItemsSource="{Binding SelectedMovie.Actors}"
                                                                             VerticalContentAlignment="Stretch"  IsReadOnly="True"
                                                                             AutoGenerateColumns="False" HeadersVisibility="None"
-                                                                            Foreground="{x:Null}" SelectedItem="{Binding SelectedActor}" >
+                                                                            Foreground="{x:Null}" SelectedItem="{Binding SelectedMovie.Actors}" >
                                                                         <i:Interaction.Triggers>
                                                                             <i:EventTrigger EventName="SelectionChanged">
                                                                                 <i:InvokeCommandAction
@@ -181,205 +209,112 @@
                                 </GroupBox>
                             </Grid>
                             <!--#endregion-->
+
                         </Grid>
                     </TabItem>
                     <TabItem Header="Shows">
                         <ScrollViewer HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
                             <Grid >
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="190"/>
-                                    <ColumnDefinition Width="190"/>
-                                    <ColumnDefinition Width="190"/>
-                                    <ColumnDefinition Width="190"/>
-                                    <ColumnDefinition Width="190"/>
-                                    <ColumnDefinition Width="190"/>
-                                    <ColumnDefinition Width="190"/>
-                                </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
+                                    <RowDefinition Height="50"/>
+                                    <RowDefinition Height="350"/>
                                 </Grid.RowDefinitions>
+                                <Border Background="Wheat" BorderBrush="Black" BorderThickness="3">
+                                    <Grid Grid.Row="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="190"/>
+                                            <ColumnDefinition Width="190"/>
+                                            <ColumnDefinition Width="190"/>
+                                            <ColumnDefinition Width="190"/>
+                                            <ColumnDefinition Width="190"/>
+                                            <ColumnDefinition Width="190"/>
+                                            <ColumnDefinition Width="190"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Monday" Grid.Column="0" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Tuesday" HorizontalAlignment="Center" Grid.Column="1" />
+                                        <TextBlock Text="Wednesday" HorizontalAlignment="Center" Grid.Column="2" />
+                                        <TextBlock Text="Thursday" HorizontalAlignment="Center" Grid.Column="3" />
+                                        <TextBlock Text="Friday" HorizontalAlignment="Center" Grid.Column="4"/>
+                                        <TextBlock Text="Saturday" HorizontalAlignment="Center" Grid.Column="5" />
+                                        <TextBlock Text="Sunday" HorizontalAlignment="Center" Grid.Column="6"/>
+                                    </Grid>
+                                </Border>
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="190"/>
+                                        <ColumnDefinition Width="190"/>
+                                        <ColumnDefinition Width="190"/>
+                                        <ColumnDefinition Width="190"/>
+                                        <ColumnDefinition Width="190"/>
+                                        <ColumnDefinition Width="190"/>
+                                        <ColumnDefinition Width="190"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ScrollViewer Grid.Column="0" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto">
+                                        <!--<local1:UserControl1 DataContext="{Binding Week.Monday}"></local1:UserControl1>-->
+                                        <Border Style = "{StaticResource DaysBorder}">
+                                            <Grid Margin="0,10,5,0" >
+                                                <ItemsControl ItemsSource="{Binding Week.Monday}" ItemTemplate="{StaticResource DaysCard}">
+                                                </ItemsControl>
+                                            </Grid>
+                                        </Border>
+                                    </ScrollViewer>
+                                    <ScrollViewer Grid.Column="1" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto">
+                                        <Border Style = "{StaticResource DaysBorder}">
+                                            <Grid Margin="0,10,0,0" >
+                                                <ItemsControl ItemsSource="{Binding Week.Tuesday}" ItemTemplate="{StaticResource DaysCard}">
 
-                                <Grid Grid.Column="0" Margin="0,10,5,0" >
-                                    <StackPanel Orientation="Horizontal" >
-                                        <TextBlock Text="Monday" Width="200" />
-                                    </StackPanel>
-                                    <ItemsControl ItemsSource="{Binding Week.Monday}" Margin="0,20,0,0">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Border BorderBrush="Black" BorderThickness="1" Margin="0,10,0,0">
-                                                        <Label Width="180" Padding="5,5,5,5">
-                                                            <ScrollViewer Padding="0,10,0,0" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                                                                <TextBlock  Foreground="Black">
-                                                                    <TextBlock Text="{Binding MovieTitle}" Foreground="Black"/>
-                                                                    <LineBreak/>
-                                                                    <TextBlock Text="{Binding Date}" Foreground="Black"/>
-                                                                </TextBlock>
-                                                            </ScrollViewer>
-                                                        </Label>
+                                                </ItemsControl>
+                                            </Grid>
+                                        </Border>
+                                    </ScrollViewer>
+                                    <ScrollViewer Grid.Column="2" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto">
+                                        <Border Style = "{StaticResource DaysBorder}">
+                                            <Grid  Margin="0,10,0,0" >
+                                                <ItemsControl ItemsSource="{Binding Week.Wednesday}" ItemTemplate="{StaticResource DaysCard}">
+                                                </ItemsControl>
+                                            </Grid>
+                                        </Border>
+                                    </ScrollViewer>
+                                    <ScrollViewer Grid.Column="3" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto">
+                                        <Border Style = "{StaticResource DaysBorder}" Margin="5,5">
+                                            <Grid  Margin="0,10,0,0" >
+                                                <ItemsControl ItemsSource="{Binding Week.Thursday}" ItemTemplate="{StaticResource DaysCard}"/>
+                                            </Grid>
+                                        </Border>
+                                    </ScrollViewer>
+                                    <ScrollViewer Grid.Column="4" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto">
+                                        <Border Style = "{StaticResource DaysBorder}">
+                                            <Grid  Margin="0,10,0,0" >
+                                                <ItemsControl ItemsSource="{Binding Week.Friday}" ItemTemplate="{StaticResource DaysCard}" />
+                                            </Grid>
+                                        </Border>
+                                    </ScrollViewer>
+                                    <ScrollViewer Grid.Column="5" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto">
+                                        <Border Style = "{StaticResource DaysBorder}">
+                                            <Grid  Margin="0,10,0,0" >
+                                                <ItemsControl ItemsSource="{Binding Week.Saturday}" ItemTemplate="{StaticResource DaysCard}" />
+                                            </Grid>
+                                        </Border>
+                                    </ScrollViewer>
+                                    <ScrollViewer Grid.Column="6" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto">
+                                        <Border Style = "{StaticResource DaysBorder}"  >
+                                            <Grid  Margin="0,10,0,0" >
+                                                <ItemsControl ItemsSource="{Binding Week.Sunday}"  ItemTemplate="{StaticResource DaysCard}"/>
+                                            </Grid>
+                                        </Border>
+                                    </ScrollViewer>
 
-                                                    </Border>
-                                                </StackPanel>
 
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
+
+
+
+
+
                                 </Grid>
-                                <Grid Grid.Column="1" Margin="0,10,5,0" >
-                                    <StackPanel Orientation="Horizontal" >
-                                        <TextBlock Text="Tuesday" Width="200" />
-                                    </StackPanel>
-                                    <ItemsControl ItemsSource="{Binding Week.Tuesday}" Margin="0,20,0,0">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Border BorderBrush="Black" BorderThickness="1" Margin="0,10,0,0">
-                                                        <Label Width="180" Padding="5,5,5,5">
-                                                            <ScrollViewer Padding="0,10,0,0" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                                                                <TextBlock  Foreground="Black">
-                                                                    <TextBlock Text="{Binding MovieTitle}" Foreground="Black"/>
-                                                                    <LineBreak/>
-                                                                    <TextBlock Text="{Binding Date}" Foreground="Black"/>
-                                                                </TextBlock>
-                                                            </ScrollViewer>
-                                                        </Label>
 
-                                                    </Border>
-                                                </StackPanel>
 
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </Grid>
-                                <Grid Grid.Column="2" Margin="0,10,5,0" >
-                                    <StackPanel Orientation="Horizontal" >
-                                        <TextBlock Text="Wednesday" Width="200" />
-                                    </StackPanel>
-                                    <ItemsControl ItemsSource="{Binding Week.Wednesday}" Margin="0,20,0,0">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Border BorderBrush="Black" BorderThickness="1" Margin="0,10,0,0">
-                                                        <Label Width="180" Padding="5,5,5,5">
-                                                            <ScrollViewer Padding="0,10,0,0" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                                                                <TextBlock  Foreground="Black">
-                                                                    <TextBlock Text="{Binding MovieTitle}" Foreground="Black"/>
-                                                                    <LineBreak/>
-                                                                    <TextBlock Text="{Binding Date}" Foreground="Black"/>
-                                                                </TextBlock>
-                                                            </ScrollViewer>
-                                                        </Label>
 
-                                                    </Border>
-                                                </StackPanel>
 
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </Grid>
-                                <Grid Grid.Column="3" Margin="0,10,5,0" >
-                                    <StackPanel Orientation="Horizontal" >
-                                        <TextBlock Text="Thursday" Width="200" />
-                                    </StackPanel>
-                                    <ItemsControl ItemsSource="{Binding Week.Thursday}" Margin="0,20,0,0">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Border BorderBrush="Black" BorderThickness="1" Margin="0,10,0,0">
-                                                        <Label Width="180" Padding="5,5,5,5">
-                                                            <ScrollViewer Padding="0,10,0,0" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                                                                <TextBlock  Foreground="Black">
-                                                                    <TextBlock Text="{Binding MovieTitle}" Foreground="Black"/>
-                                                                    <LineBreak/>
-                                                                    <TextBlock Text="{Binding Date}" Foreground="Black"/>
-                                                                </TextBlock>
-                                                            </ScrollViewer>
-                                                        </Label>
-
-                                                    </Border>
-                                                </StackPanel>
-
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </Grid>
-                                <Grid Grid.Column="4" Margin="0,10,5,0" >
-                                    <StackPanel Orientation="Horizontal" >
-                                        <TextBlock Text="Friday" Width="200" />
-                                    </StackPanel>
-                                    <ItemsControl ItemsSource="{Binding Week.Friday}" Margin="0,20,0,0">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Border BorderBrush="Black" BorderThickness="1" Margin="0,10,0,0">
-                                                        <Label Width="180" Padding="5,5,5,5">
-                                                            <ScrollViewer Padding="0,10,0,0" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                                                                <TextBlock  Foreground="Black">
-                                                                    <TextBlock Text="{Binding MovieTitle}" Foreground="Black"/>
-                                                                    <LineBreak/>
-                                                                    <TextBlock Text="{Binding Date}" Foreground="Black"/>
-                                                                </TextBlock>
-                                                            </ScrollViewer>
-                                                        </Label>
-
-                                                    </Border>
-                                                </StackPanel>
-
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </Grid>
-                                <Grid Grid.Column="5" Margin="0,10,5,0" >
-                                    <StackPanel Orientation="Horizontal" >
-                                        <TextBlock Text="Saturday" Width="200" />
-                                    </StackPanel>
-                                    <ItemsControl ItemsSource="{Binding Week.Saturday}" Margin="0,20,0,0">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Border BorderBrush="Black" BorderThickness="1" Margin="0,10,0,0">
-                                                        <Label Width="180" Padding="5,5,5,5">
-                                                            <ScrollViewer Padding="0,10,0,0" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                                                                <TextBlock  Foreground="Black">
-                                                                    <TextBlock Text="{Binding MovieTitle}" Foreground="Black"/>
-                                                                    <LineBreak/>
-                                                                    <TextBlock Text="{Binding Date}" Foreground="Black"/>
-                                                                </TextBlock>
-                                                            </ScrollViewer>
-                                                        </Label>
-
-                                                    </Border>
-                                                </StackPanel>
-
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </Grid>
-                                <Grid Grid.Column="6" Margin="0,10,5,0" >
-                                    <StackPanel Orientation="Horizontal" >
-                                        <TextBlock Text="Sunday" Width="200" />
-                                    </StackPanel>
-                                    <ItemsControl ItemsSource="{Binding Week.Sunday}" Margin="0,20,0,0">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Border BorderBrush="Black" BorderThickness="1" Margin="0,10,0,0">
-                                                        <Label Width="180" Padding="5,5,5,5">
-                                                            <ScrollViewer Padding="0,10,0,0" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                                                                <TextBlock  Foreground="Black">
-                                                                    <TextBlock Text="{Binding MovieTitle}" Foreground="Black" FontSize="24"/>
-                                                                    <LineBreak/>
-                                                                    <TextBlock Text="{Binding Date}" Foreground="Black" FontSize="24"/>
-                                                                </TextBlock>
-                                                            </ScrollViewer>
-                                                        </Label>
-                                                    </Border>
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </Grid>
                             </Grid>
                         </ScrollViewer>
                     </TabItem>

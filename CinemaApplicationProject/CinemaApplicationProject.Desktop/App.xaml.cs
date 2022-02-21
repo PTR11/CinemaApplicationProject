@@ -27,7 +27,7 @@ namespace CinemaApplicationProject.Desktop
         private void App_Startup(object sender, StartupEventArgs e)
         {
             _mainViewModel = new MainViewModel();
-            _mainViewModel.AddColumnEvent += AddTablecell;
+            _mainViewModel.MovieDetailsVisible += MovieDetailsVisible;
             _view = new AdminMainWindow
             {
                 DataContext = _mainViewModel
@@ -35,9 +35,9 @@ namespace CinemaApplicationProject.Desktop
             _view.Show();
         }
 
-        private void AddTablecell(object sender, EventArgs e)
+        private void MovieDetailsVisible(object sender, bool e)
         {
-            _view.Menu.Visibility = Visibility.Visible;
+            _view.Menu.Visibility = e ? Visibility.Visible : Visibility.Hidden ;
         }
     }
 }

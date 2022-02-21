@@ -14,5 +14,6 @@ namespace CinemaApplicationProject.Model.Database
         public string Name { get; set; }
 
         public string Address { get; set; }
+
     }
 }

@@ -22,6 +22,21 @@ namespace CinemaApplicationProject.API.Controllers
         public MoviesController(IDatabaseService service)
         {
             _service = service;
+            DatabaseManipulation.context = _service.GetContext();
+        }
+
+        [HttpGet("only/{id}")]
+        [EnableCors("_myAllowSpecificOrigins")]
+        public ActionResult<MoviesDTO> GetMovieById(int id)
+        {
+            var movie = (MoviesDTO)_service.GetMovieById(id);
+
+            if (movie == null)
+            {
+                return NotFound();
+            }
+
+            return movie;
         }
 
         // GET: api/Movies
@@ -78,20 +93,39 @@ namespace CinemaApplicationProject.API.Controllers
             {
                 return BadRequest();
             }
-
-            DatabaseManipulation.UpdateElement(movies);
-
-            return NoContent();
+            if (DatabaseManipulation.UpdateElement(movies))
+            {
+                return Ok();
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         // POST: api/Movies
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public ActionResult<Movies> PostMovies(Movies movies)
+        public ActionResult<MoviesDTO> PostMovies(MoviesDTO movies)
         {
-            DatabaseManipulation.AddElement(movies);
+            //var m = new Movies{ 
+            //    Title = movies.Title ,
+            //    Length = movies.Length ,
+            //    Description = movies.Description ,
+            //    Actors = new List<Actors>(movies.Actors.Select(a => new Actors { Name = a.Name, Id = a.Id })),
+            //    Trailer = movies.Trailer ,
 
-            return CreatedAtAction("GetMovies", new { id = movies.Id }, movies);
+            //};
+            var movie = DatabaseManipulation.AddElement((Movies)movies);
+
+            if (movie == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+            else
+            {
+                return CreatedAtAction(nameof(GetMovieById), new { id = movie.Id }, (MoviesDTO)movie);
+            }
         }
 
         // DELETE: api/Movies/5

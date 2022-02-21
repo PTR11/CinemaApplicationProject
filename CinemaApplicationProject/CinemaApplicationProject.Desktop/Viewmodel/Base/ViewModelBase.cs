@@ -39,6 +39,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Base
                 MessageApplication(this, new MessageEventArgs(message));
         }
 
+
         
     }
 }

@@ -20,5 +20,11 @@ namespace CinemaApplicationProject.Model.DTOs
             Category = m.Category,
         };
 
+        public static explicit operator Categories(CategoriesDTO m) => new Categories
+        {
+            Id = m.Id,
+            Category = m.Category,
+        };
+
     }
 }

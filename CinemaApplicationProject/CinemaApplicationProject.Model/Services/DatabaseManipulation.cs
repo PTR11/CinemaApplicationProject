@@ -15,11 +15,11 @@ namespace CinemaApplicationProject.Model.Services
 
         
         
-        public static T  AddElement<T>(T element) where T : class
+        public static T AddElement<T>(T element) where T : class
         {
             try
             {
-                context.Set<T>().Add(element);
+                context.Entry(element).State = Microsoft.EntityFrameworkCore.EntityState.Added;
                 context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
@@ -56,7 +56,7 @@ namespace CinemaApplicationProject.Model.Services
             try
             {
                 context.Set<T>().Update(element);
-                context.Entry(element).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                //context.Entry(element).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)

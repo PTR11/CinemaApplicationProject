@@ -40,8 +40,11 @@ namespace CinemaApplicationProject.Model.Services
         }
 
         public void ConnectMovieWithActor(int movieId, int actorId) {
-            context.Movies.FirstOrDefault(m => m.Id == movieId).Actors.Add(context.Actors.FirstOrDefault(m => m.Id == actorId));
-            context.SaveChanges();
+            if(movieId != 0)
+            {
+                context.Movies.FirstOrDefault(m => m.Id == movieId).Actors.Add(context.Actors.FirstOrDefault(m => m.Id == actorId));
+                context.SaveChanges();
+            }
         }
         #endregion
 
@@ -95,6 +98,8 @@ namespace CinemaApplicationProject.Model.Services
         #endregion
 
         #region Movies
+
+        public Movies GetMovie(int id) => context.Movies.Include(m => m.Shows).Include(m => m.Actors).Include(m => m.Categories).FirstOrDefault(m => m.Id==id);
 
         public List<Movies> GetMovies() => context.Movies.Include(m => m.Actors).ToList();
 

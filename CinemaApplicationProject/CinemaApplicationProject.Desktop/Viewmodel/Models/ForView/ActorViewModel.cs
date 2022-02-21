@@ -11,19 +11,19 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
 {
     public class ActorViewModel : ViewModelBase
     {
-        public int _id;
         public string _name;
-
-        public int Id
-        {
-            get { return _id; }
-            set { _id = value; OnPropertyChanged(); }
-        }
+        public int _movieId;
 
         public string Name
         {
             get { return _name; }
             set { _name = value; OnPropertyChanged(); }
+        }
+
+        public int MovieId
+        {
+            get { return _movieId; }
+            set { _movieId = value; OnPropertyChanged(); }
         }
 
         public ActorViewModel ShallowClone()
@@ -35,18 +35,21 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
         {
             Id = rhs.Id;
             Name = rhs.Name;
+            MovieId = rhs.MovieId;
         }
 
         public static explicit operator ActorViewModel(ActorsDTO dto) => new ActorViewModel
         {
             Id = dto.Id,
             Name = dto.Name,
+            MovieId = dto.MovieId,
         };
 
         public static explicit operator ActorsDTO(ActorViewModel mvm) => new ActorsDTO
         {
             Id = mvm.Id,
             Name = mvm.Name,
+            MovieId = mvm.MovieId
         };
     }
 }
