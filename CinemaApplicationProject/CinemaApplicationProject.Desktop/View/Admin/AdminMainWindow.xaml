@@ -4,34 +4,46 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:CinemaApplicationProject.Desktop.View.Admin"
         xmlns:ForView="clr-namespace:CinemaApplicationProject.Desktop.Viewmodel.Models.ForView"
         xmlns:Models="clr-namespace:CinemaApplicationProject.Desktop.Viewmodel.Models"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" xmlns:local1="clr-namespace:CinemaApplicationProject.Desktop.View.Admin.Pages"
     x:Class="CinemaApplicationProject.Desktop.View.Admin.AdminMainWindow"
         mc:Ignorable="d"
-        Title="AdminMainWindow" Height="700" Width="1400">
+        Title="AdminMainWindow" Height="750" Width="1400">
     <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="Wheat"></Setter>
+            <Setter Property="BorderBrush" Value="Black"></Setter>
+            <Setter Property="BorderThickness" Value="3"></Setter>
+            <Setter Property="Foreground" Value="Black"></Setter>
+        </Style>
         <Style TargetType="Border" x:Key="DaysBorder">
             <Setter Property="BorderBrush" Value="Gray"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="5"/>
             <Setter Property="Margin" Value="5,5"/>
-
         </Style>
-        <DataTemplate x:Key="DaysCard">
+        <DataTemplate x:Key="DaysCard"  >
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Border BorderBrush="Black" BorderThickness="1" Margin="0,5,0,0">
-                    <Label Width="150" Padding="5,5,5,5">
-                        <ScrollViewer Padding="0,10,0,0" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                            <TextBlock  Foreground="Black" FontSize="12">
-                                <TextBlock Text="{Binding MovieTitle}" Foreground="Black"/>
+                    <Button Click="Button_Click_1" ClickMode="Press" >
+                        <Button.Content >
+                            <Label Width="150" Padding="5,5,5,5" >
+                                <ScrollViewer MouseDoubleClick="ScrollViewer_MouseDoubleClick" Padding="0,10,0,0" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                                    <TextBlock  Foreground="Black" FontSize="12">
+                                <TextBlock Text="{Binding MovieTitle}" Foreground="Black" />
                                 <LineBreak/>
-                                <TextBlock Text="{Binding Date}" Foreground="Black"/>
+                                <TextBlock Text="{Binding RoomName}" Foreground="Black"/>
+                                <LineBreak/>
+                                <TextBlock Text="{Binding DateFormat}" Foreground="Black"/>
+                                 <Hyperlink Click="Button_Click"></Hyperlink>
                             </TextBlock>
-                        </ScrollViewer>
-                    </Label>
-
+                                </ScrollViewer>
+                            </Label>
+                        </Button.Content>
+                    </Button>
                 </Border>
             </StackPanel>
         </DataTemplate>
@@ -44,6 +56,140 @@
             </Menu>
             <Grid>
                 <TabControl FontSize="20">
+                    <TabItem Header="Cinema">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <!--#region RoomsSection -->
+                            <Grid Grid.Column="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <GroupBox Padding="0" Background="Wheat" Grid.Row="0" Margin="0,0,10,0">
+                                    <GroupBox.Header >
+                                        <Grid Background="Wheat">
+                                            <Label Content="Rooms:" FontSize="24" Height="50" BorderBrush="Black" BorderThickness="3" />
+                                            <Button FontSize="20" Margin="0,0,10,0" Padding="10,0,10,0" Height="30" HorizontalAlignment="Right" Command="{Binding AddNewRoom}" Content="Add Room" Foreground="Black" BorderBrush="Black" BorderThickness="3" Background="Wheat"/>
+                                        </Grid>
+                                    </GroupBox.Header>
+                                    <Border>
+                                        <Grid>
+                                            <Border CornerRadius="0" BorderThickness="3,0,3,3" BorderBrush="Black">
+                                                <DataGrid ItemsSource="{Binding Rooms}"
+                                                VerticalContentAlignment="Stretch"  IsReadOnly="True"
+                                                AutoGenerateColumns="False" HeadersVisibility="None"
+                                                Foreground="{x:Null}" SelectedItem="{Binding SelectedRoom}">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="SelectionChanged">
+                                                            <i:InvokeCommandAction
+                                                            Command="{Binding SelectRoom}"
+                                                            CommandParameter="{
+                                                            Binding Path=SelectedItem,
+                                                            RelativeSource={
+                                                                RelativeSource
+                                                                AncestorType={x:Type DataGrid},
+                                                                AncestorLevel=1}}" />
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                    <DataGrid.Columns>
+                                                        <DataGridTextColumn Binding="{Binding Name}" FontSize="24" Width="200" Foreground="Black"/>
+                                                        <DataGridTextColumn Binding="{Binding Width}" FontSize="24" Width="200" Foreground="Black"/>
+                                                        <DataGridTextColumn Binding="{Binding Heigth}" FontSize="24" Width="*" Foreground="Black"/>
+                                                    </DataGrid.Columns>
+                                                </DataGrid>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </GroupBox>
+                                <Grid Grid.Row="1" Visibility="Hidden" x:Name="RoomMenu">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="65"/>
+                                        <RowDefinition Height="65"/>
+                                        <RowDefinition Height="65"/>
+                                        <RowDefinition Height="40"/>
+                                    </Grid.RowDefinitions>
+                                    <Label Grid.Row="0" Grid.Column="0" Content="Name:" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1"  Width="400" Margin="0,10,0,10" Text="{Binding SelectedRoom.Name, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
+                                    <Label Grid.Row="1" Grid.Column="0" Content="Width:" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1"  Width="400" Margin="0,10,0,10" Text="{Binding SelectedRoom.Width, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
+                                    <Label Grid.Row="2" Grid.Column="0" Content="Height:" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="2" Grid.Column="1"  Width="400" Margin="0,10,0,10" Text="{Binding SelectedRoom.Heigth, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
+                                    <Button Content="Update Show" Command="{Binding UpdateRoom}" Height="35" Grid.Row="3" Width="150" HorizontalAlignment="Center" Grid.ColumnSpan="2"/>
+                                    
+                                </Grid>
+                            </Grid>
+                            <!--#endregion-->
+                            
+                            <!--#region TicketsSection -->
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <GroupBox Padding="0" Background="Wheat" Grid.Row="0" Margin="10,0,0,0">
+                                    <GroupBox.Header >
+                                        <Grid Background="Wheat">
+                                            <Label Content="Tickets:" FontSize="24" Height="50" BorderBrush="Black" BorderThickness="3" />
+                                            <Button FontSize="20" Margin="0,0,10,0" Padding="10,0,10,0" Height="30" HorizontalAlignment="Right" Command="{Binding AddNewTicket}" Content="Add Ticket" Foreground="Black" BorderBrush="Black" BorderThickness="3" Background="Wheat"/>
+                                        </Grid>
+                                    </GroupBox.Header>
+                                    <Border>
+                                        <Grid>
+                                            <Border CornerRadius="0" BorderThickness="3,0,3,3" BorderBrush="Black">
+                                                <DataGrid ItemsSource="{Binding Tickets}"
+                                                VerticalContentAlignment="Stretch"  IsReadOnly="True"
+                                                AutoGenerateColumns="False" HeadersVisibility="None"
+                                                Foreground="{x:Null}" SelectedItem="{Binding SelectedTicket}">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="SelectionChanged">
+                                                            <i:InvokeCommandAction
+                                                            Command="{Binding SelectTicket}"
+                                                            CommandParameter="{
+                                                            Binding Path=SelectedItem,
+                                                            RelativeSource={
+                                                                RelativeSource
+                                                                AncestorType={x:Type DataGrid},
+                                                                AncestorLevel=1}}" />
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                    <DataGrid.Columns>
+                                                        <DataGridTextColumn Binding="{Binding Type}" FontSize="24" Width="200" Foreground="Black"/>
+                                                        <DataGridTextColumn Binding="{Binding Price}" FontSize="24" Width="200" Foreground="Black"/>
+                                                    </DataGrid.Columns>
+                                                </DataGrid>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </GroupBox>
+                                <Grid Grid.Row="1" Visibility="Hidden" x:Name="TicketMenu">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="65"/>
+                                        <RowDefinition Height="65"/>
+                                        <RowDefinition Height="65"/>
+                                        <RowDefinition Height="30"/>
+                                    </Grid.RowDefinitions>
+                                    <Label Grid.Row="0" Grid.Column="0" Content="Name:" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1"  Width="400" Margin="0,10,0,10" Text="{Binding SelectedTicket.Type, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
+                                    <Label Grid.Row="1" Grid.Column="0" Content="Width:" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1"  Width="400" Margin="0,10,0,10" Text="{Binding SelectedTicket.Price, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
+                                    <Button Content="Update Show" Command="{Binding UpdateTicket}" Height="35" Grid.Row="2" Width="150" HorizontalAlignment="Center" Grid.ColumnSpan="2"/>
+
+                                </Grid>
+                            </Grid>
+                            <!--#endregion-->
+                        </Grid>
+                    </TabItem>
                     <TabItem Header="Movies">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -57,10 +203,8 @@
                                     <GroupBox.Header >
                                         <Grid Background="Wheat">
                                             <Label Content="Movies:" FontSize="24" Height="50" BorderBrush="Black" BorderThickness="3" />
-                                            <Button FontSize="20" Margin="0,0,10,0" Padding="10,0,10,0" HorizontalAlignment="Right" Command="{Binding AddNewMovie}" Content="Add Movie" Foreground="Black" BorderBrush="Black" BorderThickness="3" Background="Wheat"/>
+                                            <Button FontSize="20" Margin="0,0,10,0" Padding="10,0,10,0" Height="30" HorizontalAlignment="Right" Command="{Binding AddNewMovie}" Content="Add Movie" Foreground="Black" BorderBrush="Black" BorderThickness="3" Background="Wheat"/>
                                         </Grid>
-
-
                                     </GroupBox.Header>
                                     <Border>
                                         <Grid>
@@ -83,7 +227,7 @@
                                                     </i:Interaction.Triggers>
 
                                                     <DataGrid.Columns>
-                                                        <DataGridTextColumn Binding="{Binding Title}" Width="*" Foreground="Black"/>
+                                                        <DataGridTextColumn Binding="{Binding Title}" FontSize="24" Width="*" Foreground="Black"/>
 
                                                     </DataGrid.Columns>
                                                 </DataGrid>
@@ -119,11 +263,12 @@
                                                         <RowDefinition Height="*"/>
                                                         <RowDefinition Height="*"/>
                                                         <RowDefinition Height="*"/>
+                                                        <RowDefinition Height="*"/>
                                                     </Grid.RowDefinitions>
                                                     <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="150"/>
+                                                        <ColumnDefinition Width="200"/>
                                                         <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition Width="100"/>
+                                                        <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
 
                                                     <Label Grid.Column="0" Grid.Row="0" Margin="0,10,0,10">
@@ -154,51 +299,62 @@
                                                     <Label Grid.Column="0" Grid.Row="5" Margin="0,10,0,10">
                                                         <TextBlock Text="New actor: " FontSize="24"/>
                                                     </Label>
-                                                    <ComboBox BorderBrush="Black" FontSize="24" SelectedItem="{Binding NewActor.Name}" Text="{Binding NewActor.Name}" Margin="0,10,10,10" BorderThickness="1" Height="50" IsEditable="True" Padding="0" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="5" Width="290" ItemsSource="{Binding ActorsList}">
-                                                    </ComboBox>
-                                                    <!--<TextBox Grid.Column="1" HorizontalAlignment="Left" Grid.Row="5" Width="200" Margin="0,10,10,10" Text="{Binding NewActor.Name, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>-->
-                                                    <Button Grid.Column="2" Grid.Row="5" HorizontalAlignment="Left" Background="Wheat" BorderBrush="Black" BorderThickness="3" Foreground="Black" Content="Add Actor" Command="{Binding AddNewActor}"/>
+                                                    <ComboBox BorderBrush="Black" FontSize="24" SelectedItem="{Binding NewActor.Name}" Text="{Binding NewActor.Name}" Margin="0,10,10,10" BorderThickness="1" Height="50" IsEditable="True" Padding="0" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="5" Width="260" ItemsSource="{Binding ActorsList}"/>
+                                                    <Button Grid.Column="2" Grid.Row="5" Width="130" HorizontalAlignment="Left" Height="35" Content="Add Actor" Command="{Binding AddNewActor}"/>
 
-                                                    <Button Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="6" HorizontalAlignment="Center" Background="Wheat" BorderBrush="Black" BorderThickness="3" Foreground="Black" Content="Update Movie" Margin="0,10,0,15" Command="{Binding UpdateMovie}"/>
+                                                    <Label Grid.Column="0" Grid.Row="6" Margin="0,10,0,10">
+                                                        <TextBlock Text="New category: " FontSize="24"/>
+                                                    </Label>
+                                                    <ComboBox BorderBrush="Black" FontSize="24" SelectedItem="{Binding NewCategory.Category}" Text="{Binding NewCategory.Category}" Margin="0,10,10,10" BorderThickness="1" Height="50" IsEditable="True" Padding="0" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="6" Width="260" ItemsSource="{Binding CategoriesList}"/>
+                                                    <Button Grid.Column="2" Width="130" Grid.Row="6" HorizontalAlignment="Left" Height="35" Content="Add Category" Command="{Binding AddNewCategory}"/>
+
+                                                    <Button Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="7" HorizontalAlignment="Center" Background="Wheat" BorderBrush="Black" BorderThickness="3" Foreground="Black" Content="Update Movie" Margin="0,10,0,15" Command="{Binding UpdateMovie}"/>
                                                 </Grid>
                                                 <!--#endregion-->
 
                                                 <!--#region ActorsList -->
                                                 <Grid Grid.Column="1">
-
-                                                    <GroupBox Padding="0" Width="200" Margin="100,10,0,10" Height="210" HorizontalAlignment="Left" VerticalAlignment="Center" BorderBrush="{x:Null}">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="300"/>
+                                                        <RowDefinition/>
+                                                    </Grid.RowDefinitions>
+                                                    <GroupBox Grid.Row="0" Padding="0" Margin="0" Height="200" VerticalAlignment="Center" Background="Wheat" Width="200">
                                                         <GroupBox.Header >
-                                                            <Label BorderBrush="Black" BorderThickness="3" Padding="0" Content="Actors:" Background="Wheat" FontSize="24"/>
+                                                            <Grid Background="Wheat" Margin="0">
+                                                                <Label Content="Actors:" FontSize="24" Height="50"  BorderBrush="Black" BorderThickness="3" />
+                                                            </Grid>
                                                         </GroupBox.Header>
-                                                        <Border>
-                                                            <Grid>
-                                                                <Border CornerRadius="0" BorderThickness="3,0,3,3" BorderBrush="Black">
-                                                                    <DataGrid ItemsSource="{Binding SelectedMovie.Actors}"
+                                                        <Border CornerRadius="0" BorderThickness="3,0,3,3" BorderBrush="Black">
+                                                            <DataGrid ItemsSource="{Binding SelectedMovie.Actors}"
                                                                             VerticalContentAlignment="Stretch"  IsReadOnly="True"
                                                                             AutoGenerateColumns="False" HeadersVisibility="None"
                                                                             Foreground="{x:Null}" SelectedItem="{Binding SelectedMovie.Actors}" >
-                                                                        <i:Interaction.Triggers>
-                                                                            <i:EventTrigger EventName="SelectionChanged">
-                                                                                <i:InvokeCommandAction
-                                                                                    Command="{Binding SelectMovie}"
-                                                                                    CommandParameter="{
-                                                                                        Binding Path=SelectedItem,
-                                                                                        RelativeSource={
-                                                                                            RelativeSource
-                                                                                            AncestorType={x:Type DataGrid},
-                                                                                            AncestorLevel=1}}" />
-                                                                            </i:EventTrigger>
-                                                                        </i:Interaction.Triggers>
+                                                                <DataGrid.Columns>
+                                                                    <DataGridTextColumn Binding="{Binding Name}" Width="*" FontSize="24" Foreground="Black"/>
+                                                                </DataGrid.Columns>
+                                                            </DataGrid>
+                                                        </Border>
+                                                    </GroupBox>
 
-                                                                        <DataGrid.Columns>
-                                                                            <DataGridTextColumn Binding="{Binding Name}" Width="*" Foreground="Black">
-
-                                                                            </DataGridTextColumn>
-
-                                                                        </DataGrid.Columns>
-                                                                    </DataGrid>
-                                                                </Border>
+                                                    <GroupBox Grid.Row="1" Padding="0" Margin="0" Height="200" VerticalAlignment="Center" Background="Wheat" Width="200">
+                                                        <GroupBox.Header >
+                                                            <Grid Background="Wheat" Margin="0">
+                                                                <Label Content="Categories:" FontSize="24" Height="50"  BorderBrush="Black" BorderThickness="3" />
                                                             </Grid>
+                                                        </GroupBox.Header>
+                                                        <Border CornerRadius="0" BorderThickness="3,0,3,3" BorderBrush="Black">
+                                                            <DataGrid ItemsSource="{Binding SelectedMovie.Categories}"
+                                                                            VerticalContentAlignment="Stretch"  IsReadOnly="True"
+                                                                            AutoGenerateColumns="False" HeadersVisibility="None"
+                                                                            Foreground="{x:Null}" SelectedItem="{Binding SelectedMovie.Actors}" >
+
+                                                                <DataGrid.Columns>
+                                                                    <DataGridTextColumn Binding="{Binding Category}" Width="*" Foreground="Black" FontSize="24">
+
+                                                                    </DataGridTextColumn>
+
+                                                                </DataGrid.Columns>
+                                                            </DataGrid>
                                                         </Border>
                                                     </GroupBox>
                                                 </Grid>
@@ -213,11 +369,13 @@
                         </Grid>
                     </TabItem>
                     <TabItem Header="Shows">
-                        <ScrollViewer HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <ScrollViewer HorizontalAlignment="Center" Focusable="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden">
                             <Grid >
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="50"/>
                                     <RowDefinition Height="350"/>
+                                    <RowDefinition Height="50"/>
+                                    <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
                                 <Border Background="Wheat" BorderBrush="Black" BorderThickness="3">
                                     <Grid Grid.Row="0">
@@ -230,13 +388,13 @@
                                             <ColumnDefinition Width="190"/>
                                             <ColumnDefinition Width="190"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="Monday" Grid.Column="0" HorizontalAlignment="Center"/>
-                                        <TextBlock Text="Tuesday" HorizontalAlignment="Center" Grid.Column="1" />
-                                        <TextBlock Text="Wednesday" HorizontalAlignment="Center" Grid.Column="2" />
-                                        <TextBlock Text="Thursday" HorizontalAlignment="Center" Grid.Column="3" />
-                                        <TextBlock Text="Friday" HorizontalAlignment="Center" Grid.Column="4"/>
-                                        <TextBlock Text="Saturday" HorizontalAlignment="Center" Grid.Column="5" />
-                                        <TextBlock Text="Sunday" HorizontalAlignment="Center" Grid.Column="6"/>
+                                        <TextBlock Text="Monday" Width="100" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0"/>
+                                        <TextBlock Text="Tuesday" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1" />
+                                        <TextBlock Text="Wednesday" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" />
+                                        <TextBlock Text="Thursday" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="3" />
+                                        <TextBlock Text="Friday" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="4"/>
+                                        <TextBlock Text="Saturday" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="5" />
+                                        <TextBlock Text="Sunday" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="6"/>
                                     </Grid>
                                 </Border>
                                 <Grid Grid.Row="1">
@@ -250,28 +408,24 @@
                                         <ColumnDefinition Width="190"/>
                                     </Grid.ColumnDefinitions>
                                     <ScrollViewer Grid.Column="0" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto">
-                                        <!--<local1:UserControl1 DataContext="{Binding Week.Monday}"></local1:UserControl1>-->
                                         <Border Style = "{StaticResource DaysBorder}">
                                             <Grid Margin="0,10,5,0" >
-                                                <ItemsControl ItemsSource="{Binding Week.Monday}" ItemTemplate="{StaticResource DaysCard}">
-                                                </ItemsControl>
+                                                <ItemsControl ItemsSource="{Binding Week.Monday}" ItemTemplate="{StaticResource DaysCard}" />
+
                                             </Grid>
                                         </Border>
                                     </ScrollViewer>
                                     <ScrollViewer Grid.Column="1" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto">
                                         <Border Style = "{StaticResource DaysBorder}">
                                             <Grid Margin="0,10,0,0" >
-                                                <ItemsControl ItemsSource="{Binding Week.Tuesday}" ItemTemplate="{StaticResource DaysCard}">
-
-                                                </ItemsControl>
+                                                <ItemsControl ItemsSource="{Binding Week.Tuesday}" ItemTemplate="{StaticResource DaysCard}"/>
                                             </Grid>
                                         </Border>
                                     </ScrollViewer>
                                     <ScrollViewer Grid.Column="2" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto">
                                         <Border Style = "{StaticResource DaysBorder}">
                                             <Grid  Margin="0,10,0,0" >
-                                                <ItemsControl ItemsSource="{Binding Week.Wednesday}" ItemTemplate="{StaticResource DaysCard}">
-                                                </ItemsControl>
+                                                <ItemsControl ItemsSource="{Binding Week.Wednesday}" ItemTemplate="{StaticResource DaysCard}" Selector.SelectionChanged="ItemsControl_SelectionChanged"/>
                                             </Grid>
                                         </Border>
                                     </ScrollViewer>
@@ -285,14 +439,14 @@
                                     <ScrollViewer Grid.Column="4" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto">
                                         <Border Style = "{StaticResource DaysBorder}">
                                             <Grid  Margin="0,10,0,0" >
-                                                <ItemsControl ItemsSource="{Binding Week.Friday}" ItemTemplate="{StaticResource DaysCard}" />
+                                                <ItemsControl ItemsSource="{Binding Week.Friday}" ItemTemplate="{StaticResource DaysCard}"/>
                                             </Grid>
                                         </Border>
                                     </ScrollViewer>
                                     <ScrollViewer Grid.Column="5" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto">
                                         <Border Style = "{StaticResource DaysBorder}">
                                             <Grid  Margin="0,10,0,0" >
-                                                <ItemsControl ItemsSource="{Binding Week.Saturday}" ItemTemplate="{StaticResource DaysCard}" />
+                                                <ItemsControl ItemsSource="{Binding Week.Saturday}" ItemTemplate="{StaticResource DaysCard}"/>
                                             </Grid>
                                         </Border>
                                     </ScrollViewer>
@@ -303,18 +457,31 @@
                                             </Grid>
                                         </Border>
                                     </ScrollViewer>
-
-
-
-
-
-
-
                                 </Grid>
-
-
-
-
+                                <Grid Grid.Row="2">
+                                    <Button Height="30" Content="Last Week" Width="120" HorizontalAlignment="Left" Command="{Binding LastWeek}"/>
+                                    <Button Height="30" Content="Actual Week" Width="120" HorizontalAlignment="Center" Command="{Binding ActualWeek}"/>
+                                    <Button Height="30" Content="Next Week" Width="120" HorizontalAlignment="Right" Command="{Binding NextWeek}"/>
+                                </Grid>
+                                <Grid Grid.Row="3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <Label Grid.Row="0" Grid.Column="0" Content="Movie:"/>
+                                    <ComboBox Grid.Row="0" Grid.Column="1" Width="400" BorderBrush="Black" FontSize="24" SelectedItem="{Binding SelectedShow.MovieTitle}" Text="{Binding SelectedShow.MovieTitle}" Margin="0,0,10,10" BorderThickness="1" Height="30" IsEditable="True" Padding="0"  HorizontalAlignment="Left"  ItemsSource="{Binding MoviesList}"/>
+                                    <Label Grid.Row="1" Grid.Column="0" Content="Room:"/>
+                                    <ComboBox Grid.Row="1" Grid.Column="1" Width="400" BorderBrush="Black" FontSize="24" SelectedItem="{Binding SelectedShow.RoomName}" Text="{Binding SelectedShow.RoomName}" Margin="0,0,10,10" BorderThickness="1" Height="30" IsEditable="True" Padding="0"  HorizontalAlignment="Left" ItemsSource="{Binding RoomsList}"/>
+                                    <Label Grid.Row="2" Grid.Column="0" Content="Date:"/>
+                                    <xctk:DateTimePicker FontSize="24" Margin="0,0,10,10" Grid.Row="2" Grid.Column="1" Width="400" Value="{Binding SelectedShow.Date}"/>
+                                    <Button Content="Update Show" Command="{Binding UpdateShow}" Height="35" Grid.Row="3" Margin="10" Width="150" HorizontalAlignment="Center" Grid.ColumnSpan="2"/>
+                                </Grid>
                             </Grid>
                         </ScrollViewer>
                     </TabItem>

@@ -20,6 +20,20 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
         public String _trailer;
         public List<ShowViewModel> _shows;
         public ObservableCollection<ActorViewModel> _actors;
+        public ObservableCollection<CategoryViewModel> _categories;
+
+        public MovieViewModel()
+        {
+            this.Id = 0;
+            this.Title = "";
+            this.Director = "";
+            this.Length = 0;
+            this.Description = "";
+            this.Trailer = "";
+            this.Shows = new List<ShowViewModel>();
+            this.Actors = new ObservableCollection<ActorViewModel>();
+            this.Categories = new ObservableCollection<CategoryViewModel>();
+        }
 
         public String Title
         {
@@ -63,6 +77,12 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             set { _actors = value; OnPropertyChanged(); }
         }
 
+        public ObservableCollection<CategoryViewModel> Categories
+        {
+            get { return _categories; }
+            set { _categories = value; OnPropertyChanged(); }
+        }
+
         public MovieViewModel ShallowClone()
         {
             return (MovieViewModel)this.MemberwiseClone();
@@ -78,6 +98,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             Trailer = rhs.Trailer;
             Shows = rhs.Shows;
             Actors = rhs.Actors;
+            Categories = rhs.Categories;
         }
 
         public static explicit operator MovieViewModel(MoviesDTO dto) => new MovieViewModel
@@ -89,6 +110,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             Trailer = dto.Trailer,
             Shows = new(dto.Shows.ToList().Select(x => (ShowViewModel)x)),
             Actors = new(dto.Actors.ToList().Select(x => (ActorViewModel)x)),
+            Categories = new(dto.Categories.ToList().Select(x => (CategoryViewModel)x)),
         };
 
         public static explicit operator MoviesDTO(MovieViewModel mvm) => new MoviesDTO
@@ -100,6 +122,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             Trailer = mvm.Trailer,
             Shows = new(mvm.Shows.ToList().Select(x => (ShowsDTO)x)),
             Actors = new(mvm.Actors.ToList().Select(x => (ActorsDTO)x)),
+            Categories = new(mvm.Categories.ToList().Select(x => (CategoriesDTO)x)),
         };
     }
 }

@@ -28,6 +28,8 @@ namespace CinemaApplicationProject.Desktop
         {
             _mainViewModel = new MainViewModel();
             _mainViewModel.MovieDetailsVisible += MovieDetailsVisible;
+            _mainViewModel.RoomDetailsVisible += RoomDetailsVisible;
+            _mainViewModel.TicketDetailsVisible += TicketDetailsVisible;
             _view = new AdminMainWindow
             {
                 DataContext = _mainViewModel
@@ -38,6 +40,14 @@ namespace CinemaApplicationProject.Desktop
         private void MovieDetailsVisible(object sender, bool e)
         {
             _view.Menu.Visibility = e ? Visibility.Visible : Visibility.Hidden ;
+        }
+        private void RoomDetailsVisible(object sender, bool e)
+        {
+            _view.RoomMenu.Visibility = e ? Visibility.Visible : Visibility.Hidden;
+        }
+        private void TicketDetailsVisible(object sender, bool e)
+        {
+            _view.TicketMenu.Visibility = e ? Visibility.Visible : Visibility.Hidden;
         }
     }
 }

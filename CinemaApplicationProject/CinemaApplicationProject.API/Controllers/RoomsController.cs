@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using CinemaApplicationProject.Model;
 using CinemaApplicationProject.Model.Database;
 using CinemaApplicationProject.Model.Services;
+using CinemaApplicationProject.Model.DTOs;
 
 namespace CinemaApplicationProject.API.Controllers
 {
@@ -21,6 +22,7 @@ namespace CinemaApplicationProject.API.Controllers
         public RoomsController(IDatabaseService service)
         {
             _service = service;
+            DatabaseManipulation.context = _service.GetContext();
         }
 
         // GET: api/Rooms
@@ -47,26 +49,42 @@ namespace CinemaApplicationProject.API.Controllers
         // PUT: api/Rooms/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public IActionResult PutRooms(int id, Rooms rooms)
+        public IActionResult PutRooms(int id, RoomsDTO rooms)
         {
-            if (id != rooms.Id)
+            var fasz = _service.GetRoomById(id);
+            fasz.Name = rooms.Name;
+            fasz.Width = rooms.Width;
+            fasz.Heigth = rooms.Heigth;
+
+            if (id != fasz.Id)
             {
                 return BadRequest();
             }
-
-            DatabaseManipulation.UpdateElement(rooms);
-
-            return NoContent();
+            if (DatabaseManipulation.UpdateElementAsync((Rooms)fasz))
+            {
+                return Ok();
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         // POST: api/Rooms
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public ActionResult<Rooms> PostRooms(Rooms rooms)
+        public ActionResult<RoomsDTO> PostRooms(RoomsDTO rooms)
         {
-            DatabaseManipulation.AddElement(rooms);
+            var room = DatabaseManipulation.AddElement((Rooms)rooms);
 
-            return CreatedAtAction("GetRooms", new { id = rooms.Id }, rooms);
+            if (room == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+            else
+            {
+                return CreatedAtAction(nameof(GetRooms), new { id = room.Id }, (RoomsDTO)room);
+            }
         }
 
         // DELETE: api/Rooms/5

@@ -62,7 +62,7 @@ namespace CinemaApplicationProject.API.Controllers
                 return BadRequest();
             }
 
-            DatabaseManipulation.UpdateElement(actors);
+            DatabaseManipulation.UpdateElementAsync(actors);
             return NoContent();
         }
 
@@ -85,7 +85,6 @@ namespace CinemaApplicationProject.API.Controllers
                 actor = entity;
             }
             _service.ConnectMovieWithActor(actors.MovieId, actor.Id);
-
             return CreatedAtAction(nameof(GetActor), new { id = actor.Id }, (ActorsDTO)actor);
         }
 
@@ -101,7 +100,9 @@ namespace CinemaApplicationProject.API.Controllers
 
             DatabaseManipulation.DeleteElement(actors);
             //_context.Actors.Remove(actors);
-            //await _context.SaveChangesAsync();
+            //await _context.SaveChanges
+            //
+            //();
 
             return NoContent();
         }

@@ -53,7 +53,7 @@ namespace CinemaApplicationProject.API.Controllers
                 return BadRequest();
             }
 
-            DatabaseManipulation.UpdateElement(statsAndPays);
+            DatabaseManipulation.UpdateElementAsync(statsAndPays);
 
             return NoContent();
         }

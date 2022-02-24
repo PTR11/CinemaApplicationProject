@@ -40,5 +40,17 @@ namespace CinemaApplicationProject.Model.DTOs
                 Heigth = m.Room.Heigth,
             } : null,
         };
+
+        public static explicit operator Shows(ShowsDTO m) => new Shows
+        {
+            Id = m.Id,
+            RoomId = m.RoomId,
+            MovieId = m.MovieId,
+            Date = m.Date,
+        };
+
+
+
+
     }
 }

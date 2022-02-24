@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.2.0" />
     <PackageReference Include="LiveCharts.WPF" Version="0.9.7" />
     <PackageReference Include="MaterialDesignColors" Version="2.0.4" />
     <PackageReference Include="MaterialDesignThemes" Version="4.3.0" />
@@ -27,6 +28,7 @@
 		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
 		<PackageReference Include="Syncfusion.SfScheduler.WPF" Version="19.4.0.50" />
 		<PackageReference Include="Syncfusion.SfSunburstChart.WPF" Version="19.4.0.50" />
+		<PackageReference Include="System.Runtime" Version="4.3.1" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\CinemaApplicationProject.Model\CinemaApplicationProject.Model.csproj" />

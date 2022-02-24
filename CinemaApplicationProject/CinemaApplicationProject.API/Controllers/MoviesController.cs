@@ -87,13 +87,13 @@ namespace CinemaApplicationProject.API.Controllers
         // PUT: api/Movies/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public IActionResult PutMovies(int id, Movies movies)
+        public IActionResult PutMovies(int id, MoviesDTO movies)
         {
             if (id != movies.Id)
             {
                 return BadRequest();
             }
-            if (DatabaseManipulation.UpdateElement(movies))
+            if (DatabaseManipulation.UpdateElementAsync((Movies)movies))
             {
                 return Ok();
             }
@@ -108,14 +108,6 @@ namespace CinemaApplicationProject.API.Controllers
         [HttpPost]
         public ActionResult<MoviesDTO> PostMovies(MoviesDTO movies)
         {
-            //var m = new Movies{ 
-            //    Title = movies.Title ,
-            //    Length = movies.Length ,
-            //    Description = movies.Description ,
-            //    Actors = new List<Actors>(movies.Actors.Select(a => new Actors { Name = a.Name, Id = a.Id })),
-            //    Trailer = movies.Trailer ,
-
-            //};
             var movie = DatabaseManipulation.AddElement((Movies)movies);
 
             if (movie == null)

@@ -12,7 +12,7 @@ namespace CinemaApplicationProject.Model.DTOs
 
         public string Category { get; set; }
 
-
+        public int MovieId { get; set; }
 
         public static explicit operator CategoriesDTO(Categories m) => new CategoriesDTO
         {

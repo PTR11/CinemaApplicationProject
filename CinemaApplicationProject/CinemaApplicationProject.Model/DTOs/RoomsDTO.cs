@@ -23,5 +23,13 @@ namespace CinemaApplicationProject.Model.DTOs
             Width = m.Width,
             Heigth = m.Heigth
         };
+
+        public static explicit operator Rooms(RoomsDTO m) => new Rooms
+        {
+            Id = m.Id,
+            Name = m.Name,
+            Width = m.Width,
+            Heigth = m.Heigth
+        };
     }
 }

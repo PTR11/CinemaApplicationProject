@@ -172,15 +172,25 @@ namespace CinemaApplicationProject.Model.Services
 
         #region Tickets
         public int GetPriceOfTicketById(int id);
+
+        public List<Tickets> GetTickets();
+
+        public Tickets GetTicketById(int id);
         #endregion
 
         #region Categories
 
         public List<Categories> GetCategories();
 
+        public Categories GetCategoryById(int id);
+
+        public Categories GetCategoryByName(String cat);
+
+        public void ConnectMovieWithCategory(int movieId, int actorId);
+
         #endregion
 
-        #region Gues
+        #region Guest
 
         public Guests GetGuestByUserName(String username);
 

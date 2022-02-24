@@ -39,11 +39,17 @@ namespace CinemaApplicationProject.Model.Services
             return context.Actors.Where(a => a.Movies.Contains(movie)).ToList();
         }
 
+
+
         public void ConnectMovieWithActor(int movieId, int actorId) {
-            if(movieId != 0)
+            if (movieId != 0)
             {
-                context.Movies.FirstOrDefault(m => m.Id == movieId).Actors.Add(context.Actors.FirstOrDefault(m => m.Id == actorId));
-                context.SaveChanges();
+                var hasConnection = context.Movies.Include(m => m.Actors).FirstOrDefault(m => m.Id == movieId).Actors.FirstOrDefault(m => m.Id == actorId);
+                if (hasConnection == null)
+                {
+                    context.Movies.FirstOrDefault(m => m.Id == movieId).Actors.Add(context.Actors.FirstOrDefault(m => m.Id == actorId));
+                    context.SaveChanges();
+                }
             }
         }
         #endregion
@@ -101,7 +107,7 @@ namespace CinemaApplicationProject.Model.Services
 
         public Movies GetMovie(int id) => context.Movies.Include(m => m.Shows).Include(m => m.Actors).Include(m => m.Categories).FirstOrDefault(m => m.Id==id);
 
-        public List<Movies> GetMovies() => context.Movies.Include(m => m.Actors).ToList();
+        public List<Movies> GetMovies() => context.Movies.Include(m => m.Actors).Include(m => m.Categories).ToList();
 
         public List<Movies> GetTodaysMovies() {
 
@@ -329,11 +335,32 @@ namespace CinemaApplicationProject.Model.Services
 
         #region Tickets
         public int GetPriceOfTicketById(int id) => context.Tickets.Where(m => m.Id == id).Select(m => m.Price).Single();
+
+        public List<Tickets> GetTickets() => context.Tickets.ToList();
+
+        public Tickets GetTicketById(int id) => context.Tickets.FirstOrDefault(t => t.Id == id);
         #endregion
 
         #region Categories
 
         public List<Categories> GetCategories() => context.Categories.ToList();
+
+        public Categories GetCategoryById(int id) => context.Categories.FirstOrDefault(m => m.Id==id);
+
+        public Categories GetCategoryByName(String cat) => context.Categories.FirstOrDefault(c => c.Category.Equals(cat));
+
+        public void ConnectMovieWithCategory(int movieId, int catId)
+        {
+            if (movieId != 0)
+            {
+                var hasConnection = context.Movies.Include(m => m.Categories).FirstOrDefault(m => m.Id == movieId).Categories.FirstOrDefault(m => m.Id == catId);
+                if (hasConnection == null)
+                {
+                    context.Movies.FirstOrDefault(m => m.Id == movieId).Categories.Add(context.Categories.FirstOrDefault(m => m.Id == catId));
+                    context.SaveChanges();
+                }
+            }
+        }
 
         #endregion
 

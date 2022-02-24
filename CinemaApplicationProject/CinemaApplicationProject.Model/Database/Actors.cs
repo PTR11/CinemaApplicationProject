@@ -17,6 +17,24 @@ namespace CinemaApplicationProject.Model.Database
         }
         public virtual ICollection<Movies> Movies { get; set; }
 
-        
+
+        public override bool Equals(Object obj)
+        {
+            //Check for null and compare run-time types.
+            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                Actors actor = (Actors)obj;
+                return (Name.Equals(actor.Name));
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return Id;
+        }
     }
 }

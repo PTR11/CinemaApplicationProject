@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CinemaApplicationProject.Model.Database;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -13,13 +14,13 @@ namespace CinemaApplicationProject.Model.Services
     {
         public static DatabaseContext context;
 
-        
-        
+
+
         public static T AddElement<T>(T element) where T : class
         {
             try
             {
-                context.Entry(element).State = Microsoft.EntityFrameworkCore.EntityState.Added;
+                context.Add(element);
                 context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
@@ -51,12 +52,12 @@ namespace CinemaApplicationProject.Model.Services
             return true;
         }
 
-        public static bool UpdateElement<T>(T element) where T : class
+        public static bool UpdateElementAsync<T>(T element) where T : class
         {
             try
             {
-                context.Set<T>().Update(element);
-                //context.Entry(element).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                context.Update(element);
+                context.Entry(element).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
@@ -68,6 +69,7 @@ namespace CinemaApplicationProject.Model.Services
                 return false;
             }
             return true;
+
         }
     }
 }

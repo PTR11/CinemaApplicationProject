@@ -13,18 +13,14 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
 {
     public class ShowViewModel : ViewModelBase
     {
-        public int _id;
         public int _roomId;
         public string _roomName;
         public int _movieId;
         public string _movieTitle;
-        public DateTime _date;
+        public DateTime _date = DateTime.Now;
+        public String _dateFormat;
 
-        public Int32 Id
-        {
-            get { return _id; }
-            set { _id = value; OnPropertyChanged(); }
-        }
+        
         public String MovieTitle
         {
             get { return _movieTitle; }
@@ -52,6 +48,12 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
         {
             get { return _roomName; }
             set { _roomName = value; OnPropertyChanged(); }
+        }
+
+        public String DateFormat
+        {
+            get { return _dateFormat; }
+            set { _dateFormat = value; OnPropertyChanged(); }
         }
 
         public ShowViewModel ShallowClone()
@@ -86,15 +88,6 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             MovieId = mvm.MovieId,
             Date = mvm.Date
         };
-
-        public static async Task<String> GetMovieTitleAsync(int id)
-        {
-            var movie = await _service.GetAsync<MoviesDTO>("api/Movies/" + id);
-
-            return movie.Title;
-        }
-
-        public static String GetRoomName(int id) => _service.GetAsync<RoomsDTO>("api/Rooms/" + id).Result.Name;
 
 
     }

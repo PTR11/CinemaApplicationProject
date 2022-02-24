@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CinemaApplicationProject.Model;
 using CinemaApplicationProject.Model.Database;
+using CinemaApplicationProject.Model.Services;
+using CinemaApplicationProject.Model.DTOs;
 
 namespace CinemaApplicationProject.API.Controllers
 {
@@ -14,95 +16,83 @@ namespace CinemaApplicationProject.API.Controllers
     [ApiController]
     public class TicketsController : ControllerBase
     {
-        private readonly DatabaseContext _context;
+        private readonly IDatabaseService _service;
 
-        public TicketsController(DatabaseContext context)
+        public TicketsController(IDatabaseService service)
         {
-            _context = context;
+            _service = service;
+            DatabaseManipulation.context = _service.GetContext();
         }
 
         // GET: api/Tickets
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tickets>>> GetTickets()
+        public ActionResult<IEnumerable<TicketsDTO>> GetTickets()
         {
-            return await _context.Tickets.ToListAsync();
+            return _service.GetTickets().Select(t => (TicketsDTO)t).ToList();
         }
 
         // GET: api/Tickets/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Tickets>> GetTickets(int id)
+        public ActionResult<TicketsDTO> GetTicketById(int id)
         {
-            var tickets = await _context.Tickets.FindAsync(id);
-
-            if (tickets == null)
-            {
-                return NotFound();
-            }
-
-            return tickets;
+            return (TicketsDTO)_service.GetTicketById(id);
         }
 
-        // PUT: api/Tickets/5
+        //PUT: api/Tickets/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTickets(int id, Tickets tickets)
+        public IActionResult PutTickets(int id, TicketsDTO tickets)
         {
             if (id != tickets.Id)
             {
                 return BadRequest();
             }
-
-            _context.Entry(tickets).State = EntityState.Modified;
-
-            try
+            if (DatabaseManipulation.UpdateElementAsync((Tickets)tickets))
             {
-                await _context.SaveChangesAsync();
+                return Ok();
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!TicketsExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
-
-            return NoContent();
         }
 
         // POST: api/Tickets
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Tickets>> PostTickets(Tickets tickets)
+        public ActionResult<Tickets> PostTickets(TicketsDTO tickets)
         {
-            _context.Tickets.Add(tickets);
-            await _context.SaveChangesAsync();
+            var ticket = DatabaseManipulation.AddElement((Tickets)tickets);
 
-            return CreatedAtAction("GetTickets", new { id = tickets.Id }, tickets);
-        }
-
-        // DELETE: api/Tickets/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTickets(int id)
-        {
-            var tickets = await _context.Tickets.FindAsync(id);
-            if (tickets == null)
+            if (ticket == null)
             {
-                return NotFound();
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
-
-            _context.Tickets.Remove(tickets);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            else
+            {
+                return CreatedAtAction(nameof(GetTicketById), new { id = ticket.Id }, (TicketsDTO)ticket);
+            }
         }
 
-        private bool TicketsExists(int id)
-        {
-            return _context.Tickets.Any(e => e.Id == id);
-        }
+        //// DELETE: api/Tickets/5
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteTickets(int id)
+        //{
+        //    var tickets = await _context.Tickets.FindAsync(id);
+        //    if (tickets == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    _context.Tickets.Remove(tickets);
+        //    await _context.SaveChangesAsync();
+
+        //    return NoContent();
+        //}
+
+        //private bool TicketsExists(int id)
+        //{
+        //    return _context.Tickets.Any(e => e.Id == id);
+        //}
     }
 }
