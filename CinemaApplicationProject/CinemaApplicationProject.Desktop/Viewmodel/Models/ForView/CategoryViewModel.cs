@@ -12,6 +12,11 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
     {
         private string _category;
 
+        public CategoryViewModel()
+        {
+            _category = "";
+        }
+
         public string Category
         {
             get { return _category; }

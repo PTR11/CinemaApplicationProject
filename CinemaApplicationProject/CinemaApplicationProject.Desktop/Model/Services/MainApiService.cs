@@ -48,10 +48,16 @@ namespace CinemaApplicationProject.Desktop.Model.Services
         public async Task CreateAsync<T>(String route,T entity) where T : RespondDTO
         {
             HttpResponseMessage response = await _client.PostAsJsonAsync(route, entity);
-            entity.Id = (await response.Content.ReadAsAsync<ActorsDTO>()).Id;
+
+            
             if (!response.IsSuccessStatusCode)
             {
+                var foo = response.Content.ReadAsStringAsync().Result;
                 throw new NetworkException("Service returned response: " + response.StatusCode);
+            }
+            else
+            {
+                entity.Id = (await response.Content.ReadAsAsync<T>()).Id;
             }
         }
 

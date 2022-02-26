@@ -60,7 +60,7 @@ namespace CinemaApplicationProject.API.Controllers
             {
                 return BadRequest();
             }
-            if (DatabaseManipulation.UpdateElementAsync((Rooms)fasz))
+            if (DatabaseManipulation.UpdateElementAsync(fasz))
             {
                 return Ok();
             }

@@ -18,6 +18,7 @@ namespace CinemaApplicationProject.API.Controllers
         public CategoriesController(IDatabaseService service)
         {
             _service = service;
+            DatabaseManipulation.context = _service.GetContext();
         }
 
         [EnableCors("_myAllowSpecificOrigins")]
@@ -30,7 +31,7 @@ namespace CinemaApplicationProject.API.Controllers
         [HttpGet]
         public ActionResult<CategoriesDTO> GetCategoryById(int id)
         {
-            return (CategoriesDTO)_service.GetCategoryById(id);
+           return (CategoriesDTO)_service.GetCategoryById(id);
         }
 
         [HttpPost]

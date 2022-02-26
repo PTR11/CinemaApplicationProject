@@ -30,14 +30,22 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         private ObservableCollection<TicketViewModel> _tickets = new ObservableCollection<TicketViewModel>();
 
+        private ObservableCollection<EmployeeViewModel> _users = new ObservableCollection<EmployeeViewModel>();
+
+        private ObservableCollection<StatsViewModel> _roles = new ObservableCollection<StatsViewModel>();
+
+
         private ObservableCollection<String> _categoriesList = new ObservableCollection<String>();
         private ObservableCollection<String> _actorsList = new ObservableCollection<String>();
+        private ObservableCollection<String> _rolesList = new ObservableCollection<String>();
         private ObservableCollection<String> _moviesList = new ObservableCollection<String>();
         private ObservableCollection<String> _roomsList = new ObservableCollection<String>();
 
         private List<ActorViewModel> _allActors = new List<ActorViewModel>();
 
         private List<CategoryViewModel> _allCategories = new List<CategoryViewModel>();
+
+        private List<StatsViewModel> _allRoles = new List<StatsViewModel>();
 
         private ShowWeekViewModel _week = new ShowWeekViewModel();
 
@@ -49,7 +57,13 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         private bool _addShow = false;
 
+        private bool _addUser = false;
+
+        private bool _addRole = false;
+
         private MovieViewModel _selectedMovie;
+
+        private EmployeeViewModel _selectedUser;
 
         private ShowViewModel _selectedShow;
 
@@ -57,9 +71,13 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         private TicketViewModel _selectedTicket;
 
+        private StatsViewModel _selectedRole;
+
         private ActorViewModel _newActor;
 
         private CategoryViewModel _newCategory;
+
+        private StatsViewModel _newRole;
 
         public List<ShowViewModel> _list;
 
@@ -83,6 +101,12 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             set { _movies = value; OnPropertyChanged(); }
         }
 
+        public ObservableCollection<EmployeeViewModel> Users
+        {
+            get { return _users; }
+            set { _users = value; OnPropertyChanged(); }
+        }
+
         public ObservableCollection<ShowViewModel> Shows
         {
             get { return _shows; }
@@ -95,10 +119,22 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             set { _actors = value; OnPropertyChanged(); }
         }
 
+        public ObservableCollection<StatsViewModel> Roles
+        {
+            get { return _roles; }
+            set { _roles = value; OnPropertyChanged(); }
+        }
+
         public ObservableCollection<String> ActorsList
         {
             get { return _actorsList; }
             set { _actorsList = value; OnPropertyChanged(); }
+        }
+
+        public ObservableCollection<String> RolesList
+        {
+            get { return _rolesList; }
+            set { _rolesList = value; OnPropertyChanged(); }
         }
 
         public ObservableCollection<String> CategoriesList
@@ -124,6 +160,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             get { return _week; }
             set { _week = value; OnPropertyChanged(); }
         }
+
+
         public MovieViewModel SelectedMovie
         {
             get { return _selectedMovie; }
@@ -148,6 +186,19 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             set { _selectedTicket = value; OnPropertyChanged(); }
         }
 
+        public EmployeeViewModel SelectedUser
+        {
+            get { return _selectedUser; }
+            set { _selectedUser = value; OnPropertyChanged(); }
+        }
+
+        public StatsViewModel SelectedRole
+        {
+            get { return _selectedRole; }
+            set { _selectedRole = value; OnPropertyChanged(); }
+        }
+
+
         public ActorViewModel NewActor
         {
             get { return _newActor; }
@@ -160,21 +211,42 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             set { _newCategory = value; OnPropertyChanged(); }
         }
 
+        public StatsViewModel NewRole
+        {
+            get { return _newRole; }
+            set { _newRole = value; OnPropertyChanged(); }
+        }
+
         public event EventHandler<bool> MovieDetailsVisible;
         public event EventHandler<bool> RoomDetailsVisible;
         public event EventHandler<bool> TicketDetailsVisible;
+        public event EventHandler<bool> UserDetailsVisible;
+        public event EventHandler<bool> RoleDetailsVisible;
+
+
         public DelegateCommand SelectMovie { get; set; }
         public DelegateCommand SelectRoom { get; set; }
         public DelegateCommand SelectTicket { get; set; }
+        public DelegateCommand SelectUser { get; set; }
+        public DelegateCommand SelectRole { get; set; }
+
+
         public DelegateCommand AddNewActor { get; set; }
         public DelegateCommand AddNewCategory { get; set; }
         public DelegateCommand AddNewMovie { get; set; }
         public DelegateCommand AddNewRoom { get; set; }
         public DelegateCommand AddNewTicket { get; set; }
+        public DelegateCommand AddNewUser { get; set; }
+        public DelegateCommand AddNewRole { get; set; }
+
+
         public DelegateCommand UpdateShow { get; set; }
         public DelegateCommand UpdateMovie { get; set; }
         public DelegateCommand UpdateRoom { get; set; }
         public DelegateCommand UpdateTicket { get; set; }
+        public DelegateCommand UpdateUser { get; set; }
+        public DelegateCommand UpdateRole { get; set; }
+
         public DelegateCommand LastWeek { get; set; }
         public DelegateCommand ActualWeek { get; set; }
         public DelegateCommand NextWeek { get; set; }
@@ -182,28 +254,37 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         public MainViewModel()
         {
             
-            
+            //Selectors
             SelectMovie = new DelegateCommand( _ => ShowDetails(SelectedMovie,ref _addMovie, MovieDetailsVisible));
             SelectRoom = new DelegateCommand(_ => ShowDetails(SelectedRoom,ref _addRoom, RoomDetailsVisible));
             SelectTicket = new DelegateCommand(_ => ShowDetails(SelectedTicket, ref _addTicket, TicketDetailsVisible));
+            SelectUser = new DelegateCommand(_ => ShowDetails(SelectedUser, ref _addUser, UserDetailsVisible));
+            SelectRole = new DelegateCommand(_ => ShowDetails(SelectedRole, ref _addRole, RoleDetailsVisible));
 
-
+            //Add news (in update menu)
             AddNewActor = new DelegateCommand(_ => !(NewActor is null), async _ => await AddActor());
             AddNewCategory = new DelegateCommand(_ => !(NewActor is null),async _ => await AddCategory());
+            AddNewRole = new DelegateCommand(_ => !(NewRole is null), async _ => await AddRole());
 
+
+            //Add new entity completly
             AddNewMovie = new DelegateCommand(_ => Adder(SelectedMovie=new MovieViewModel(),ref _addMovie,MovieDetailsVisible));
             AddNewRoom = new DelegateCommand(_ => Adder(SelectedRoom=new RoomViewModel(),ref _addRoom,RoomDetailsVisible));
             AddNewTicket = new DelegateCommand(_ => Adder(SelectedTicket=new TicketViewModel(),ref _addTicket,TicketDetailsVisible));
+            AddNewUser = new DelegateCommand(_ => Adder(SelectedUser = new EmployeeViewModel(), ref _addUser, UserDetailsVisible));
 
             //Updates
             UpdateShow = new DelegateCommand(_ => !(SelectedShow is null), async _ => await UpdateSelectedItem(_addShow,AddCreatedShow, SelectedShow.Id != 0,SetupShowUpdate,"api/Shows",LoadShows,LoadRooms));
 
-            UpdateMovie = new DelegateCommand(_ => !(SelectedMovie is null), async _ => await UpdateSelectedItem(_addMovie, AddCreatedMovie, SelectedMovie.Title != null, SetupMovieUpdate, "api/Movies", LoadMovies, LoadShows));
+            UpdateMovie = new DelegateCommand(_ => !(SelectedMovie is null), async _ => await UpdateSelectedItem(_addMovie, AddCreatedMovie, SelectedMovie.Title != null, SetupMovieUpdate, "api/Movies", LoadMovies, LoadShows, LoadActors, LoadCategories));
 
             UpdateRoom = new DelegateCommand(_ => !(SelectedRoom is null), async _ => await UpdateSelectedItem(_addRoom, AddCreatedRoom, SelectedRoom.Id != 0, SetupRoomUpdate, "api/Rooms", LoadRooms, LoadShows));
 
-
             UpdateTicket = new DelegateCommand(_ => !(SelectedTicket is null), async _ => await UpdateSelectedItem(_addTicket, AddCreatedTicket, SelectedTicket.Id != 0, SetupTicketUpdate, "api/Tickets", null));
+
+            UpdateUser = new DelegateCommand(_ => !(SelectedUser is null), async _ => await UpdateSelectedItem(_addUser, AddCreatedUser, SelectedUser.Id != 0, SetupUserUpdate, "api/Users", LoadUsers, LoadRoles));
+
+            UpdateRole = new DelegateCommand(_ => !(SelectedRole is null), async _ => await UpdateSelectedItem(_addRole, AddCreatedTicket, SelectedRole.Id != 0, SetupRoleUpdate, "api/StatsAndPays", LoadRoles));
 
             LastWeek = new DelegateCommand(_ => ChangeWeekToLast());
             ActualWeek = new DelegateCommand(async _ => await LoadShows());
@@ -211,11 +292,14 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
             NewActor = new ActorViewModel();
             NewCategory = new CategoryViewModel();
+            NewRole = new StatsViewModel();
 
             SelectedShow = new ShowViewModel();
             SelectedMovie = new MovieViewModel();
             SelectedRoom = new RoomViewModel();
             SelectedTicket = new TicketViewModel();
+            SelectedUser = new EmployeeViewModel();
+            SelectedRole = new StatsViewModel();
 
            LoadInit();
         }
@@ -247,9 +331,11 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             await LoadRooms();
             await LoadTickets();
             await LoadCategories();
+            await LoadUsers();
+            await LoadRoles();
         }
 
-        
+
 
         private bool IsOnThisWeek(DateTime date)
         {
@@ -369,7 +455,6 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             Rooms = new ObservableCollection<RoomViewModel>(tmpRooms);
             RoomsList = new ObservableCollection<string>(tmpRooms.Select(r => "" + r.Name + " (" + r.Width + "x" + r.Heigth + ")").ToList());
         }
-
         private async Task LoadCategories()
         {
             try
@@ -383,9 +468,58 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             }
             CategoriesList = new ObservableCollection<string>(_allCategories.Select(a => a.Category).ToList());
         }
+        private async Task LoadUsers()
+        {
+            List<EmployeeViewModel> tmpEmployees = new List<EmployeeViewModel>();
+            try
+            {
+                tmpEmployees = new List<EmployeeViewModel>((await _service.LoadingAsync<EmployeesDTO>("api/Users"))
+                    .Select(movie => (EmployeeViewModel)movie));
+            }
+            catch (Exception ex) when (ex is NetworkException || ex is HttpRequestException)
+            {
+                OnMessageApplication($"Unexpected error occured! ({ex.Message})");
+            }
+            Users = new ObservableCollection<EmployeeViewModel>(tmpEmployees);
+            //MoviesList = new ObservableCollection<string>(tmpMovies.Select(m => m.Title).ToList());
+        }
+        private async Task LoadRoles()
+        {
+            try
+            {
+                _allRoles = new List<StatsViewModel>((await _service.LoadingAsync<StatsDTO>("api/StatsAndPays"))
+                    .Select(ticket => (StatsViewModel)ticket));
+            }
+            catch (Exception ex) when (ex is NetworkException || ex is HttpRequestException)
+            {
+                OnMessageApplication($"Unexpected error occured! ({ex.Message})");
+            }
+            Roles = new ObservableCollection<StatsViewModel>(_allRoles);
+            RolesList = new ObservableCollection<string>(_allRoles.Select(a => a.Name).ToList());
+        }
 
         #endregion
 
+
+        private async Task AddRole()
+        {
+            if (NewRole.Name != null)
+            {
+                var roleDTO = (StatsDTO)NewRole;
+                if (roleDTO.Id == 0 && RolesList.Contains(roleDTO.Name))
+                {
+                    roleDTO.Id = _allRoles.FirstOrDefault(c => c.Name.Equals(roleDTO.Name)).Id;
+                }
+                roleDTO.UserId = SelectedUser.Id;
+                NewRole.Id = await AddEntity("api/StatsAndPays", roleDTO);
+                if (SelectedUser.Stats.FirstOrDefault(c => c.Id == NewRole.Id) == null)
+                {
+                    SelectedUser.Stats.Add(NewRole);
+                }
+                NewRole = new StatsViewModel();
+            }
+            await LoadRoles();
+        }
 
         private async Task AddCategory()
         {
@@ -398,10 +532,10 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
                 var category = _allCategories.FirstOrDefault(a => a.Category == NewCategory.Category);
                 if (category != null)
                 {
-                    NewActor.Id = category.Id;
+                    NewCategory.Id = category.Id;
                 }
                 SelectedMovie.Categories.Add(NewCategory);
-                NewActor = new ActorViewModel();
+                NewCategory = new CategoryViewModel();
             }
             else if (NewCategory.Category != null)
             {
@@ -418,6 +552,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
                 }
                 NewCategory = new CategoryViewModel();
             }
+            await LoadCategories();
         }
 
         private async Task AddActor()
@@ -451,10 +586,12 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
                 }
                 NewActor = new ActorViewModel();
             }
+            await LoadActors();
         }
 
 
         #region Setups
+
         private ShowsDTO SetupShowUpdate()
         {
             ShowViewModel updatetedShow = new ShowViewModel();
@@ -498,6 +635,27 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             TicketDetailsVisible?.Invoke(this, false);
             return dto;
         }
+
+        private EmployeesDTO SetupUserUpdate()
+        {
+            EmployeeViewModel newUser = new EmployeeViewModel();
+            newUser.CopyFrom(SelectedUser);
+            SelectedUser = new EmployeeViewModel();
+            var dto = (EmployeesDTO)newUser;
+            UserDetailsVisible?.Invoke(this, false);
+            return dto;
+        }
+
+        private StatsDTO SetupRoleUpdate()
+        {
+            StatsViewModel newRole = new StatsViewModel();
+            newRole.CopyFrom(SelectedRole);
+            SelectedRole = new StatsViewModel();
+            var dto = (StatsDTO)newRole;
+            RoleDetailsVisible?.Invoke(this, false);
+            return dto;
+        }
+
         #endregion
 
         #region Creates
@@ -514,7 +672,6 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
                     SelectedShow.RoomId = room.Id;
                     var showDTO = (ShowsDTO)SelectedShow;
                     SelectedShow.Id = await AddEntity("api/Shows", showDTO);
-                    await LoadShows();
                     SelectedShow = new ShowViewModel();
                 }
             }
@@ -526,11 +683,11 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             {
                 var movieDTO = (MoviesDTO)SelectedMovie;
                 movieDTO.Actors.Select(a => new ActorsDTO { Name = a.Name, Id = a.Id });
+                movieDTO.Categories.Select(a => new CategoriesDTO { Category = a.Category, Id = a.Id });
                 SelectedMovie.Id = await AddEntity("api/Movies", movieDTO);
                 _addMovie = false;
                 NewActor = new ActorViewModel();
                 SelectedMovie = new MovieViewModel();
-                await LoadMovies();
                 MovieDetailsVisible?.Invoke(this, false);
             }
         }
@@ -560,6 +717,19 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
                 TicketDetailsVisible?.Invoke(this, false);
             }
         }
+
+        private async Task AddCreatedUser()
+        {
+            if (SelectedUser.Name != null && SelectedUser.UserName != null)
+            {
+                var userDTO = (EmployeesDTO)SelectedUser;
+                SelectedUser.Id = await AddEntity("api/Users/", userDTO);
+                _addUser = false;
+                SelectedUser = new EmployeeViewModel();
+                await LoadUsers();
+                UserDetailsVisible?.Invoke(this, false);
+            }
+        }
         #endregion
 
         #region Generics
@@ -578,25 +748,31 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             e?.Invoke(this, adder);
         }
 
+        private async Task Loads(Func<Task>[] loadMethods)
+        {
+            if (loadMethods != null)
+            {
+                foreach (var method in loadMethods)
+                {
+                    await method.Invoke();
+                }
+            }
+        }
+
+
         private async Task UpdateSelectedItem<X>(bool adder, Func<Task> createMethod, bool condition, Func<X> setup, string route, params Func<Task>[] loadMethods) where X : RespondDTO
         {
             if (adder)
             {
                 await createMethod();
-                return;
             }
             else if (condition)
             {
                 var dto = setup();
                 await UpdateEntity(route, dto);
-                if (loadMethods != null)
-                {
-                    foreach (var method in loadMethods)
-                    {
-                        await method.Invoke();
-                    }
-                }
             }
+            await Loads(loadMethods);
+
         }
 
         private async Task UpdateEntity<T>(String route, T entity) where T : RespondDTO

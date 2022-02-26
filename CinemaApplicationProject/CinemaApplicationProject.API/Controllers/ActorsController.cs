@@ -26,9 +26,9 @@ namespace CinemaApplicationProject.API.Controllers
 
         // GET: api/Actors
         [HttpGet]
-        public ActionResult<IEnumerable<Actors>> GetActors()
+        public ActionResult<IEnumerable<ActorsDTO>> GetActors()
         {
-            return _service.GetActors();
+            return _service.GetActors().Select(m => (ActorsDTO)m).ToList();
         }
 
         [HttpGet("movie/{id}")]
@@ -55,14 +55,14 @@ namespace CinemaApplicationProject.API.Controllers
         // PUT: api/Actors/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public IActionResult PutActors(int id, Actors actors)
+        public IActionResult PutActors(int id, ActorsDTO actors)
         {
             if (id != actors.Id)
             {
                 return BadRequest();
             }
 
-            DatabaseManipulation.UpdateElementAsync(actors);
+            DatabaseManipulation.UpdateElementAsync((Actors)actors);
             return NoContent();
         }
 

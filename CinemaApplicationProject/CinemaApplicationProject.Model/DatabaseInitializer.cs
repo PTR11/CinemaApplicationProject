@@ -296,14 +296,19 @@ namespace CinemaApplicationProject.Model
 				Address = "anyadban",
 				CreditCardNumber = "123asd321"
 			};
-			
+
+
+			var adminRole = new StatsAndPays("administrator");
+			adminRole.Salary = 2500;
+
 
 			var adminUser = new Employees
 			{
 				UserName = "admin",
-				Name = "Péter",
+				Name = "Barnák Péter",
 				Email = "barnak.peter1@gmail.com",
-				Address = "faszomban"
+				Address = "Nyíregyháza, Honvéd utca 61",
+				Birthday = "2000/06/15"
 			};
 
 			var adminUser2 = new Guests
@@ -315,12 +320,14 @@ namespace CinemaApplicationProject.Model
 				CreditCardNumber = "KurvaAnyádat"
 			};
 			var adminPassword = "Almafa123";
-			var adminRole = new StatsAndPays("administrator");
+			
+			//adminUser.Stat = new List<StatsAndPays>();
+			//adminUser.Stat.Add(adminRole);
             _ = _userManager.CreateAsync(adminUser, adminPassword).Result;
             _ = _userManager.CreateAsync(adminUser2, adminPassword).Result;
 			_ = _userManager.CreateAsync(guest, adminPassword).Result;
 			_ = _roleManager.CreateAsync(adminRole).Result;
-            _ = _userManager.AddToRoleAsync(adminUser, adminRole.Name).Result;
+			_ = _userManager.AddToRoleAsync(adminUser, adminRole.Name).Result;
         }
 	}
 }

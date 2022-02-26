@@ -1,6 +1,7 @@
 ﻿using CinemaApplicationProject.Desktop.Model.Services;
 using CinemaApplicationProject.Desktop.View.Admin;
 using CinemaApplicationProject.Desktop.View.Admin.Pages;
+using CinemaApplicationProject.Desktop.Viewmodel.EventArguments;
 using CinemaApplicationProject.Desktop.Viewmodel.Models;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,9 @@ namespace CinemaApplicationProject.Desktop
             _mainViewModel.MovieDetailsVisible += MovieDetailsVisible;
             _mainViewModel.RoomDetailsVisible += RoomDetailsVisible;
             _mainViewModel.TicketDetailsVisible += TicketDetailsVisible;
+            _mainViewModel.UserDetailsVisible += UserDetailsVisible;
+            _mainViewModel.RoleDetailsVisible += RoleDetailsVisible;
+            _mainViewModel.MessageApplication += MessageApplication;
             _view = new AdminMainWindow
             {
                 DataContext = _mainViewModel
@@ -48,6 +52,22 @@ namespace CinemaApplicationProject.Desktop
         private void TicketDetailsVisible(object sender, bool e)
         {
             _view.TicketMenu.Visibility = e ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        private void UserDetailsVisible(object sender, bool e)
+        {
+            
+            _view.UserMenu.Visibility = e ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        private void RoleDetailsVisible(object sender, bool e)
+        {
+            _view.RoleMenu.Visibility = e ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        private void MessageApplication(object sender, MessageEventArgs e)
+        {
+            MessageBox.Show(e.Message, "CinemaHW", MessageBoxButton.OK, MessageBoxImage.Asterisk);
         }
     }
 }

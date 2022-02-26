@@ -108,8 +108,22 @@ namespace CinemaApplicationProject.API.Controllers
         [HttpPost]
         public ActionResult<MoviesDTO> PostMovies(MoviesDTO movies)
         {
+            var tmp = new MoviesDTO
+            {
+                Id = movies.Id,
+                Title = movies.Title,
+                Actors = new List<ActorsDTO>(),
+                Categories = new List<CategoriesDTO>(),
+                Length = movies.Length,
+                Description = movies.Description,
+                Trailer = movies.Trailer
+            };
+
+
+
             var movie = DatabaseManipulation.AddElement((Movies)movies);
 
+            
             if (movie == null)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);

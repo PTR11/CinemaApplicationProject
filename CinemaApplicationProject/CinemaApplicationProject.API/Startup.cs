@@ -43,8 +43,7 @@ namespace CinemaApplicationProject.API
 
             services.AddIdentity<ApplicationUser, StatsAndPays>()
                 .AddEntityFrameworkStores<DatabaseContext>()
-                .AddDefaultTokenProviders()
-                .AddRoles<StatsAndPays>();
+                .AddDefaultTokenProviders();
 
             services.AddCors(options =>
             {

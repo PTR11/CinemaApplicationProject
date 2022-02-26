@@ -8,6 +8,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using CinemaApplicationProject.Model.Services;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace CinemaApplicationProject.API.Controllers
 {
@@ -25,6 +27,14 @@ namespace CinemaApplicationProject.API.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _service = service;
+            DatabaseManipulation.context = _service.GetContext();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<EmployeesDTO>>> GetEmployees()
+        {
+            var tmpList = await _service.GetEmployees();
+            return tmpList.Select(m => (EmployeesDTO)m).ToList();
         }
 
 
@@ -36,7 +46,7 @@ namespace CinemaApplicationProject.API.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(login.UserName, login.Password, false, false);
-                
+
                 if (result.Succeeded)
                 {
                     var user = _service.GetGuestByUserName(login.UserName);
@@ -47,12 +57,12 @@ namespace CinemaApplicationProject.API.Controllers
                         HttpOnly = false,
                         //Expires = HttpContext.Current.Session.Timout,
                         SameSite = SameSiteMode.Lax
-                    }) ;
-                    
+                    });
+
                     return Ok(tmp);
                     //return RedirectService.RedirectMethod("Successfully logged in", HttpStatusCode.Redirect, new Uri("http://localhost:8080/"));
                 }
-                ModelState.AddModelError("loginError","Sikertelen bejelentkezés");
+                ModelState.AddModelError("loginError", "Sikertelen bejelentkezés");
             }
             return BadRequest(ModelState);
 
@@ -85,6 +95,69 @@ namespace CinemaApplicationProject.API.Controllers
                 ModelState.AddModelError("", "Sikertelen regisztráció");
             }
             return BadRequest(ModelState);
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult<EmployeesDTO>> PostUser(EmployeesDTO newUser)
+        {
+            var user = new Employees
+            {
+                UserName = newUser.UserName,
+                Name = newUser.Name,
+                Email = newUser.Email,
+                Address = newUser.Address,
+                Birthday = newUser.Birthday
+            };
+
+            var result = await _userManager.CreateAsync(user, newUser.Password);
+            if (result.Succeeded)
+            {
+                return (EmployeesDTO)await _service.GetEmployeeById(user.Id);
+            }
+            ModelState.AddModelError("", "Sikertelen regisztráció");
+            return BadRequest();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutUser(int id, EmployeesDTO employees)
+        {
+            if (id != employees.Id)
+            {
+                return BadRequest();
+            }
+            if(employees.Stats == null)
+            {
+                employees.Stats = new List<StatsDTO>();
+            }
+            var asd = (Employees)employees;
+            var user = await _service.GetEmployeeById(asd.Id);
+
+            user.Name = asd.Name;
+            user.UserName = asd.UserName;
+            user.Email = asd.Email;
+            user.Address = asd.Address;
+            user.Birthday = asd.Birthday;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (employees.Password != null)
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var pwResult = await _userManager.ResetPasswordAsync(user, token, employees.Password);
+                if (!pwResult.Succeeded)
+                {
+                    StatusCode(StatusCodes.Status500InternalServerError);
+                }
+            }
+
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
     }
 }

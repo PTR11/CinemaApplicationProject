@@ -18,10 +18,7 @@ namespace CinemaApplicationProject.Model.Database
             Rent = new HashSet<Rents>();
         }
 
-        
-
-        [DataType(DataType.DateTime)]
-        public DateTime Birthday { get; set; }
+        public String Birthday { get; set; }
 
         public ICollection<EmployeePresence> Presence { get; set; }
 

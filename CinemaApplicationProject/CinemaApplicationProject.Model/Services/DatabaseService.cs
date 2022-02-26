@@ -327,6 +327,8 @@ namespace CinemaApplicationProject.Model.Services
         #region StatsAndPays
         public List<StatsAndPays> GetStats() => context.StatsAndPays.ToList();
 
+        public StatsAndPays GetStatByName(String name) => context.StatsAndPays.FirstOrDefault(m => m.Name.Equals(name));
+
         public StatsAndPays GetStatById(int id) => context.StatsAndPays.FirstOrDefault(m => m.Id == id);
 
         public int GetSalaryOfStatById(int id) => context.StatsAndPays.Where(m => m.Id == id).Select(m => m.Salary).Single();
@@ -353,6 +355,7 @@ namespace CinemaApplicationProject.Model.Services
         {
             if (movieId != 0)
             {
+                
                 var hasConnection = context.Movies.Include(m => m.Categories).FirstOrDefault(m => m.Id == movieId).Categories.FirstOrDefault(m => m.Id == catId);
                 if (hasConnection == null)
                 {
@@ -367,6 +370,53 @@ namespace CinemaApplicationProject.Model.Services
         #region Guest
 
         public Guests GetGuestByUserName(String username) => context.Guests.FirstOrDefault(g => g.UserName.Equals(username));
+
+        #endregion
+
+        #region Employee
+
+        public async Task<List<Employees>> GetEmployees()
+        {
+            var emps = context.Employees.ToList();
+            foreach(var employee in emps)
+            {
+                var rolesString = await guestManager.GetRolesAsync(employee);
+                var roles = context.StatsAndPays.Where(m => rolesString.Contains(m.Name));
+                employee.Stat = new List<StatsAndPays>(roles);
+            }
+            return emps;
+        }
+
+        public async Task<Employees> GetEmployeeById(int id)
+        {
+            var user = context.Employees.FirstOrDefault(m => m.Id == id);
+            var rolesString =await guestManager.GetRolesAsync(user);
+            var roles = context.StatsAndPays.Where(m => rolesString.Contains(m.Name));
+            user.Stat = new List<StatsAndPays>(roles);
+            return user;
+        }
+
+
+        public async Task<bool> ConnectUserWithRole(int userId, int roleId)
+        {
+            if (userId != 0)
+            {
+                var user = context.Employees.FirstOrDefault(m => m.Id == userId);
+                var rolesString = await guestManager.GetRolesAsync(user);
+                var role = context.StatsAndPays.FirstOrDefault(m => m.Id == roleId);
+
+                var hasConnection = rolesString.Contains(role.Name);
+                if (hasConnection == false)
+                {
+                    var result = await guestManager.AddToRoleAsync(user, role.Name);
+                    if (result.Succeeded)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
 
         #endregion
 

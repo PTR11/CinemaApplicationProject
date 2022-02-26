@@ -57,7 +57,7 @@ namespace CinemaApplicationProject.Model.DTOs
             Length = m.Length,
             Description = m.Description,
             Actors = new List<Actors>(m.Actors.ToList().Select(a => new Actors { Name = a.Name })),
-            //Categories = ConvertCategoriesDTOToClass(m.Categories)
+            Categories = new List<Categories>(m.Categories.ToList().Select(a => new Categories { Category = a.Category })),
         };
 
     }

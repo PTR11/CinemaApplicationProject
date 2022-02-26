@@ -53,7 +53,7 @@ export default {
   methods: {
     fetchCategories(){
       axios
-          .get("http://localhost:7384/api/Categories/")
+          .get("http://localhost:7384/api/Categories/all")
           .then((result) => {
             result.data.map(e => e.category).forEach(x => this.categories.push(x))
           });

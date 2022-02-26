@@ -168,6 +168,8 @@ namespace CinemaApplicationProject.Model.Services
 
         public int GetSalaryOfStatById(int id);
 
+        public StatsAndPays GetStatByName(String name);
+
         #endregion
 
         #region Tickets
@@ -194,6 +196,14 @@ namespace CinemaApplicationProject.Model.Services
 
         public Guests GetGuestByUserName(String username);
 
+        #endregion
+
+        #region Employee
+        public Task<List<Employees>> GetEmployees();
+
+        public Task<Employees> GetEmployeeById(int id);
+
+        public Task<bool> ConnectUserWithRole(int userId, int roleId);
         #endregion
     }
 }
