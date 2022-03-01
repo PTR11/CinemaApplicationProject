@@ -97,9 +97,9 @@ namespace CinemaApplicationProject.Model.Services
 
         public EmployeePresence GetEmployeePresenceById(int id) => context.EmployeePresence.FirstOrDefault(m => m.Id == id);
 
-        public List<Employees> GetEmployeesFromPresenceByDate(DateTime date) => context.EmployeePresence.Where(m => m.Day.Date.Equals(date.Date)).Select(m => m.Employee).ToList();
+        //public List<Employees> GetEmployeesFromPresenceByDate(DateTime date) => context.EmployeePresence.Where(m => m.Day.Date.Equals(date.Date)).Select(m => m.Employee).ToList();
 
-        public List<Employees> GetEmployeesFromPresenceByDateAndStat(DateTime date, StatsAndPays stat) => context.EmployeePresence.Where(m => m.Day.Date.Equals(date.Date)).Select(m => m.Employee).Where(m => m.Stat.Contains(stat)).ToList();
+        //public List<Employees> GetEmployeesFromPresenceByDateAndStat(DateTime date, StatsAndPays stat) => context.EmployeePresence.Where(m => m.Day.Date.Equals(date.Date)).Select(m => m.Employee).Where(m => m.Stat.Contains(stat)).ToList();
 
         #endregion
 
@@ -273,7 +273,18 @@ namespace CinemaApplicationProject.Model.Services
 
         #region Rooms
 
-        public List<Rooms> GetAllRooms() => context.Rooms.ToList();
+        public List<Rooms> GetAllRooms()
+        {
+            var list = context.Rooms.Include(m => m.Shows).ToList();
+            list.ForEach(r =>
+            {
+                foreach(var show in r.Shows)
+                {
+                    show.Movie = context.Movies.FirstOrDefault(m => m.Id == show.MovieId);
+                }
+            });
+            return list;
+        }
 
         public Rooms GetRoomById(int id) => context.Rooms.Where(m => m.Id == id).Single();
 

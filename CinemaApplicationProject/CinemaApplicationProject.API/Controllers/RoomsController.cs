@@ -27,9 +27,9 @@ namespace CinemaApplicationProject.API.Controllers
 
         // GET: api/Rooms
         [HttpGet]
-        public ActionResult<IEnumerable<Rooms>> GetRooms()
+        public ActionResult<IEnumerable<RoomsDTO>> GetRooms()
         {
-            return _service.GetAllRooms();
+            return _service.GetAllRooms().Select(x => (RoomsDTO) x).ToList();
         }
 
         // GET: api/Rooms/5

@@ -45,9 +45,9 @@ namespace CinemaApplicationProject.Model.DTOs
             Title = m.Title,
             Length = m.Length,
             Description = m.Description,
-            Shows = ConvertShowsToDTO(m.Shows),
-            Actors = ConvertActorsToDTO(m.Actors),
-            Categories = ConvertCategoriesToDTO(m.Categories)
+            Shows = m.Shows != null ? ConvertShowsToDTO(m.Shows) : null, 
+            Actors = m.Actors != null ? ConvertActorsToDTO(m.Actors) : null,
+            Categories = m.Categories != null ? ConvertCategoriesToDTO(m.Categories) : null
         };
 
         public static explicit operator Movies(MoviesDTO m) => new Movies

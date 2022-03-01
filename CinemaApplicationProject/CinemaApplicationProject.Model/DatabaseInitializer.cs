@@ -24,8 +24,8 @@ namespace CinemaApplicationProject.Model
 			_roleManager = serviceProvider.GetRequiredService<RoleManager<StatsAndPays>>();
 
 			// Adatbázis migrációk végrehajtása, amennyiben szükséges
-			_context.Database.EnsureDeleted();
-			_context.Database.EnsureCreated();
+			//_context.Database.EnsureDeleted();
+			 _context.Database.EnsureCreated();
 			// Városok, épületek, apartmanok inicializálás
 			_context.Products.Add(new Products { Name = "Sajt", Price = 100 });
 

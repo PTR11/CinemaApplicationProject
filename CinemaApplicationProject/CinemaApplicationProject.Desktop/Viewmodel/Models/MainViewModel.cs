@@ -18,8 +18,6 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 {
     public class MainViewModel : ViewModelBase
     {
-        #region 
-        #endregion
         private ObservableCollection<MovieViewModel> _movies = new ObservableCollection<MovieViewModel>();
 
         private ObservableCollection<ShowViewModel> _shows = new ObservableCollection<ShowViewModel>();
@@ -60,6 +58,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         private bool _addUser = false;
 
         private bool _addRole = false;
+
+        private TicketSellViewModel _ticketsell;
 
         private MovieViewModel _selectedMovie;
 
@@ -161,6 +161,11 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             set { _week = value; OnPropertyChanged(); }
         }
 
+        public TicketSellViewModel TicketSell
+        {
+            get { return _ticketsell; }
+            set { _ticketsell = value; OnPropertyChanged(); }
+        }
 
         public MovieViewModel SelectedMovie
         {
@@ -379,6 +384,35 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             }
         }
 
+        private void AddColorsToMovies(ref List<RoomViewModel> tmpRooms)
+        {
+            Dictionary<string, string> movieTitles = new Dictionary<string, string>();
+            foreach (var room in tmpRooms)
+            {
+                var shows = room.TmpShows;
+                foreach (var show in shows)
+                {
+                    if (movieTitles.ContainsKey(show.MovieTitle))
+                    {
+                        show.Background = movieTitles.GetValueOrDefault(show.MovieTitle).Split("/")[0];
+                        show.Foreground = movieTitles.GetValueOrDefault(show.MovieTitle).Split("/")[1];
+                    }
+                    else
+                    {
+                        Random rnd = new Random();
+                        int nThreshold = 105;
+                        Color randomColor = Color.FromRgb((byte)rnd.Next(256), (byte)rnd.Next(256), (byte)rnd.Next(256));
+                        int bgDelta = Convert.ToInt32(randomColor.R + randomColor.G +randomColor.B);
+                        Color foreColor = (255 - bgDelta < nThreshold) ? Color.FromRgb(0,0,0) : Color.FromRgb(255, 255, 255);
+                        show.Background = randomColor.ToString();
+                        show.Foreground = foreColor.ToString();
+                        movieTitles.Add(show.MovieTitle, show.Background+"/"+show.Foreground);
+                    }
+                }
+                room.Shows = new ObservableCollection<ShowViewModel>(room.TmpShows);
+            }
+        }
+
         #region Loaders
 
         private async Task LoadShows()
@@ -410,7 +444,9 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             {
                 OnMessageApplication($"Unexpected error occured! ({ex.Message})");
             }
-            Movies = new ObservableCollection<MovieViewModel>(tmpMovies);
+            List<MovieViewModel> tmpMovies2 = new List<MovieViewModel>(tmpMovies);
+            tmpMovies2.AddRange(tmpMovies);
+            Movies = new ObservableCollection<MovieViewModel>(tmpMovies2);
             MoviesList = new ObservableCollection<string>(tmpMovies.Select(m => m.Title).ToList());
         }
         private async Task LoadActors()
@@ -452,8 +488,11 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             {
                 OnMessageApplication($"Unexpected error occured! ({ex.Message})");
             }
+            AddColorsToMovies(ref tmpRooms);
             Rooms = new ObservableCollection<RoomViewModel>(tmpRooms);
             RoomsList = new ObservableCollection<string>(tmpRooms.Select(r => "" + r.Name + " (" + r.Width + "x" + r.Heigth + ")").ToList());
+            TicketSell = new TicketSellViewModel();
+            TicketSell.Rooms = Rooms;
         }
         private async Task LoadCategories()
         {

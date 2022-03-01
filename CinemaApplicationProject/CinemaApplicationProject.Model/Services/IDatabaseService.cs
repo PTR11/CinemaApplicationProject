@@ -60,9 +60,9 @@ namespace CinemaApplicationProject.Model.Services
 
         public EmployeePresence GetEmployeePresenceById(int id);
 
-        public List<Employees> GetEmployeesFromPresenceByDate(DateTime date);
+        //public List<Employees> GetEmployeesFromPresenceByDate(DateTime date);
 
-        public List<Employees> GetEmployeesFromPresenceByDateAndStat(DateTime date, StatsAndPays stat);
+        //public List<Employees> GetEmployeesFromPresenceByDateAndStat(DateTime date, StatsAndPays stat);
 
         #endregion
 

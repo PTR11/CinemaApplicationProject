@@ -19,8 +19,9 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
         public string _movieTitle;
         public DateTime _date = DateTime.Now;
         public String _dateFormat;
+        private String _background;
+        private String _foreground;
 
-        
         public String MovieTitle
         {
             get { return _movieTitle; }
@@ -48,6 +49,18 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
         {
             get { return _roomName; }
             set { _roomName = value; OnPropertyChanged(); }
+        }
+
+        public String Background
+        {
+            get { return _background; }
+            set { _background = value; OnPropertyChanged(); }
+        }
+
+        public String Foreground
+        {
+            get { return _foreground; }
+            set { _foreground = value; OnPropertyChanged(); }
         }
 
         public String DateFormat
@@ -79,6 +92,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             Date = dto.Date,
             MovieTitle = dto.Movie != null ? dto.Movie.Title : "",
             RoomName = dto.Room != null ? dto.Room.Name : "",
+            DateFormat = dto.Date.ToString("HH:mm") + " - " + dto.Date.AddMinutes(dto.Movie.Length).ToString("HH:mm")
         };
 
         public static explicit operator ShowsDTO(ShowViewModel mvm) => new ShowsDTO
