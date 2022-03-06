@@ -28,67 +28,31 @@ namespace CinemaApplicationProject.Desktop.View.Admin
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-            Debug.WriteLine("faszom");
-        }
-
-        public void Add()
-        {
-            //var rowGroup = tblDummyData.RowGroups.FirstOrDefault();
-
-            //if (rowGroup != null)
-            //{
-            //    TableRow row = new TableRow();
-
-            //    TableCell cell = new TableCell();
-
-            //    MainViewModel asd = (MainViewModel)this.DataContext;
-
-            //    //cell.Blocks.Add(new Paragraph(new Run(asd._list[0].MovieTitle)));
-            //    row.Cells.Add(cell);
-
-            //    cell = new TableCell();
-            //    cell.Blocks.Add(new Paragraph(new Run("New cell 2")));
-            //    row.Cells.Add(cell);
-
-            //    cell = new TableCell();
-            //    cell.Blocks.Add(new Paragraph(new Run("New cell 3")));
-            //    row.Cells.Add(cell);
-
-            //    rowGroup.Rows.Add(row);
-            //}
-        }
-
-        private void ItemsControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            
-        }
-
-        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            Debug.WriteLine("faszomat");
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            Debug.WriteLine("faszomat22");
-        }
-
-        private void listBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            Debug.WriteLine("faszomat22");
-        }
 
         private void ScrollViewer_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
 
-            var asd = (TextBlock)e.OriginalSource;
-            var ctx = asd.DataContext;
+            var text = (TextBlock)e.OriginalSource;
+            var ctx = text.DataContext;
             var fasz = (MainViewModel)this.DataContext;
             fasz.SelectedShow.CopyFrom((ShowViewModel)ctx);
             Debug.WriteLine(e.OriginalSource);
+        }
+
+        private void TicketSell(object sender, MouseButtonEventArgs e)
+        {
+
+            TicketSellingWindow tsw = new TicketSellingWindow()
+            {
+                DataContext = this.DataContext,
+            };
+            var dataContext = (MainViewModel)this.DataContext;
+            var text = (TextBlock)e.OriginalSource;
+            var ctx = text.DataContext;
+            dataContext.SelectedTicketShow.CopyFrom((ShowViewModel)ctx);
+            dataContext.CreateField();
+            tsw.ShowDialog();
+
         }
 
         private void IsNumber(object sender, TextCompositionEventArgs e)

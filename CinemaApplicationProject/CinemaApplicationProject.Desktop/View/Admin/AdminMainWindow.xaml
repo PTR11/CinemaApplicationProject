@@ -28,7 +28,7 @@
         <DataTemplate x:Key="DaysCard"  >
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Border BorderBrush="Black" BorderThickness="1" Margin="0,5,0,0">
-                    <Button Click="Button_Click_1" ClickMode="Press" >
+                    <Button>
                         <Button.Content >
                             <Label Width="150" Padding="5,5,5,5" >
                                 <ScrollViewer MouseDoubleClick="ScrollViewer_MouseDoubleClick" Padding="0,10,0,0" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Disabled">
@@ -49,16 +49,17 @@
         <DataTemplate x:Key="TicketCard"  >
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Border BorderBrush="Black" BorderThickness="1" Margin="0,5,0,0" Background="Blue">
-                    <Button Click="Button_Click_1" ClickMode="Press" Background="{Binding Background}" >
+                    <Button Background="{Binding Background}" >
                         <Button.Content >
                             <Label Width="150" Padding="5,5,5,5" >
-                                <ScrollViewer MouseDoubleClick="ScrollViewer_MouseDoubleClick" Padding="0,10,0,0" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                                <ScrollViewer MouseDoubleClick="TicketSell" Padding="0,10,0,0" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Disabled">
                                     <TextBlock  Foreground="Black" FontSize="12">
-                                <TextBlock Text="{Binding MovieTitle}" Foreground="{Binding Foreground}" />
-                                <LineBreak/>
-                                <TextBlock Text="{Binding DateFormat}" Foreground="{Binding Foreground}"/>
-                                 <Hyperlink Click="Button_Click"></Hyperlink>
-                            </TextBlock>
+                                        <TextBlock Text="{Binding MovieTitle}" Foreground="{Binding Foreground}" />
+                                        <LineBreak/>
+                                        <TextBlock Text="{Binding DateT}" Foreground="{Binding Foreground}"/>
+                                        <LineBreak/>
+                                        <TextBlock Text="{Binding DateFormat}" Foreground="{Binding Foreground}"/>
+                                    </TextBlock>
                                 </ScrollViewer>
                             </Label>
                         </Button.Content>
@@ -441,7 +442,7 @@
                                     <ScrollViewer Grid.Column="2" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto">
                                         <Border Style = "{StaticResource DaysBorder}">
                                             <Grid  Margin="0,10,0,0" >
-                                                <ItemsControl ItemsSource="{Binding Week.Wednesday}" ItemTemplate="{StaticResource DaysCard}" Selector.SelectionChanged="ItemsControl_SelectionChanged"/>
+                                                <ItemsControl ItemsSource="{Binding Week.Wednesday}" ItemTemplate="{StaticResource DaysCard}"/>
                                             </Grid>
                                         </Border>
                                     </ScrollViewer>
@@ -784,7 +785,7 @@
                                         <Label Grid.Column="0" Grid.Row="0" VerticalAlignment="Center">
                                             <TextBlock Text="Movie: " FontSize="24"/>
                                         </Label>
-                                        <ComboBox Grid.Column="1" Grid.Row="0" BorderBrush="Black"  FontSize="24" SelectedItem="{Binding NewCategory.Category}" Margin="0,10,10,10" BorderThickness="1" Height="50" IsEditable="True" Padding="20,10,0,0" HorizontalAlignment="Left" Width="Auto" ItemsSource="{Binding MoviesList}">
+                                        <ComboBox Grid.Column="1" Grid.Row="0" BorderBrush="Black"  FontSize="24" SelectedItem="{Binding TicketSell.MovieFilter}" Margin="0,10,10,10" BorderThickness="1" Height="50" IsEditable="True" Padding="20,10,0,0" HorizontalAlignment="Left" Width="Auto" ItemsSource="{Binding MoviesList}">
                                             <i:Interaction.Triggers>
                                                 <i:EventTrigger EventName="SelectionChanged">
                                                     <i:InvokeCommandAction
@@ -800,15 +801,15 @@
                                         </ComboBox>
 
                                         <Label Grid.Column="2" Grid.Row="0" VerticalAlignment="Center">
-                                            <TextBlock Text="Movie: " FontSize="24"/>
+                                            <TextBlock Text="Date: " FontSize="24"/>
                                         </Label>
-                                        <xctk:DateTimePicker FontSize="24" Grid.Column="3" Width="500" Grid.Row="0"  Height="50"  Value="{Binding SelectedShow.Date}"/>
-
-                                        <Button Grid.Column="4" Content="Search" Height="35" HorizontalAlignment="Center" Margin="0,0,20,0"/>
+                                        <DatePicker Grid.Row="0" Grid.Column="3" FontSize="24" Width="200" SelectedDate="{Binding TicketSell.DateFilter}"></DatePicker>
+                                        
+                                        <Button Grid.Column="4" Content="Search" Height="35" HorizontalAlignment="Center" Margin="0,0,20,0" Command="{Binding TicketSearch}"/>
                                     </Grid>
                                 </Border>
                             </GroupBox>
-                            <GroupBox Padding="0" Background="Wheat" Grid.Row="1" Margin="0,0,10,0" >
+                            <GroupBox Padding="0" Background="Wheat" Grid.Row="1" Margin="0,10,10,0" >
                                 <GroupBox.Header >
                                     <Grid Background="Wheat">
                                         <Label Content="Shows:" FontSize="24" Height="50" BorderBrush="Black" BorderThickness="3" />
@@ -823,7 +824,7 @@
                                                 <!-- This panel will be used to hold the items -->
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
-                                                        <UniformGrid Rows="1" Columns="13" Height="300"/>
+                                                        <UniformGrid Rows="1" Columns="{Binding TicketSell.RoomsNumber}" Height="300"/>
                                                     </ItemsPanelTemplate>
                                                 </ItemsControl.ItemsPanel>
 
@@ -836,7 +837,7 @@
                                                                 <RowDefinition Height="50"/>
                                                                 <RowDefinition/>
                                                             </Grid.RowDefinitions>
-                                                            <TextBlock Grid.Row="0" Text="{Binding Name}" FontSize="12" Foreground="Black" HorizontalAlignment="Center"/>
+                                                            <TextBlock Grid.Row="0" Text="{Binding Name}" FontSize="24" Foreground="Black" HorizontalAlignment="Center"/>
 
                                                             <ItemsControl Grid.Row="1" ItemsSource="{Binding Shows}" ItemTemplate="{StaticResource TicketCard}" />
                                                         </Grid>

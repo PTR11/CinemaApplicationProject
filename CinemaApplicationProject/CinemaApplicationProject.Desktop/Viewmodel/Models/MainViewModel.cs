@@ -32,7 +32,10 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         private ObservableCollection<StatsViewModel> _roles = new ObservableCollection<StatsViewModel>();
 
+        private ObservableCollection<TicketsCounterViewModel> _ticketsCounter = new ObservableCollection<TicketsCounterViewModel>();
 
+        private ObservableCollection<Field> _places = new ObservableCollection<Field>();
+        
         private ObservableCollection<String> _categoriesList = new ObservableCollection<String>();
         private ObservableCollection<String> _actorsList = new ObservableCollection<String>();
         private ObservableCollection<String> _rolesList = new ObservableCollection<String>();
@@ -59,6 +62,35 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         private bool _addRole = false;
 
+        private Int32 _gridW;
+        private Int32 _gridH;
+
+        public Int32 GridW
+        {
+            get { return _gridW; }
+            set
+            {
+                if (_gridW != value)
+                {
+                    _gridW = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public Int32 GridH
+        {
+            get { return _gridH; }
+            set
+            {
+                if (_gridH != value)
+                {
+                    _gridH = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         private TicketSellViewModel _ticketsell;
 
         private MovieViewModel _selectedMovie;
@@ -66,6 +98,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         private EmployeeViewModel _selectedUser;
 
         private ShowViewModel _selectedShow;
+
+        private ShowViewModel _selectedTicketShow;
 
         private RoomViewModel _selectedRoom;
 
@@ -82,6 +116,18 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         public List<ShowViewModel> _list;
 
         public String name = "faszom";
+
+        public ObservableCollection<TicketsCounterViewModel> TicketsCounter
+        {
+            get { return _ticketsCounter; }
+            set { _ticketsCounter = value; OnPropertyChanged(); }
+        }
+
+        public ObservableCollection<Field> Places
+        {
+            get { return _places; }
+            set { _places = value; OnPropertyChanged(); }
+        }
 
         public ObservableCollection<TicketViewModel> Tickets
         {
@@ -179,6 +225,12 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             set { _selectedShow = value; OnPropertyChanged(); }
         }
 
+        public ShowViewModel SelectedTicketShow
+        {
+            get { return _selectedTicketShow; }
+            set { _selectedTicketShow = value; OnPropertyChanged(); }
+        }
+
         public RoomViewModel SelectedRoom
         {
             get { return _selectedRoom; }
@@ -202,7 +254,6 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             get { return _selectedRole; }
             set { _selectedRole = value; OnPropertyChanged(); }
         }
-
 
         public ActorViewModel NewActor
         {
@@ -236,6 +287,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         public DelegateCommand SelectRole { get; set; }
 
 
+        public DelegateCommand TicketSearch { get; set; }
         public DelegateCommand AddNewActor { get; set; }
         public DelegateCommand AddNewCategory { get; set; }
         public DelegateCommand AddNewMovie { get; set; }
@@ -251,6 +303,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         public DelegateCommand UpdateTicket { get; set; }
         public DelegateCommand UpdateUser { get; set; }
         public DelegateCommand UpdateRole { get; set; }
+
 
         public DelegateCommand LastWeek { get; set; }
         public DelegateCommand ActualWeek { get; set; }
@@ -271,6 +324,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             AddNewCategory = new DelegateCommand(_ => !(NewActor is null),async _ => await AddCategory());
             AddNewRole = new DelegateCommand(_ => !(NewRole is null), async _ => await AddRole());
 
+            TicketSearch = new DelegateCommand(_ => FilterTicketRooms());
 
             //Add new entity completly
             AddNewMovie = new DelegateCommand(_ => Adder(SelectedMovie=new MovieViewModel(),ref _addMovie,MovieDetailsVisible));
@@ -305,8 +359,79 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             SelectedTicket = new TicketViewModel();
             SelectedUser = new EmployeeViewModel();
             SelectedRole = new StatsViewModel();
+            SelectedTicketShow = new ShowViewModel();
 
            LoadInit();
+        }
+
+        public void CreateField()
+        {
+            Places = new ObservableCollection<Field>();
+            TicketsCounter = new ObservableCollection<TicketsCounterViewModel>();
+            foreach(var tickets in Tickets)
+            {
+                TicketsCounter.Add(new TicketsCounterViewModel
+                {
+                    Type = tickets.Type,
+                    Count = 0
+                });
+            }
+            int width = Rooms.FirstOrDefault(r => r.Id == SelectedTicketShow.RoomId).Width;
+            int height = Rooms.FirstOrDefault(r => r.Id == SelectedTicketShow.RoomId).Heigth;
+            GridH = height;
+            GridW = width;
+            for (Int32 i = 0; i < height; i++)
+            {
+                for (Int32 j = 0; j < width; j++)
+                {
+                    Places.Add(new Field
+                    {
+                        Image = "/images/empty.png",
+                        Background = "White",
+                        X = i,
+                        Y = j,
+                        Number = i * width + j,
+                        OnClick = new DelegateCommand(param => ReservePlace(Convert.ToInt32(param))),
+                    });
+                }
+            }
+        }
+
+        private void ReservePlace(int number)
+        {
+            Debug.WriteLine("Clicked");
+            Debug.WriteLine(number);
+            Debug.WriteLine("Clicked");
+        }
+
+        private void FilterTicketRooms()
+        {
+            var rooms = new List<RoomViewModel>(TicketSell.Rooms.ToList());
+            var movie = TicketSell.MovieFilter;
+            var date = TicketSell.DateFilter;
+            if(movie != null || date != DateTime.Now.Date)
+            {
+                foreach(var room in rooms)
+                {
+                    List<ShowViewModel> showsForMovieFilter = new List<ShowViewModel>();
+                    List<ShowViewModel> showsForDateFilter = new List<ShowViewModel>();
+                    foreach(var show in room.TmpShows)
+                    {
+                        if(movie != null && show.MovieTitle == movie)
+                        {
+                            showsForMovieFilter.Add(show);
+                        }
+                        if(date != DateTime.Now.Date && show.Date.Date == date.Date)
+                        {
+                            showsForDateFilter.Add(show);
+                        }
+                    }
+                    List<ShowViewModel> intersect = new List<ShowViewModel>(showsForDateFilter.AsQueryable().Intersect(showsForDateFilter));
+                    room.Shows = new ObservableCollection<ShowViewModel>(intersect);
+
+                }
+            }
+
         }
 
         private void ChangeWeekToNext()
@@ -400,10 +525,10 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
                     else
                     {
                         Random rnd = new Random();
-                        int nThreshold = 105;
+                        int nThreshold = 100;
                         Color randomColor = Color.FromRgb((byte)rnd.Next(256), (byte)rnd.Next(256), (byte)rnd.Next(256));
-                        int bgDelta = Convert.ToInt32(randomColor.R + randomColor.G +randomColor.B);
-                        Color foreColor = (255 - bgDelta < nThreshold) ? Color.FromRgb(0,0,0) : Color.FromRgb(255, 255, 255);
+                        int bgDelta = Convert.ToInt32((randomColor.R * 0.299)+ (randomColor.G * 0.587) +(randomColor.B * 0.114));
+                        Color foreColor = (255 - bgDelta > nThreshold) ? Color.FromRgb(255,255,255) : Color.FromRgb(0, 0, 0);
                         show.Background = randomColor.ToString();
                         show.Foreground = foreColor.ToString();
                         movieTitles.Add(show.MovieTitle, show.Background+"/"+show.Foreground);
@@ -493,6 +618,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             RoomsList = new ObservableCollection<string>(tmpRooms.Select(r => "" + r.Name + " (" + r.Width + "x" + r.Heigth + ")").ToList());
             TicketSell = new TicketSellViewModel();
             TicketSell.Rooms = Rooms;
+            TicketSell.RoomsNumber = Rooms.Count;
         }
         private async Task LoadCategories()
         {

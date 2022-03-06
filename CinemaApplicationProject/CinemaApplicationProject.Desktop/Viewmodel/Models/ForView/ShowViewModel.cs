@@ -18,6 +18,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
         public int _movieId;
         public string _movieTitle;
         public DateTime _date = DateTime.Now;
+        public string _dateT = DateTime.Now.ToString("yyyy/MM/dd");
         public String _dateFormat;
         private String _background;
         private String _foreground;
@@ -69,6 +70,12 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             set { _dateFormat = value; OnPropertyChanged(); }
         }
 
+        public String DateT
+        {
+            get { return _dateT; }
+            set { _dateT = value; OnPropertyChanged(); }
+        }
+
         public ShowViewModel ShallowClone()
         {
             return (ShowViewModel)this.MemberwiseClone();
@@ -90,6 +97,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             MovieId = dto.MovieId,
             RoomId = dto.RoomId,
             Date = dto.Date,
+            DateT = dto.Date.Date.ToString("yyyy/MM/dd"),
             MovieTitle = dto.Movie != null ? dto.Movie.Title : "",
             RoomName = dto.Room != null ? dto.Room.Name : "",
             DateFormat = dto.Date.ToString("HH:mm") + " - " + dto.Date.AddMinutes(dto.Movie.Length).ToString("HH:mm")
