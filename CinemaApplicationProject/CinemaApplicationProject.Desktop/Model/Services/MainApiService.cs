@@ -24,6 +24,26 @@ namespace CinemaApplicationProject.Desktop.Model.Services
             };
         }
 
+        public async Task<int> LoginAsync(String userName, String password)
+        {
+            LoginDTO user = new LoginDTO
+            {
+                UserName = userName,
+                Password = password
+            };
+            var response = await _client.PostAsJsonAsync("api/Employee/Login", user);
+            if (response.IsSuccessStatusCode)
+            {
+                return Int32.Parse(response.Content.ReadAsStringAsync().Result);
+            }
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                return 0;
+            }
+
+            throw new NetworkException("Service returned response: " + response.StatusCode);
+        }
+
         public async Task<IEnumerable<T>> LoadingAsync<T>(String route)
         {
             var response = await _client.GetAsync(route);

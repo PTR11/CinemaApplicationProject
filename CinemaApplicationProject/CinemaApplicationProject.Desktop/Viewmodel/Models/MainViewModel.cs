@@ -32,8 +32,6 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         private ObservableCollection<StatsViewModel> _roles = new ObservableCollection<StatsViewModel>();
 
-        private ObservableCollection<TicketsCounterViewModel> _ticketsCounter = new ObservableCollection<TicketsCounterViewModel>();
-
         private ObservableCollection<Field> _places = new ObservableCollection<Field>();
         
         private ObservableCollection<String> _categoriesList = new ObservableCollection<String>();
@@ -61,6 +59,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         private bool _addUser = false;
 
         private bool _addRole = false;
+
+        private int _userId = 0;
 
         private Int32 _gridW;
         private Int32 _gridH;
@@ -117,10 +117,10 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         public String name = "faszom";
 
-        public ObservableCollection<TicketsCounterViewModel> TicketsCounter
+        public int UserId
         {
-            get { return _ticketsCounter; }
-            set { _ticketsCounter = value; OnPropertyChanged(); }
+            get { return _userId; }
+            set { _userId = value; }
         }
 
         public ObservableCollection<Field> Places
@@ -295,7 +295,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         public DelegateCommand AddNewTicket { get; set; }
         public DelegateCommand AddNewUser { get; set; }
         public DelegateCommand AddNewRole { get; set; }
-
+        public DelegateCommand AddNewRents { get; set; }
 
         public DelegateCommand UpdateShow { get; set; }
         public DelegateCommand UpdateMovie { get; set; }
@@ -331,7 +331,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             AddNewRoom = new DelegateCommand(_ => Adder(SelectedRoom=new RoomViewModel(),ref _addRoom,RoomDetailsVisible));
             AddNewTicket = new DelegateCommand(_ => Adder(SelectedTicket=new TicketViewModel(),ref _addTicket,TicketDetailsVisible));
             AddNewUser = new DelegateCommand(_ => Adder(SelectedUser = new EmployeeViewModel(), ref _addUser, UserDetailsVisible));
-
+            AddNewRents = new DelegateCommand(_ => !(TicketSell is null), async _ => await AddRent());
+            
             //Updates
             UpdateShow = new DelegateCommand(_ => !(SelectedShow is null), async _ => await UpdateSelectedItem(_addShow,AddCreatedShow, SelectedShow.Id != 0,SetupShowUpdate,"api/Shows",LoadShows,LoadRooms));
 
@@ -367,10 +368,11 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         public void CreateField()
         {
             Places = new ObservableCollection<Field>();
-            TicketsCounter = new ObservableCollection<TicketsCounterViewModel>();
-            foreach(var tickets in Tickets)
+            TicketSell.Show = SelectedTicketShow;
+            TicketSell.TicketsCounter = new ObservableCollection<TicketsCounterViewModel>();
+            foreach (var tickets in Tickets)
             {
-                TicketsCounter.Add(new TicketsCounterViewModel
+                TicketSell.TicketsCounter.Add(new TicketsCounterViewModel
                 {
                     Type = tickets.Type,
                     Count = 0
@@ -386,7 +388,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
                 {
                     Places.Add(new Field
                     {
-                        Image = "/images/empty.png",
+                        Image = "/View/Images/emptyPlace.png",
                         Background = "White",
                         X = i,
                         Y = j,
@@ -399,9 +401,26 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         private void ReservePlace(int number)
         {
-            Debug.WriteLine("Clicked");
-            Debug.WriteLine(number);
-            Debug.WriteLine("Clicked");
+            if(TicketSell.SelectedTicket != null)
+            {
+                Debug.WriteLine("Clicked");
+                Debug.WriteLine(number);
+                Debug.WriteLine("Clicked");
+                Field act = Places[number];
+                int x = act.X;
+                int y = act.Y;
+                act.Background = "Black";
+                var exist = TicketSell.Places.FirstOrDefault(p => p.X == x && p.Y == y);
+                if(exist == null)
+                {
+                    TicketSell.AddPlace(x,y);
+                }
+            }
+            else
+            {
+                OnMessageApplication("Please select a ticket type");
+            }
+            
         }
 
         private void FilterTicketRooms()
@@ -617,6 +636,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             Rooms = new ObservableCollection<RoomViewModel>(tmpRooms);
             RoomsList = new ObservableCollection<string>(tmpRooms.Select(r => "" + r.Name + " (" + r.Width + "x" + r.Heigth + ")").ToList());
             TicketSell = new TicketSellViewModel();
+            TicketSell.Places = new List<Place>();
             TicketSell.Rooms = Rooms;
             TicketSell.RoomsNumber = Rooms.Count;
         }
@@ -824,6 +844,16 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         #endregion
 
         #region Creates
+
+        private async Task AddRent()
+        {
+            var dto =new RentFromGuestDTO();
+            dto.IsEmployee = true;
+            dto.ShowId = TicketSell.Show.Id;
+            dto.Places = TicketSell.Places;
+            Debug.WriteLine("hova");
+        }
+
         private async Task AddCreatedShow()
         {
             if (SelectedShow.Date != DateTime.MinValue && SelectedShow.MovieTitle != "" && SelectedShow.RoomName != "")

@@ -1,4 +1,5 @@
 ﻿using CinemaApplicationProject.Desktop.Model.Services;
+using CinemaApplicationProject.Desktop.View;
 using CinemaApplicationProject.Desktop.View.Admin;
 using CinemaApplicationProject.Desktop.View.Admin.Pages;
 using CinemaApplicationProject.Desktop.Viewmodel.EventArguments;
@@ -19,7 +20,9 @@ namespace CinemaApplicationProject.Desktop
     public partial class App : Application
     {
         private AdminMainWindow _view;
+        private LoginWindow _login;
         private MainViewModel _mainViewModel;
+        private LoginViewModel _loginViewModel;
         public App()
         {
             Startup += App_Startup;
@@ -38,6 +41,21 @@ namespace CinemaApplicationProject.Desktop
             {
                 DataContext = _mainViewModel
             };
+            _loginViewModel = new LoginViewModel();
+            _loginViewModel.MessageApplication += MessageApplication;
+            _loginViewModel.LoginSucceeded += AfterLogin;
+            _login = new LoginWindow
+            {
+                DataContext = _loginViewModel
+            };
+
+            _login.Show();
+        }
+
+        private void AfterLogin(object sender, int e)
+        {
+            _login.Close();
+            _mainViewModel.UserId = e;
             _view.Show();
         }
 

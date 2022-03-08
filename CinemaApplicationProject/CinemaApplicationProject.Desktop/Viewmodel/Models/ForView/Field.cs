@@ -23,7 +23,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             set { _background = value; OnPropertyChanged(); }
         }
 
-        public string Image
+        public String Image
         {
             get { return _image; }
             set { _image = value; OnPropertyChanged(); }

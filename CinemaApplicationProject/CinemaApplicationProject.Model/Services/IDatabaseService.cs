@@ -204,6 +204,8 @@ namespace CinemaApplicationProject.Model.Services
         public Task<Employees> GetEmployeeById(int id);
 
         public Task<bool> ConnectUserWithRole(int userId, int roleId);
+
+        public Employees GetEmployeeByUserName(String userName);
         #endregion
     }
 }

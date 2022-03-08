@@ -429,6 +429,8 @@ namespace CinemaApplicationProject.Model.Services
             return false;
         }
 
+        public Employees GetEmployeeByUserName(String userName) => context.Employees.FirstOrDefault(e => e.UserName.Equals(userName));
+
         #endregion
 
     }
