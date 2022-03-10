@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CinemaApplicationProject.Desktop.Viewmodel.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,12 @@ namespace CinemaApplicationProject.Desktop.View
         public TicketSellingWindow()
         {
             InitializeComponent();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var dataContext = (MainViewModel)this.DataContext;
+            dataContext.LoadInit();
         }
     }
 }

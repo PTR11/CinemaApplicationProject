@@ -127,10 +127,10 @@ namespace CinemaApplicationProject.Model.Services
         public List<Rents> GetAllRentsByGuestId(int id);
 
         public List<Rents> GetAllRentsByShowId(int id);
-
+        public List<Guests> GetAllRentUserByShowId(int id);
         public Boolean IfReservedPlace(int showid, int x, int y);
 
-        public Task<Boolean> SaveRentsAsync(RentFromGuestDTO rfg);
+        public Task<Boolean> SaveRents(RentFromGuestDTO rfg);
 
         #endregion
 

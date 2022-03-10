@@ -4,6 +4,7 @@ using CinemaApplicationProject.Desktop.View.Admin;
 using CinemaApplicationProject.Desktop.View.Admin.Pages;
 using CinemaApplicationProject.Desktop.Viewmodel.EventArguments;
 using CinemaApplicationProject.Desktop.Viewmodel.Models;
+using CinemaApplicationProject.Desktop.Viewmodel.Models.ForView;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -23,6 +24,7 @@ namespace CinemaApplicationProject.Desktop
         private LoginWindow _login;
         private MainViewModel _mainViewModel;
         private LoginViewModel _loginViewModel;
+        private TicketSellViewModel _ticketSellViewModel;
         public App()
         {
             Startup += App_Startup;

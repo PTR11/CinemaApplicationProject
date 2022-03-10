@@ -32,7 +32,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         private ObservableCollection<StatsViewModel> _roles = new ObservableCollection<StatsViewModel>();
 
-        private ObservableCollection<Field> _places = new ObservableCollection<Field>();
+        
         
         private ObservableCollection<String> _categoriesList = new ObservableCollection<String>();
         private ObservableCollection<String> _actorsList = new ObservableCollection<String>();
@@ -123,11 +123,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             set { _userId = value; }
         }
 
-        public ObservableCollection<Field> Places
-        {
-            get { return _places; }
-            set { _places = value; OnPropertyChanged(); }
-        }
+        
 
         public ObservableCollection<TicketViewModel> Tickets
         {
@@ -309,15 +305,16 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         public DelegateCommand ActualWeek { get; set; }
         public DelegateCommand NextWeek { get; set; }
 
+
         public MainViewModel()
         {
-            
             //Selectors
             SelectMovie = new DelegateCommand( _ => ShowDetails(SelectedMovie,ref _addMovie, MovieDetailsVisible));
             SelectRoom = new DelegateCommand(_ => ShowDetails(SelectedRoom,ref _addRoom, RoomDetailsVisible));
             SelectTicket = new DelegateCommand(_ => ShowDetails(SelectedTicket, ref _addTicket, TicketDetailsVisible));
             SelectUser = new DelegateCommand(_ => ShowDetails(SelectedUser, ref _addUser, UserDetailsVisible));
             SelectRole = new DelegateCommand(_ => ShowDetails(SelectedRole, ref _addRole, RoleDetailsVisible));
+            
 
             //Add news (in update menu)
             AddNewActor = new DelegateCommand(_ => !(NewActor is null), async _ => await AddActor());
@@ -365,11 +362,14 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
            LoadInit();
         }
 
-        public void CreateField()
+        public async Task CreateFieldAsync()
         {
-            Places = new ObservableCollection<Field>();
+            TicketSell = new TicketSellViewModel();
+            await LoadRents(SelectedTicketShow.Id);
+            await LoadRentsUsers(SelectedTicketShow.Id);
             TicketSell.Show = SelectedTicketShow;
-            TicketSell.TicketsCounter = new ObservableCollection<TicketsCounterViewModel>();
+            TicketSell.Main = this;
+            TicketSell.Tickets = Tickets;
             foreach (var tickets in Tickets)
             {
                 TicketSell.TicketsCounter.Add(new TicketsCounterViewModel
@@ -386,42 +386,39 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             {
                 for (Int32 j = 0; j < width; j++)
                 {
-                    Places.Add(new Field
+                    
+                    TicketSell.Field.Add(new Field
                     {
-                        Image = "/View/Images/emptyPlace.png",
-                        Background = "White",
+                        Image = TicketSell.Rents.Contains(new RentViewModel { X = i, Y = j }) ? "/View/Images/reservedPlace.png" : "/View/Images/emptyPlace.png",
+                        Background = Background(i,j),
                         X = i,
                         Y = j,
                         Number = i * width + j,
-                        OnClick = new DelegateCommand(param => ReservePlace(Convert.ToInt32(param))),
+                        OnClick = new DelegateCommand(param => TicketSell.PlaceManagement(Convert.ToInt32(param))),
                     });
                 }
             }
         }
 
-        private void ReservePlace(int number)
+        private String Background(int i, int j)
         {
-            if(TicketSell.SelectedTicket != null)
+            var element = TicketSell.Rents.FirstOrDefault(r => r.X == i && r.Y == j);
+            if(element != null)
             {
-                Debug.WriteLine("Clicked");
-                Debug.WriteLine(number);
-                Debug.WriteLine("Clicked");
-                Field act = Places[number];
-                int x = act.X;
-                int y = act.Y;
-                act.Background = "Black";
-                var exist = TicketSell.Places.FirstOrDefault(p => p.X == x && p.Y == y);
-                if(exist == null)
+                if (element.EmployeeId != null)
                 {
-                    TicketSell.AddPlace(x,y);
+                    return "Red";
+                }
+                else if (element.GuestId != null)
+                {
+                    return "Orange";
                 }
             }
-            else
-            {
-                OnMessageApplication("Please select a ticket type");
-            }
-            
+            return "White";
+
         }
+        
+
 
         private void FilterTicketRooms()
         {
@@ -472,7 +469,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         
 
-        private async Task LoadInit()
+        public async Task LoadInit()
         {
             await LoadMovies();
             await LoadShows();
@@ -558,6 +555,37 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         }
 
         #region Loaders
+        private async Task LoadRentsUsers(int id)
+        {
+            List<TicketsUsersViewModel> tmpRentUsers = new List<TicketsUsersViewModel>();
+            try
+            {
+                tmpRentUsers = new List<TicketsUsersViewModel>((await _service.LoadingAsync<GuestVDTO>("api/Rents/sellUsers/" + id))
+                    .Select(rent => (TicketsUsersViewModel)rent));
+            }
+            catch (Exception ex) when (ex is NetworkException || ex is HttpRequestException)
+            {
+                OnMessageApplication($"Unexpected error occured! ({ex.Message})");
+            }
+            TicketSell.Users = new ObservableCollection<TicketsUsersViewModel>(tmpRentUsers);
+        }
+
+
+        private async Task LoadRents(int id)
+        {
+            List<RentViewModel> tmpRents = new List<RentViewModel>();
+            try
+            {
+                tmpRents = new List<RentViewModel>((await _service.LoadingAsync<RentsDTO>("api/Rents/sell/" + id))
+                    .Select(rent => (RentViewModel)rent));
+            }
+            catch (Exception ex) when (ex is NetworkException || ex is HttpRequestException)
+            {
+                OnMessageApplication($"Unexpected error occured! ({ex.Message})");
+            }
+            TicketSell.Rents = tmpRents;
+        }
+
 
         private async Task LoadShows()
         {
@@ -640,6 +668,12 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             TicketSell.Rooms = Rooms;
             TicketSell.RoomsNumber = Rooms.Count;
         }
+
+        public void MessageSender(String message)
+        {
+            OnMessageApplication(message);
+        }
+
         private async Task LoadCategories()
         {
             try
@@ -848,10 +882,14 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         private async Task AddRent()
         {
             var dto =new RentFromGuestDTO();
+            dto.UserId = TicketSell.SelectedUser != null ? TicketSell.SelectedUser.Id : 0;
             dto.IsEmployee = true;
             dto.ShowId = TicketSell.Show.Id;
             dto.Places = TicketSell.Places;
-            Debug.WriteLine("hova");
+            dto.EmployeeId = UserId;
+            await this.AddRent("api/Rents", dto);
+            TicketSell = new TicketSellViewModel();
+            await CreateFieldAsync();
         }
 
         private async Task AddCreatedShow()
@@ -975,6 +1013,18 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             try
             {
                 await _service.UpdateAsync(route, entity);
+            }
+            catch (Exception ex) when (ex is NetworkException || ex is HttpRequestException)
+            {
+                OnMessageApplication($"Unexpected error occured! ({ex.Message})");
+            }
+        }
+
+        private async Task AddRent(String route, RentFromGuestDTO entity)
+        {
+            try
+            {
+                await _service.CreateRent(route, entity);
             }
             catch (Exception ex) when (ex is NetworkException || ex is HttpRequestException)
             {

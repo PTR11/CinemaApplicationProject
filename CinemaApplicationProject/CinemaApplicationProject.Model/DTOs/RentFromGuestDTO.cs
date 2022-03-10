@@ -29,6 +29,8 @@ namespace CinemaApplicationProject.Model.DTOs
 
         public bool IsEmployee { get; set; }
 
+        public int EmployeeId { get; set; }
+
         [Required]
         public List<Place> Places { get; set; }
 

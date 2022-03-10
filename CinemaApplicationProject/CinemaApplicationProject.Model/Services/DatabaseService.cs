@@ -220,48 +220,105 @@ namespace CinemaApplicationProject.Model.Services
 
         public List<Rents> GetAllRentsByGuestId(int id) => context.Rents.Where(m => m.GuestId == id).ToList();
 
-        public List<Rents> GetAllRentsByShowId(int id) => context.Rents.Where(m => m.ShowId == id).ToList();
+        public List<Rents> GetAllRentsByShowId(int id) => context.Rents.Where(m => m.ShowId == id).Include(m => m.Guest).ToList();
 
+        public List<Guests> GetAllRentUserByShowId(int id) => context.Rents.Where(m => m.ShowId == id).Include(m => m.Guest).Select(m => m.Guest).Distinct().ToList();
         public Boolean IfReservedPlace(int showid, int x, int y) => context.Rents.Where(m => m.ShowId == showid).Where(m => m.X == x && m.Y == y).Any();
 
-        public async Task<Boolean> SaveRentsAsync(RentFromGuestDTO rfg)
+        public async Task<bool> SaveRents(RentFromGuestDTO rfg)
         {
-            if (rfg.UserId == 0 || rfg.ShowId == 0)
-            {
-                return false;
-            }
-            Guests guest = context.Guests.FirstOrDefault(m => m.Id == rfg.UserId);
-            //Guests guest = (Guests)await guestManager.FindByIdAsync(rfg.UserId.ToString());
-
-            if (guest == null)
+            if (rfg.ShowId == 0)
             {
                 return false;
             }
 
-            foreach (var place in rfg.Places)
+            if(rfg.IsEmployee && rfg.UserId != 0 && rfg.EmployeeId != 0)
             {
-                if (this.IfReservedPlace(rfg.ShowId, place.X, place.Y))
+                foreach(var place in rfg.Places)
+                {
+                    Rents find = context.Rents.FirstOrDefault(r => r.GuestId == rfg.UserId && r.ShowId == rfg.ShowId && r.X == place.X && r.Y ==place.Y && r.Ticket == context.Tickets.FirstOrDefault(t => t.Type == place.TicketCategory));
+                    if (find != null)
+                    {
+                        find.Employee = context.Employees.FirstOrDefault(m => m.Id == rfg.EmployeeId);
+
+                        context.Update(find);
+                    }
+                }
+            }
+            else
+            {
+                Guests guest = context.Guests.FirstOrDefault(m => m.Id == rfg.UserId);
+                //Guests guest = (Guests)await guestManager.FindByIdAsync(rfg.UserId.ToString());
+                Employees employees = context.Employees.FirstOrDefault(m => m.Id == rfg.EmployeeId);
+
+                if (guest == null && rfg.IsEmployee == false)
                 {
                     return false;
                 }
-            }
-            foreach (var place in rfg.Places)
-            {
-                Rents rent = new Rents
+                else if (guest != null)
                 {
-                    Guest = guest,
-                    ShowId = rfg.ShowId,
-                    X = place.X,
-                    Y = place.Y,
-                    Ticket = context.Tickets.FirstOrDefault(m => m.Type == place.TicketCategory)
-                };
+                    foreach (var place in rfg.Places)
+                    {
+                        if (this.IfReservedPlace(rfg.ShowId, place.X, place.Y))
+                        {
+                            return false;
+                        }
+                    }
+                    foreach (var place in rfg.Places)
+                    {
+                        Rents rent = new Rents
+                        {
+                            Guest = guest,
+                            ShowId = rfg.ShowId,
+                            X = place.X,
+                            Y = place.Y,
+                            Ticket = context.Tickets.FirstOrDefault(m => m.Type == place.TicketCategory)
+                        };
 
-                context.Rents.Add(rent); 
+                        context.Rents.Add(rent);
+                    }
+                }
+
+
+                if (employees == null && rfg.IsEmployee == true)
+                {
+                    return false;
+                }
+                else if (employees != null)
+                {
+                    foreach (var place in rfg.Places)
+                    {
+                        if (this.IfReservedPlace(rfg.ShowId, place.X, place.Y))
+                        {
+                            return false;
+                        }
+                    }
+                    foreach (var place in rfg.Places)
+                    {
+                        Place tmp = place;
+                        Rents rent = new Rents
+                        {
+                            Employee = employees,
+                            ShowId = rfg.ShowId,
+                            X = tmp.X,
+                            Y = tmp.Y,
+                            Ticket = context.Tickets.FirstOrDefault(m => m.Type == place.TicketCategory)
+                        };
+
+                        context.Rents.Add(rent);
+                    }
+                }
             }
+
+
+            
+
+            
             try
             {
                 context.SaveChanges();
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 Debug.WriteLine(ex.ToString());
                 return false;
@@ -269,6 +326,8 @@ namespace CinemaApplicationProject.Model.Services
             return true;
         }
 
+
+        
         #endregion
 
         #region Rooms

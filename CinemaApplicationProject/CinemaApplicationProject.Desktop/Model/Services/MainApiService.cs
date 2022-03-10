@@ -64,6 +64,19 @@ namespace CinemaApplicationProject.Desktop.Model.Services
             throw new NetworkException("Service returned response: " + response.StatusCode);
         }
 
+        public async Task CreateRent(String route, RentFromGuestDTO entity)
+        {
+            HttpResponseMessage response = await _client.PostAsJsonAsync(route, entity);
+
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var foo = response.Content.ReadAsStringAsync().Result;
+                throw new NetworkException("Service returned response: " + response.StatusCode);
+            }
+            
+        }
+
 
         public async Task CreateAsync<T>(String route,T entity) where T : RespondDTO
         {

@@ -50,7 +50,7 @@ namespace CinemaApplicationProject.Desktop.View.Admin
             var text = (TextBlock)e.OriginalSource;
             var ctx = text.DataContext;
             dataContext.SelectedTicketShow.CopyFrom((ShowViewModel)ctx);
-            dataContext.CreateField();
+            dataContext.CreateFieldAsync();
             tsw.ShowDialog();
 
         }

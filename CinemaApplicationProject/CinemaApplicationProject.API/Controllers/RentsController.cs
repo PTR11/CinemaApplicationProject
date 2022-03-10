@@ -42,6 +42,18 @@ namespace CinemaApplicationProject.API.Controllers
             return _service.GetAllRentsByShowId(id).Select(m => (RentsGDTO)m).ToList();
         }
 
+        [HttpGet("sell/{id}")]
+        public ActionResult<IEnumerable<RentsDTO>> GetRentsForSellById(int id)
+        {
+            return _service.GetAllRentsByShowId(id).Select(m => (RentsDTO)m).ToList();
+        }
+
+        [HttpGet("sellUsers/{id}")]
+        public ActionResult<IEnumerable<GuestVDTO>> GetRentUsersForSellById(int id)
+        {
+            return _service.GetAllRentUserByShowId(id).Select(m => (GuestVDTO)m).ToList();
+        }
+
         //POST: api/Rents
         //To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [EnableCors("_myAllowSpecificOrigins")]
@@ -69,7 +81,7 @@ namespace CinemaApplicationProject.API.Controllers
                     ModelState.AddModelError("", "You need choose places");
                     return BadRequest(ModelState);
                 }
-                if(!await _service.SaveRentsAsync(rfg))
+                if(!await _service.SaveRents(rfg))
                 {
                     ModelState.AddModelError("", "Something went wrong with the process");
                     return BadRequest(ModelState);

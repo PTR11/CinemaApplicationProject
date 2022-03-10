@@ -20,11 +20,11 @@ namespace CinemaApplicationProject.Model.Database
 
         public int?  EmployeeId { get; set; }
 
-        public int GuestId { get; set; }
+        public int? GuestId { get; set; }
 
         public virtual Employees Employee { get; set; }
 
-        public Guests Guest { get; set; }
+        public virtual Guests Guest { get; set; }
 
         public Tickets Ticket { get; set; }
 
