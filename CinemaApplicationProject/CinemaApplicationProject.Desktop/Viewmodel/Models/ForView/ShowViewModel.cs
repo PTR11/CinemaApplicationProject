@@ -81,6 +81,22 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             return (ShowViewModel)this.MemberwiseClone();
         }
 
+        public ShowViewModel()
+        {
+            DeleteShow = new DelegateCommand(async _ => await Delete());
+        }
+
+        public DelegateCommand DeleteShow { get; set; }
+
+        public async Task Delete()
+        {
+            var main = (MainViewModel)this.MainModel;
+            await main.DeleteEntity("api/Shows", this.Id, main.LoadInit);
+            main.SelectedShow = new ShowViewModel();
+            main.MainModel = main;
+            main.ShowVisibility(false);
+        }
+
         public void CopyFrom(ShowViewModel rhs)
         {
             Id = rhs.Id;

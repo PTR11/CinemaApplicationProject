@@ -34,6 +34,7 @@ namespace CinemaApplicationProject.Desktop
         {
             _mainViewModel = new MainViewModel();
             _mainViewModel.MovieDetailsVisible += MovieDetailsVisible;
+            _mainViewModel.ShowDetailsVisible += ShowDetailsVisible;
             _mainViewModel.RoomDetailsVisible += RoomDetailsVisible;
             _mainViewModel.TicketDetailsVisible += TicketDetailsVisible;
             _mainViewModel.UserDetailsVisible += UserDetailsVisible;
@@ -64,6 +65,10 @@ namespace CinemaApplicationProject.Desktop
         private void MovieDetailsVisible(object sender, bool e)
         {
             _view.Menu.Visibility = e ? Visibility.Visible : Visibility.Hidden ;
+        }
+        private void ShowDetailsVisible(object sender, bool e)
+        {
+            _view.ShowMenu.Visibility = e ? Visibility.Visible : Visibility.Hidden;
         }
         private void RoomDetailsVisible(object sender, bool e)
         {

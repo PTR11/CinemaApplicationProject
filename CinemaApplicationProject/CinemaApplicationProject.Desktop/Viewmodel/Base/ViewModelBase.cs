@@ -13,6 +13,14 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Base
 {
     public class ViewModelBase : INotifyPropertyChanged
     {
+        public ViewModelBase _mainModel;
+
+        public ViewModelBase MainModel
+        {
+            get { return _mainModel; }
+            set { _mainModel = value; OnPropertyChanged(); }
+        }
+
         public int _id;
         public int Id
         {

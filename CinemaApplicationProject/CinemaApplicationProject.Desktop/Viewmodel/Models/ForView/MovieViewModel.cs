@@ -33,6 +33,14 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             this.Shows = new List<ShowViewModel>();
             this.Actors = new ObservableCollection<ActorViewModel>();
             this.Categories = new ObservableCollection<CategoryViewModel>();
+            DeleteMovie = new DelegateCommand(async _ => await Delete());
+        }
+
+        public async Task Delete()
+        {
+            var main = (MainViewModel)this.MainModel;
+            await main.DeleteEntity("api/Movies",this.Id,main.LoadInit);
+            main.MovieVisibility(false);
         }
 
         public String Title
@@ -87,6 +95,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
         {
             return (MovieViewModel)this.MemberwiseClone();
         }
+
+        public DelegateCommand DeleteMovie { get; set; }
 
         public void CopyFrom(MovieViewModel rhs)
         {

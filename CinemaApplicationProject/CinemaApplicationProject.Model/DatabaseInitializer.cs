@@ -24,7 +24,7 @@ namespace CinemaApplicationProject.Model
 			_roleManager = serviceProvider.GetRequiredService<RoleManager<StatsAndPays>>();
 
 			// Adatbázis migrációk végrehajtása, amennyiben szükséges
-			//_context.Database.EnsureDeleted();
+			_context.Database.EnsureDeleted();
 			 _context.Database.EnsureCreated();
 			// Városok, épületek, apartmanok inicializálás
 			_context.Products.Add(new Products { Name = "Sajt", Price = 100 });
@@ -252,7 +252,7 @@ namespace CinemaApplicationProject.Model
 				{
 					Room = rooms[1],
 					Movie = movies[0],
-					Date = DateTime.Now.AddHours(-1),
+					Date = DateTime.Now.AddDays(-7).AddHours(-1),
 					IsActiveShow = true
 				},
 				new Shows

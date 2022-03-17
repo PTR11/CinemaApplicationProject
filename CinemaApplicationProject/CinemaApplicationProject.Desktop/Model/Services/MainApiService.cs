@@ -74,7 +74,6 @@ namespace CinemaApplicationProject.Desktop.Model.Services
                 var foo = response.Content.ReadAsStringAsync().Result;
                 throw new NetworkException("Service returned response: " + response.StatusCode);
             }
-            
         }
 
 
@@ -97,6 +96,16 @@ namespace CinemaApplicationProject.Desktop.Model.Services
         public async Task UpdateAsync<T>(String route,T entity) where T : RespondDTO
         {
             HttpResponseMessage response = await _client.PutAsJsonAsync(route+"/"+ entity.Id, entity);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new NetworkException("Service returned response: " + response.StatusCode);
+            }
+        }
+
+        public async Task DeleteAsync(string route,int id)
+        {
+            HttpResponseMessage response = await _client.DeleteAsync(route+"/"+id);
 
             if (!response.IsSuccessStatusCode)
             {

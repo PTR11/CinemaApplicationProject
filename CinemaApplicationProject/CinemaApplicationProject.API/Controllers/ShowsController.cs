@@ -111,7 +111,9 @@ namespace CinemaApplicationProject.API.Controllers
         [HttpPost]
         public ActionResult<Shows> PostShows(ShowsDTO shows)
         {
-            var show = DatabaseManipulation.AddElement((Shows)shows);
+            var s = (Shows)shows;
+            s.IsActiveShow =  true;
+            var show = DatabaseManipulation.AddElement(s);
 
             if (show == null)
             {

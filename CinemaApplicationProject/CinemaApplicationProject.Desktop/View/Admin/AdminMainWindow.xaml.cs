@@ -36,6 +36,7 @@ namespace CinemaApplicationProject.Desktop.View.Admin
             var ctx = text.DataContext;
             var fasz = (MainViewModel)this.DataContext;
             fasz.SelectedShow.CopyFrom((ShowViewModel)ctx);
+            fasz.InvokeShowDetails();
             Debug.WriteLine(e.OriginalSource);
         }
 
