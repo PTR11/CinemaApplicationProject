@@ -32,6 +32,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         private ObservableCollection<StatsViewModel> _roles = new ObservableCollection<StatsViewModel>();
 
+        private ObservableCollection<ProductViewModel> _warehouse = new ObservableCollection<ProductViewModel>();
+
 
 
         private ObservableCollection<String> _categoriesList = new ObservableCollection<String>();
@@ -48,7 +50,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         private ShowWeekViewModel _week = new ShowWeekViewModel();
 
-        private bool _addMovie = false;
+        public bool _addMovie = false;
 
         private bool _addRoom = false;
 
@@ -59,6 +61,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         private bool _addUser = false;
 
         private bool _addRole = false;
+
+        public bool _addProduct = false;
 
         private int _userId = 0;
 
@@ -93,6 +97,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         private TicketSellViewModel _ticketsell;
 
+        private ProductSellViewModel _productsell;
+
         private MovieViewModel _selectedMovie;
 
         private EmployeeViewModel _selectedUser;
@@ -106,6 +112,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         private TicketViewModel _selectedTicket;
 
         private StatsViewModel _selectedRole;
+
+        private ProductViewModel _selectedProduct;
 
         private ActorViewModel _newActor;
 
@@ -123,7 +131,11 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             set { _userId = value; }
         }
 
-
+        public ObservableCollection<ProductViewModel> Warehouse
+        {
+            get { return _warehouse; }
+            set { _warehouse = value; OnPropertyChanged(); }
+        }
 
         public ObservableCollection<TicketViewModel> Tickets
         {
@@ -209,6 +221,12 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             set { _ticketsell = value; OnPropertyChanged(); }
         }
 
+        public ProductSellViewModel ProductSell
+        {
+            get { return _productsell; }
+            set { _productsell = value; OnPropertyChanged(); }
+        }
+
         public MovieViewModel SelectedMovie
         {
             get { return _selectedMovie; }
@@ -219,6 +237,12 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         {
             get { return _selectedShow; }
             set { _selectedShow = value; OnPropertyChanged(); }
+        }
+
+        public ProductViewModel SelectedProduct
+        {
+            get { return _selectedProduct; }
+            set { _selectedProduct = value; OnPropertyChanged(); }
         }
 
         public ShowViewModel SelectedTicketShow
@@ -275,14 +299,16 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         public event EventHandler<bool> TicketDetailsVisible;
         public event EventHandler<bool> UserDetailsVisible;
         public event EventHandler<bool> RoleDetailsVisible;
-
+        public event EventHandler<bool> ProductDetailsVisible;
+        public event EventHandler<bool> ImageChanger;
+        public event EventHandler<bool> ImageChanger2;
 
         public DelegateCommand SelectMovie { get; set; }
         public DelegateCommand SelectRoom { get; set; }
         public DelegateCommand SelectTicket { get; set; }
         public DelegateCommand SelectUser { get; set; }
         public DelegateCommand SelectRole { get; set; }
-
+        public DelegateCommand SelectProduct { get; set; }
 
         public DelegateCommand TicketSearch { get; set; }
         public DelegateCommand AddNewActor { get; set; }
@@ -294,6 +320,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         public DelegateCommand AddNewUser { get; set; }
         public DelegateCommand AddNewRole { get; set; }
         public DelegateCommand AddNewRents { get; set; }
+        public DelegateCommand AddNewProduct { get; set; }
+
 
         public DelegateCommand UpdateShow { get; set; }
         public DelegateCommand UpdateMovie { get; set; }
@@ -301,8 +329,13 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         public DelegateCommand UpdateTicket { get; set; }
         public DelegateCommand UpdateUser { get; set; }
         public DelegateCommand UpdateRole { get; set; }
+        public DelegateCommand UpdateProduct { get; set; }
 
         public DelegateCommand DeleteMovie { get; set; }
+
+        public DelegateCommand ChangeImageCommand { get; set; }
+        public DelegateCommand ChangeImageCommand2 { get; set; }
+
 
 
         public DelegateCommand LastWeek { get; set; }
@@ -318,7 +351,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             SelectTicket = new DelegateCommand(_ => ShowDetails(SelectedTicket, ref _addTicket, TicketDetailsVisible));
             SelectUser = new DelegateCommand(_ => ShowDetails(SelectedUser, ref _addUser, UserDetailsVisible));
             SelectRole = new DelegateCommand(_ => ShowDetails(SelectedRole, ref _addRole, RoleDetailsVisible));
-
+            SelectProduct = new DelegateCommand(_ => ShowDetails(SelectedProduct, ref _addProduct, ProductDetailsVisible));
 
             //Add news (in update menu)
             AddNewActor = new DelegateCommand(_ => !(NewActor is null), async _ => await AddActor());
@@ -334,26 +367,26 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             AddNewTicket = new DelegateCommand(_ => Adder(SelectedTicket = new TicketViewModel(), ref _addTicket, TicketDetailsVisible));
             AddNewUser = new DelegateCommand(_ => Adder(SelectedUser = new EmployeeViewModel(), ref _addUser, UserDetailsVisible));
             AddNewRents = new DelegateCommand(_ => !(TicketSell is null), async _ => await AddRent());
-
+            AddNewProduct = new DelegateCommand(_ => Adder(SelectedProduct = new ProductViewModel(), ref _addProduct, ProductDetailsVisible));
 
             //Updates
             UpdateShow = new DelegateCommand(_ => !(SelectedShow is null), async _ => await UpdateSelectedItem(_addShow, AddCreatedShow, SelectedShow.Id != 0, SetupShowUpdate, "api/Shows", LoadShows, LoadRooms));
-
             UpdateMovie = new DelegateCommand(_ => !(SelectedMovie is null), async _ => await UpdateSelectedItem(_addMovie, AddCreatedMovie, SelectedMovie.Title != null, SetupMovieUpdate, "api/Movies", LoadMovies, LoadShows, LoadActors, LoadCategories));
-
             UpdateRoom = new DelegateCommand(_ => !(SelectedRoom is null), async _ => await UpdateSelectedItem(_addRoom, AddCreatedRoom, SelectedRoom.Id != 0, SetupRoomUpdate, "api/Rooms", LoadRooms, LoadShows));
-
             UpdateTicket = new DelegateCommand(_ => !(SelectedTicket is null), async _ => await UpdateSelectedItem(_addTicket, AddCreatedTicket, SelectedTicket.Id != 0, SetupTicketUpdate, "api/Tickets", null));
-
             UpdateUser = new DelegateCommand(_ => !(SelectedUser is null), async _ => await UpdateSelectedItem(_addUser, AddCreatedUser, SelectedUser.Id != 0, SetupUserUpdate, "api/Users", LoadUsers, LoadRoles));
-
             UpdateRole = new DelegateCommand(_ => !(SelectedRole is null), async _ => await UpdateSelectedItem(_addRole, AddCreatedTicket, SelectedRole.Id != 0, SetupRoleUpdate, "api/StatsAndPays", LoadRoles));
+            UpdateProduct = new DelegateCommand(_ => !(SelectedProduct is null), async _ => await UpdateSelectedItem(_addProduct, AddCreatedProduct, SelectedProduct.Id != 0, SetupProductUpdate, "api/BuffetWarehouses", LoadProducts));
+
+            ChangeImageCommand = new DelegateCommand(_ => ImageChangerMethod("movie"));
+            ChangeImageCommand2 = new DelegateCommand(_ => ImageChangerMethod("product"));
 
             LastWeek = new DelegateCommand(_ => ChangeWeekToLast());
             ActualWeek = new DelegateCommand(async _ => await LoadShows());
             NextWeek = new DelegateCommand(_ => ChangeWeekToNext());
-
+            
             NewActor = new ActorViewModel();
+            NewActor.MainModel = this;
             NewCategory = new CategoryViewModel();
             NewRole = new StatsViewModel();
 
@@ -370,15 +403,24 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             LoadInit();
         }
 
-        
-
+        private void ImageChangerMethod(String caller)
+        {
+            if (caller.Equals("movie"))
+            {
+                ImageChanger?.Invoke(this, true);
+            }
+            else
+            {
+                ImageChanger2?.Invoke(this, true);
+            }
+        }
 
         public void InvokeShowDetails()
         {
             ShowDetailsVisible?.Invoke(this, true);
         }
 
-        public async Task CreateFieldAsync()
+        public async Task CreateMoviesFieldAsync()
         {
             TicketSell = new TicketSellViewModel();
             await LoadRents(SelectedTicketShow.Id);
@@ -414,6 +456,30 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
                     });
                 }
             }
+            width = Warehouse.Count >= 8 ? 8 : Warehouse.Count % 8;
+        }
+
+        public async Task CreateProductsFieldAsync()
+        {
+            ProductSell = new ProductSellViewModel();
+            ProductSell.MainModel = this;
+            await LoadProducts();
+            ProductSell.Rows = Warehouse.Count % 8 == 0 ? Warehouse.Count / 8 : (Warehouse.Count / 8 )+ 1;
+            for (Int32 i = 0; i < Warehouse.Count; i++)
+            {
+                ProductSell.Field.Add(new Field
+                {
+                    ImageInBytes = Warehouse[i].Image,
+                    Text = Warehouse[i].Name,
+                    Price = Warehouse[i].Price,
+                    //Background = Background(i, 0),
+                    X = i / 8,
+                    Y = i % 8,
+                    Number = i,
+                    OnClick = new DelegateCommand(param => ProductSell.PlaceManagement(Convert.ToInt32(param))),
+                }) ;
+            }
+            int width = Warehouse.Count >= 8 ? 8 : Warehouse.Count % 8;
         }
 
         private String Background(int i, int j)
@@ -434,8 +500,6 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         }
 
-
-
         private void FilterTicketRooms()
         {
             var rooms = new List<RoomViewModel>(TicketSell.Rooms.ToList());
@@ -449,7 +513,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
                     List<ShowViewModel> showsForDateFilter = new List<ShowViewModel>();
                     foreach (var show in room.TmpShows)
                     {
-                        if (movie != null && show.MovieTitle == movie)
+                        if (movie != null && show.MovieTitle.Equals(movie))
                         {
                             showsForMovieFilter.Add(show);
                         }
@@ -458,9 +522,20 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
                             showsForDateFilter.Add(show);
                         }
                     }
-                    List<ShowViewModel> intersect = new List<ShowViewModel>(showsForDateFilter.AsQueryable().Intersect(showsForDateFilter));
+                    List<ShowViewModel> intersect;
+                    if (movie != null && !movie.Equals("") && (date.Date.Year == 1 && date.Date.Month == 1 && date.Date.Day == 1))
+                    {
+                        intersect = new List<ShowViewModel>(showsForMovieFilter);
+                    }
+                    else if((movie == null || movie.Equals("")) && (date.Date.Year != 1))
+                    {
+                        intersect = new List<ShowViewModel>(showsForDateFilter);
+                    }
+                    else 
+                    {
+                        intersect = new List<ShowViewModel>(showsForMovieFilter.AsQueryable().Intersect(showsForDateFilter));
+                    }
                     room.Shows = new ObservableCollection<ShowViewModel>(intersect);
-
                 }
             }
 
@@ -482,22 +557,6 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             SeparateShowsByDay(tmpShow);
 
         }
-
-
-
-        public async Task LoadInit()
-        {
-            await LoadMovies();
-            await LoadShows();
-            await LoadActors();
-            await LoadRooms();
-            await LoadTickets();
-            await LoadCategories();
-            await LoadUsers();
-            await LoadRoles();
-        }
-
-
 
         private bool IsOnThisWeek(DateTime date)    
         {
@@ -594,9 +653,53 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
                 SelectedShow.MainModel = this;
             }
         }
+
+        public void UserVisibility(bool visibility)
+        {
+            UserDetailsVisible?.Invoke(this, visibility);
+            if (!visibility)
+            {
+                SelectedUser = new EmployeeViewModel();
+                SelectedUser.MainModel = this;
+            }
+        }
+
+        public void RoleVisibility(bool visibility)
+        {
+            RoleDetailsVisible?.Invoke(this, visibility);
+            if (!visibility)
+            {
+                SelectedRole = new StatsViewModel();
+                SelectedRole.MainModel = this;
+            }
+        }
+
+        public void ProductVisibility(bool visibility)
+        {
+            ProductDetailsVisible?.Invoke(this, visibility);
+            if (!visibility)
+            {
+                SelectedProduct = new ProductViewModel();
+                SelectedProduct.MainModel = this;
+            }
+        }
         #endregion
 
         #region Loaders
+
+        public async Task LoadInit()
+        {
+            await LoadMovies();
+            await LoadShows();
+            await LoadActors();
+            await LoadRooms();
+            await LoadTickets();
+            await LoadCategories();
+            await LoadUsers();
+            await LoadRoles();
+            await LoadProducts();
+        }
+
         private async Task LoadRentsUsers(int id)
         {
             List<TicketsUsersViewModel> tmpRentUsers = new List<TicketsUsersViewModel>();
@@ -661,8 +764,39 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             List<MovieViewModel> tmpMovies2 = new List<MovieViewModel>(tmpMovies);
             tmpMovies2.AddRange(tmpMovies);
             Movies = new ObservableCollection<MovieViewModel>(tmpMovies2);
+            foreach(var movie in Movies)
+            {
+                foreach(var actor in movie.Actors)
+                {
+                    actor.MainModel = this;
+                }
+                foreach (var cat in movie.Categories)
+                {
+                    cat.MainModel = this;
+                }
+            }
             MoviesList = new ObservableCollection<string>(tmpMovies.Select(m => m.Title).ToList());
         }
+
+        private async Task LoadProducts()
+        {
+            List<ProductViewModel> tmpProducts = new List<ProductViewModel>();
+            try
+            {
+                tmpProducts = new List<ProductViewModel>((await _service.LoadingAsync<ProductDTO>("api/BuffetWarehouses"))
+                    .Select(movie => (ProductViewModel)movie));
+            }
+            catch (Exception ex) when (ex is NetworkException || ex is HttpRequestException)
+            {
+                OnMessageApplication($"Unexpected error occured! ({ex.Message})");
+            }
+            Warehouse = new ObservableCollection<ProductViewModel>(tmpProducts);
+            foreach (var product in Warehouse)
+            {
+                product.MainModel = this;
+            }
+        }
+
         private async Task LoadActors()
         {
             try
@@ -673,6 +807,10 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             catch (Exception ex) when (ex is NetworkException || ex is HttpRequestException)
             {
                 OnMessageApplication($"Unexpected error occured! ({ex.Message})");
+            }
+            foreach(var actor in _allActors)
+            {
+                actor.MainModel = this;
             }
             ActorsList = new ObservableCollection<string>(_allActors.Select(a => a._name).ToList());
         }
@@ -711,8 +849,6 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             TicketSell.RoomsNumber = Rooms.Count;
         }
 
-        
-
         private async Task LoadCategories()
         {
             try
@@ -723,6 +859,11 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             catch (Exception ex) when (ex is NetworkException || ex is HttpRequestException)
             {
                 OnMessageApplication($"Unexpected error occured! ({ex.Message})");
+            }
+
+            foreach(var cat in _allCategories)
+            {
+                cat.MainModel = this;
             }
             CategoriesList = new ObservableCollection<string>(_allCategories.Select(a => a.Category).ToList());
         }
@@ -739,6 +880,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
                 OnMessageApplication($"Unexpected error occured! ({ex.Message})");
             }
             Users = new ObservableCollection<EmployeeViewModel>(tmpEmployees);
+
             //MoviesList = new ObservableCollection<string>(tmpMovies.Select(m => m.Title).ToList());
         }
         private async Task LoadRoles()
@@ -758,6 +900,85 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         #endregion
 
+        #region Setups
+
+        private ShowsDTO SetupShowUpdate()
+        {
+            ShowViewModel updatetedShow = new ShowViewModel();
+            updatetedShow.CopyFrom(SelectedShow);
+            updatetedShow.RoomName = updatetedShow.RoomName.Split("(")[0].Trim();
+            updatetedShow.MovieId = Movies.FirstOrDefault(m => m.Title.Equals(updatetedShow.MovieTitle)).Id;
+            updatetedShow.RoomId = Rooms.FirstOrDefault(m => m.Name.Equals(updatetedShow.RoomName)).Id;
+            var dto = (ShowsDTO)updatetedShow;
+            SelectedShow = new ShowViewModel();
+            return dto;
+        }
+
+        private RoomsDTO SetupRoomUpdate()
+        {
+            RoomViewModel updatetedRoom = new RoomViewModel();
+            updatetedRoom.CopyFrom(SelectedRoom);
+
+            var dto = (RoomsDTO)updatetedRoom;
+            SelectedRoom = new RoomViewModel();
+            RoomDetailsVisible?.Invoke(this, false);
+            return dto;
+        }
+
+        private MoviesDTO SetupMovieUpdate()
+        {
+            MovieViewModel newMovie = new MovieViewModel();
+            newMovie.CopyFrom(SelectedMovie);
+            SelectedMovie = new MovieViewModel();
+            var dto = (MoviesDTO)newMovie;
+            MovieDetailsVisible?.Invoke(this, false);
+            return dto;
+        }
+
+        private TicketsDTO SetupTicketUpdate()
+        {
+            TicketViewModel newTicket = new TicketViewModel();
+            newTicket.CopyFrom(SelectedTicket);
+            SelectedTicket = new TicketViewModel();
+            var dto = (TicketsDTO)newTicket;
+            TicketDetailsVisible?.Invoke(this, false);
+            return dto;
+        }
+
+        private EmployeesDTO SetupUserUpdate()
+        {
+            EmployeeViewModel newUser = new EmployeeViewModel();
+            newUser.CopyFrom(SelectedUser);
+            SelectedUser = new EmployeeViewModel();
+            var dto = (EmployeesDTO)newUser;
+            UserDetailsVisible?.Invoke(this, false);
+            return dto;
+        }
+
+        private StatsDTO SetupRoleUpdate()
+        {
+            StatsViewModel newRole = new StatsViewModel();
+            newRole.CopyFrom(SelectedRole);
+            SelectedRole = new StatsViewModel();
+            var dto = (StatsDTO)newRole;
+            RoleDetailsVisible?.Invoke(this, false);
+            return dto;
+        }
+
+        private ProductDTO SetupProductUpdate()
+        {
+            ProductViewModel newRole = new ProductViewModel();
+            newRole.CopyFrom(SelectedProduct);
+            SelectedProduct = new ProductViewModel();
+            var dto = (ProductDTO)newRole;
+            ProductDetailsVisible?.Invoke(this, false);
+            return dto;
+        }
+
+
+        #endregion
+
+        #region Creates
 
         private async Task AddRole()
         {
@@ -827,9 +1048,10 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
                     NewActor.Id = actor.Id;
                 }
                 SelectedMovie.Actors.Add(NewActor);
+                NewActor.MainModel = this;
                 NewActor = new ActorViewModel();
             }
-            if (NewActor.Name != null)
+            if (NewActor.Name != null && NewActor.Name != "")
             {
                 var actorDTO = (ActorsDTO)NewActor;
                 if (actorDTO.Id == 0 && ActorsList.Contains(actorDTO.Name))
@@ -842,81 +1064,11 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
                 {
                     SelectedMovie.Actors.Add(NewActor);
                 }
+                NewActor.MainModel = this;
                 NewActor = new ActorViewModel();
             }
             await LoadActors();
         }
-
-
-        #region Setups
-
-        private ShowsDTO SetupShowUpdate()
-        {
-            ShowViewModel updatetedShow = new ShowViewModel();
-            updatetedShow.CopyFrom(SelectedShow);
-            updatetedShow.RoomName = updatetedShow.RoomName.Split("(")[0].Trim();
-            updatetedShow.MovieId = Movies.FirstOrDefault(m => m.Title.Equals(updatetedShow.MovieTitle)).Id;
-            updatetedShow.RoomId = Rooms.FirstOrDefault(m => m.Name.Equals(updatetedShow.RoomName)).Id;
-            var dto = (ShowsDTO)updatetedShow;
-            SelectedShow = new ShowViewModel();
-            return dto;
-        }
-
-        private RoomsDTO SetupRoomUpdate()
-        {
-            RoomViewModel updatetedRoom = new RoomViewModel();
-            updatetedRoom.CopyFrom(SelectedRoom);
-
-            var dto = (RoomsDTO)updatetedRoom;
-            SelectedRoom = new RoomViewModel();
-            RoomDetailsVisible?.Invoke(this, false);
-            return dto;
-        }
-
-        private MoviesDTO SetupMovieUpdate()
-        {
-            MovieViewModel newMovie = new MovieViewModel();
-            newMovie.CopyFrom(SelectedMovie);
-            newMovie.Actors.Clear();
-            SelectedMovie = new MovieViewModel();
-            var dto = (MoviesDTO)newMovie;
-            MovieDetailsVisible?.Invoke(this, false);
-            return dto;
-        }
-
-        private TicketsDTO SetupTicketUpdate()
-        {
-            TicketViewModel newTicket = new TicketViewModel();
-            newTicket.CopyFrom(SelectedTicket);
-            SelectedTicket = new TicketViewModel();
-            var dto = (TicketsDTO)newTicket;
-            TicketDetailsVisible?.Invoke(this, false);
-            return dto;
-        }
-
-        private EmployeesDTO SetupUserUpdate()
-        {
-            EmployeeViewModel newUser = new EmployeeViewModel();
-            newUser.CopyFrom(SelectedUser);
-            SelectedUser = new EmployeeViewModel();
-            var dto = (EmployeesDTO)newUser;
-            UserDetailsVisible?.Invoke(this, false);
-            return dto;
-        }
-
-        private StatsDTO SetupRoleUpdate()
-        {
-            StatsViewModel newRole = new StatsViewModel();
-            newRole.CopyFrom(SelectedRole);
-            SelectedRole = new StatsViewModel();
-            var dto = (StatsDTO)newRole;
-            RoleDetailsVisible?.Invoke(this, false);
-            return dto;
-        }
-
-        #endregion
-
-        #region Creates
 
         private async Task AddRent()
         {
@@ -928,7 +1080,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             dto.EmployeeId = UserId;
             await this.AddRent("api/Rents", dto);
             TicketSell = new TicketSellViewModel();
-            await CreateFieldAsync();
+            await CreateMoviesFieldAsync();
         }
 
         private async Task AddCreatedShow()
@@ -1003,6 +1155,19 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
                 UserDetailsVisible?.Invoke(this, false);
             }
         }
+
+        private async Task AddCreatedProduct()
+        {
+            if (SelectedProduct.Name != "" && SelectedProduct.Price != 0 && SelectedProduct.Quantity != 0)
+            {
+                var productDTO = (ProductDTO)SelectedProduct;
+                SelectedProduct.Id = await AddEntity("api/BuffetWarehouses/", productDTO);
+                _addProduct = false;
+                SelectedProduct = new ProductViewModel();
+                await LoadProducts();
+                ProductDetailsVisible?.Invoke(this, false);
+            }
+        }
         #endregion
 
         #region Generics
@@ -1011,6 +1176,19 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             try
             {
                 await _service.DeleteAsync(route, id);
+            }
+            catch (Exception ex) when (ex is NetworkException || ex is HttpRequestException)
+            {
+                OnMessageApplication($"Unexpected error occured! ({ex.Message})");
+            }
+            await Loads(loadMethods);
+        }
+
+        public async Task DeleteEntity(String route, int id, int id2, params Func<Task>[] loadMethods)
+        {
+            try
+            {
+                await _service.DeleteAsync(route, id,id2);
             }
             catch (Exception ex) when (ex is NetworkException || ex is HttpRequestException)
             {

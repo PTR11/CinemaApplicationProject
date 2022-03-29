@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CinemaApplicationProject.Model;
 using CinemaApplicationProject.Model.Database;
+using CinemaApplicationProject.Model.Services;
+using CinemaApplicationProject.Model.DTOs;
 
 namespace CinemaApplicationProject.API.Controllers
 {
@@ -14,95 +16,88 @@ namespace CinemaApplicationProject.API.Controllers
     [ApiController]
     public class BuffetWarehousesController : ControllerBase
     {
-        private readonly DatabaseContext _context;
+        private readonly IDatabaseService _service;
 
-        public BuffetWarehousesController(DatabaseContext context)
+        public BuffetWarehousesController(IDatabaseService service)
         {
-            _context = context;
+            _service = service;
+            DatabaseManipulation.context = _service.GetContext();
         }
 
         // GET: api/BuffetWarehouses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BuffetWarehouse>>> GetBuffetWarehouse()
+        public ActionResult<IEnumerable<ProductDTO>> GetBuffetWarehouse()
         {
-            return await _context.BuffetWarehouse.ToListAsync();
+            return _service.GetWarehouse().Select(m => (ProductDTO)m).ToList();
         }
-
-        // GET: api/BuffetWarehouses/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BuffetWarehouse>> GetBuffetWarehouse(int id)
+        public ActionResult<ProductDTO> GetBuffetWarehouseById(int id)
         {
-            var buffetWarehouse = await _context.BuffetWarehouse.FindAsync(id);
-
-            if (buffetWarehouse == null)
-            {
-                return NotFound();
-            }
-
-            return buffetWarehouse;
+            return (ProductDTO)_service.GetProductInWareHouse(id);
         }
 
-        // PUT: api/BuffetWarehouses/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //// PUT: api/BuffetWarehouses/5
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBuffetWarehouse(int id, BuffetWarehouse buffetWarehouse)
+        public ActionResult<ProductDTO> PutProduct(int id,ProductDTO product)
         {
-            if (id != buffetWarehouse.Id)
+            if (id != product.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(buffetWarehouse).State = EntityState.Modified;
-
-            try
+            var tmp = _service.GetProductById(id);
+            tmp.Product.Name = product.Name;
+            tmp.Product.Price = product.Price;
+            tmp.Product.Image = product.Image;
+            tmp.Quantity = product.Quantity;
+            if (DatabaseManipulation.UpdateElementAsync(tmp))
             {
-                await _context.SaveChangesAsync();
+                return Ok();
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!BuffetWarehouseExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
-
-            return NoContent();
         }
 
         // POST: api/BuffetWarehouses
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<BuffetWarehouse>> PostBuffetWarehouse(BuffetWarehouse buffetWarehouse)
+        public ActionResult<ProductDTO> PostProduct(ProductDTO product)
         {
-            _context.BuffetWarehouse.Add(buffetWarehouse);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetBuffetWarehouse", new { id = buffetWarehouse.Id }, buffetWarehouse);
+            var p = _service.GetProductByName(product.Name);
+            if(p == null)
+            {
+                var tmpProduct = DatabaseManipulation.AddElement(new Products { Name = product.Name, Price = product.Price, Image = product.Image });
+                var tmpB = DatabaseManipulation.AddElement(new BuffetWarehouse { Product = tmpProduct, Quantity = product.Quantity });
+                if (tmpB == null && tmpProduct == null)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError);
+                }
+                else
+                {
+                    return CreatedAtAction(nameof(GetBuffetWarehouseById), new { id = tmpB.Id }, (ProductDTO)tmpB);
+                }
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
+
+
 
         // DELETE: api/BuffetWarehouses/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBuffetWarehouse(int id)
+        public IActionResult DeleteProduct(int id)
         {
-            var buffetWarehouse = await _context.BuffetWarehouse.FindAsync(id);
-            if (buffetWarehouse == null)
+            var product = _service.GetProductById(id);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            _context.BuffetWarehouse.Remove(buffetWarehouse);
-            await _context.SaveChangesAsync();
+            DatabaseManipulation.DeleteElement(product);
 
             return NoContent();
-        }
-
-        private bool BuffetWarehouseExists(int id)
-        {
-            return _context.BuffetWarehouse.Any(e => e.Id == id);
         }
     }
 }

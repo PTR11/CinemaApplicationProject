@@ -88,9 +88,11 @@ namespace CinemaApplicationProject.API.Controllers
             return CreatedAtAction(nameof(GetActor), new { id = actor.Id }, (ActorsDTO)actor);
         }
 
+
+
         // DELETE: api/Actors/5
-        [HttpDelete("{id}")]
-        public IActionResult DeleteActors(int id)
+        [HttpDelete("{movieId}/{id}")]
+        public IActionResult DeleteActors(int movieId,int id)
         {
             var actors = _service.GetActorById(id);
             if (actors == null)
@@ -98,11 +100,14 @@ namespace CinemaApplicationProject.API.Controllers
                 return NotFound();
             }
 
-            DatabaseManipulation.DeleteElement(actors);
-            //_context.Actors.Remove(actors);
-            //await _context.SaveChanges
-            //
-            //();
+            var movie = _service.GetMovieById(movieId);
+            if(movie == null)
+            {
+                return NotFound();
+            }
+
+            _service.DeleteActorFromMovie(movieId, id);
+            
 
             return NoContent();
         }

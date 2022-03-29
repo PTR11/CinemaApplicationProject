@@ -7,7 +7,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace CinemaApplicationProject.Model.Services
 {
     public static class DatabaseManipulation
@@ -38,7 +37,7 @@ namespace CinemaApplicationProject.Model.Services
         {
             try
             {
-                context.Set<T>().Remove(element);
+                context.Remove(element);
                 context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
@@ -56,8 +55,34 @@ namespace CinemaApplicationProject.Model.Services
         {
             try
             {
+                context.Remove(element);
+                context.Add(element);
+                context.Entry(element).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return false;
+            }
+            catch (DbUpdateException)
+            {
+                return false;
+            }
+            return true;
+
+        }
+
+        public static bool UpdateElementAsync(Movies element)
+        {
+            try
+            {
+                var actors = element.Actors;
+                var cats = element.Categories;
                 context.Update(element);
                 context.Entry(element).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                context.SaveChanges();
+                context.Movies.FirstOrDefault(m => m.Id == element.Id).Actors = actors;
+                context.Movies.FirstOrDefault(m => m.Id == element.Id).Categories = cats;
                 context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)

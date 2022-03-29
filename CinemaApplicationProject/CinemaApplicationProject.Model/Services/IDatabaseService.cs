@@ -27,6 +27,8 @@ namespace CinemaApplicationProject.Model.Services
 
         public void ConnectMovieWithActor(int movieId, int actorId);
 
+        public void DeleteActorFromMovie(int movieId, int actorId);
+
         #endregion
 
         #region BuffetSales
@@ -53,6 +55,7 @@ namespace CinemaApplicationProject.Model.Services
         public int GetQuantityofProductById(int id);
 
         public int GetPriceOfQuantityOfProductById(int id);
+        public BuffetWarehouse GetProductInWareHouse(int id);
 
         #endregion
 
@@ -77,6 +80,8 @@ namespace CinemaApplicationProject.Model.Services
         public List<Movies> GetMoviesByNamePart(String name = null);
 
         public List<Movies> GetMoviesByCategory(String category);
+
+        public Task UpdateMovieActors(List<Actors> actors, int movieId);
 
         #endregion
 
@@ -106,6 +111,10 @@ namespace CinemaApplicationProject.Model.Services
 
         #region Products
         public List<Products> GetAllProducts();
+
+        public Products GetProductByName(String name);
+
+        public BuffetWarehouse GetProductById(int id);
 
         public int GetProductPrice(String name = null);
 
@@ -189,6 +198,8 @@ namespace CinemaApplicationProject.Model.Services
         public Categories GetCategoryByName(String cat);
 
         public void ConnectMovieWithCategory(int movieId, int actorId);
+
+        public void DeleteCategoryFromMovie(int movieId, int catId);
 
         #endregion
 

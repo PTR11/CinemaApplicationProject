@@ -14,6 +14,30 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
         public string _name;
         public int _movieId;
 
+        public ActorViewModel()
+        {
+            this.Name = "";
+            this.MovieId = 0;
+            DeleteMovieActor = new DelegateCommand(async _ => await DeleteActor());
+        }
+
+        public async Task DeleteActor()
+        {
+            var main = (MainViewModel)this.MainModel;
+            if (main._addMovie)
+            {
+                main.SelectedMovie.Actors.Remove(this);
+            }
+            else
+            {
+                await main.DeleteEntity("api/Actors", main.SelectedMovie.Id, this.Id, main.LoadInit);
+                main.MovieVisibility(false);
+            }
+            
+        }
+
+        public DelegateCommand DeleteMovieActor { get; set; }
+
         public string Name
         {
             get { return _name; }

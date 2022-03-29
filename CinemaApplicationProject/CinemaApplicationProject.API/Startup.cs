@@ -94,7 +94,7 @@ namespace CinemaApplicationProject.API
                 endpoints.MapControllers();
             });
 
-            DatabaseInitializer.Initialize(serviceProvider);
+            DatabaseInitializer.Initialize(serviceProvider, Configuration.GetValue<string>("ImageStore"));
         }
     }
 }

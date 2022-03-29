@@ -289,61 +289,81 @@
                                                         <RowDefinition Height="*"/>
                                                         <RowDefinition Height="*"/>
                                                         <RowDefinition Height="*"/>
+                                                        <RowDefinition Height="*"/>
+                                                        <RowDefinition Height="*"/>
                                                     </Grid.RowDefinitions>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="200"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
+                                                    <Grid Grid.Row="0" Grid.ColumnSpan="3">
+                                                        <Image  Margin="5" 
+                                                        VerticalAlignment="Center" 
+                                                        HorizontalAlignment="Center" MaxHeight="300"
+                                                        TextSearch.Text="asdf"
+                                                        Source="{Binding SelectedMovie.Image, TargetNullValue={x:Null}}"/>
+                                                        <TextBlock Text="No image available" VerticalAlignment="Center" 
+                                                        HorizontalAlignment="Center" Foreground="{Binding SelectedMovie.ImageForeground}">
+                                                            
+                                                        </TextBlock>
+                                                    </Grid>
+                                                    
 
-                                                    <Label Grid.Column="0" Grid.Row="0" Margin="0,10,0,10">
+                                                    <Button Grid.Row="1" Grid.ColumnSpan="3" HorizontalAlignment="Center"
+                                                        Content="Change image"
+                                                        VerticalAlignment="Center"
+                                                        Width="Auto" FontSize="24"  Margin="5"
+                                                        Command="{Binding ChangeImageCommand}"/>
+
+                                                    <Label Grid.Row="2" Grid.Column="0" Margin="0,10,0,10">
                                                         <TextBlock Width="Auto" Text="Title: " FontSize="24"/>
                                                     </Label>
-                                                    <TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0" Width="400" Margin="0,10,0,10" Text="{Binding SelectedMovie.Title, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
+                                                    <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"  Width="400" Margin="0,10,0,10" Text="{Binding SelectedMovie.Title, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
 
-                                                    <Label Grid.Column="0" Grid.Row="1" Margin="0,10,0,10">
+                                                    <Label Grid.Row="3" Grid.Column="0" Margin="0,10,0,10">
                                                         <TextBlock Text="Director: " FontSize="24"/>
                                                     </Label>
-                                                    <TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Width="400" Margin="0,10,0,10" Text="{Binding SelectedMovie.Director, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
+                                                    <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"  Width="400" Margin="0,10,0,10" Text="{Binding SelectedMovie.Director, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
 
-                                                    <Label Grid.Column="0" Grid.Row="2" Margin="0,10,0,10">
+                                                    <Label Grid.Row="4" Grid.Column="0"  Margin="0,10,0,10">
                                                         <TextBlock Text="Length: " FontSize="24"/>
                                                     </Label>
-                                                    <TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="2" Width="400" Margin="0,10,0,10" Text="{Binding SelectedMovie.Length, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
+                                                    <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"  Width="400" Margin="0,10,0,10" Text="{Binding SelectedMovie.Length, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
 
-                                                    <Label Grid.Column="0" Grid.Row="3" Margin="0,10,0,10">
+                                                    <Label Grid.Row="5" Grid.Column="0"  Margin="0,10,0,10">
                                                         <TextBlock Text="Description: " FontSize="24"/>
                                                     </Label>
-                                                    <TextBox Grid.Column="1" Grid.ColumnSpan="2" Height="200" Grid.Row="3" Width="400" Margin="0,10,0,10" TextWrapping="Wrap" Text="{Binding SelectedMovie.Description, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
+                                                    <TextBox Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Height="200"  Width="400" Margin="0,10,0,10" TextWrapping="Wrap" Text="{Binding SelectedMovie.Description, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
 
-                                                    <Label Grid.Column="0" Grid.Row="4" Margin="0,10,0,10">
+                                                    <Label Grid.Row="6" Grid.Column="0"  Margin="0,10,0,10">
                                                         <TextBlock Text="Trailer: " FontSize="24"/>
                                                     </Label>
-                                                    <TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="4" Width="400" Margin="0,10,0,10" Text="{Binding SelectedMovie.Trailer, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
+                                                    <TextBox Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Width="400" Margin="0,10,0,10" Text="{Binding SelectedMovie.Trailer, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
 
-                                                    <Label Grid.Column="0" Grid.Row="5" Margin="0,10,0,10">
+                                                    <Label Grid.Row="7" Grid.Column="0"  Margin="0,10,0,10">
                                                         <TextBlock Text="New actor: " FontSize="24"/>
                                                     </Label>
-                                                    <ComboBox BorderBrush="Black" FontSize="24" SelectedItem="{Binding NewActor.Name}" Text="{Binding NewActor.Name}" Margin="0,10,10,10" BorderThickness="1" Height="50" IsEditable="True" Padding="0" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="5" Width="260" ItemsSource="{Binding ActorsList}"/>
-                                                    <Button Grid.Column="2" Grid.Row="5" Width="130" HorizontalAlignment="Left" Height="35" Content="Add Actor" Command="{Binding AddNewActor}"/>
+                                                    <ComboBox Grid.Row="7" BorderBrush="Black" FontSize="24" SelectedItem="{Binding NewActor.Name}" Text="{Binding NewActor.Name}" Margin="0,10,10,10" BorderThickness="1" Height="50" IsEditable="True" Padding="0" Grid.Column="1" HorizontalAlignment="Left" Width="260" ItemsSource="{Binding ActorsList}"/>
+                                                    <Button Grid.Column="2" Grid.Row="7" Width="130" HorizontalAlignment="Left" Height="35" Content="Add Actor" Command="{Binding AddNewActor}"/>
 
-                                                    <Label Grid.Column="0" Grid.Row="6" Margin="0,10,0,10">
+                                                    <Label Grid.Column="0" Grid.Row="8" Margin="0,10,0,10">
                                                         <TextBlock Text="New category: " FontSize="24"/>
                                                     </Label>
-                                                    <ComboBox BorderBrush="Black" FontSize="24" SelectedItem="{Binding NewCategory.Category}" Text="{Binding NewCategory.Category}" Margin="0,10,10,10" BorderThickness="1" Height="50" IsEditable="True" Padding="0" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="6" Width="260" ItemsSource="{Binding CategoriesList}"/>
-                                                    <Button Grid.Column="2" Width="130" Grid.Row="6" HorizontalAlignment="Left" Height="35" Content="Add Category" Command="{Binding AddNewCategory}"/>
+                                                    <ComboBox Grid.Row="8" BorderBrush="Black" FontSize="24" SelectedItem="{Binding NewCategory.Category}" Text="{Binding NewCategory.Category}" Margin="0,10,10,10" BorderThickness="1" Height="50" IsEditable="True" Padding="0" Grid.Column="1" HorizontalAlignment="Left" Width="260" ItemsSource="{Binding CategoriesList}"/>
+                                                    <Button Grid.Row="8" Grid.Column="2" Width="130"  HorizontalAlignment="Left" Height="35" Content="Add Category" Command="{Binding AddNewCategory}"/>
 
-                                                    <Button Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="7" HorizontalAlignment="Center" Background="Wheat" BorderBrush="Black" BorderThickness="3" Foreground="Black" Content="Update Movie" Margin="0,10,0,15" Command="{Binding UpdateMovie}"/>
+                                                    <Button Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" Background="Wheat" BorderBrush="Black" BorderThickness="3" Foreground="Black" Content="Update Movie" Margin="0,10,0,15" Command="{Binding UpdateMovie}"/>
                                                 </Grid>
                                                 <!--#endregion-->
 
                                                 <!--#region ActorsList -->
                                                 <Grid Grid.Column="1">
                                                     <Grid.RowDefinitions>
-                                                        <RowDefinition Height="300"/>
+                                                        <RowDefinition/>
                                                         <RowDefinition/>
                                                     </Grid.RowDefinitions>
-                                                    <GroupBox Grid.Row="0" Padding="0" Margin="0" Height="200" VerticalAlignment="Center" Background="Wheat" Width="200">
+                                                    <GroupBox Grid.Row="0" Padding="0" Margin="0,300,0,0" Height="200" VerticalAlignment="Center" Background="Wheat" Width="300">
                                                         <GroupBox.Header >
                                                             <Grid Background="Wheat" Margin="0">
                                                                 <Label Content="Actors:" FontSize="24" Height="50"  BorderBrush="Black" BorderThickness="3" />
@@ -353,15 +373,22 @@
                                                             <DataGrid ItemsSource="{Binding SelectedMovie.Actors}"
                                                                             VerticalContentAlignment="Stretch"  IsReadOnly="True"
                                                                             AutoGenerateColumns="False" HeadersVisibility="None"
-                                                                            Foreground="{x:Null}" SelectedItem="{Binding SelectedMovie.Actors}" >
+                                                                            Foreground="{x:Null}" SelectedItem="{Binding SelectedMovie.SelectedActor}" >
                                                                 <DataGrid.Columns>
                                                                     <DataGridTextColumn Binding="{Binding Name}" Width="*" FontSize="24" Foreground="Black"/>
+                                                                    <DataGridTemplateColumn Width="100">
+                                                                        <DataGridTemplateColumn.CellTemplate>
+                                                                            <DataTemplate>
+                                                                                <Button Width="50" HorizontalAlignment="Right" Command="{Binding DeleteMovieActor}">Delete</Button>
+                                                                            </DataTemplate>
+                                                                        </DataGridTemplateColumn.CellTemplate>
+                                                                    </DataGridTemplateColumn>
                                                                 </DataGrid.Columns>
                                                             </DataGrid>
                                                         </Border>
                                                     </GroupBox>
 
-                                                    <GroupBox Grid.Row="1" Padding="0" Margin="0" Height="200" VerticalAlignment="Center" Background="Wheat" Width="200">
+                                                    <GroupBox Grid.Row="1" Padding="0" Margin="0" Height="200" VerticalAlignment="Center" Background="Wheat" Width="300">
                                                         <GroupBox.Header >
                                                             <Grid Background="Wheat" Margin="0">
                                                                 <Label Content="Categories:" FontSize="24" Height="50"  BorderBrush="Black" BorderThickness="3" />
@@ -371,12 +398,18 @@
                                                             <DataGrid ItemsSource="{Binding SelectedMovie.Categories}"
                                                                             VerticalContentAlignment="Stretch"  IsReadOnly="True"
                                                                             AutoGenerateColumns="False" HeadersVisibility="None"
-                                                                            Foreground="{x:Null}" SelectedItem="{Binding SelectedMovie.Actors}" >
+                                                                            Foreground="{x:Null}" SelectedItem="{Binding SelectedMovie.SelectedCategory}" >
 
                                                                 <DataGrid.Columns>
-                                                                    <DataGridTextColumn Binding="{Binding Category}" Width="*" Foreground="Black" FontSize="24">
+                                                                    <DataGridTextColumn Binding="{Binding Category}" Width="*" Foreground="Black" FontSize="24"/>
+                                                                    <DataGridTemplateColumn Width="100">
+                                                                        <DataGridTemplateColumn.CellTemplate>
+                                                                            <DataTemplate>
+                                                                                <Button Width="50" HorizontalAlignment="Right" Command="{Binding DeleteMovieCategory}">Delete</Button>
+                                                                            </DataTemplate>
+                                                                        </DataGridTemplateColumn.CellTemplate>
+                                                                    </DataGridTemplateColumn>
 
-                                                                    </DataGridTextColumn>
 
                                                                 </DataGrid.Columns>
                                                             </DataGrid>
@@ -531,8 +564,8 @@
                     <TabItem Header="Users">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1000"/>
-                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1250"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <!--#region UsersSection -->
                             <Grid Grid.Column="0">
@@ -571,6 +604,13 @@
                                                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" FontSize="24" Width="Auto" Foreground="Black"/>
                                                         <DataGridTextColumn Header="Address" Binding="{Binding Address}" FontSize="24" Width="Auto" Foreground="Black"/>
                                                         <DataGridTextColumn Header="Email" Binding="{Binding Email}" FontSize="24" Width="Auto" Foreground="Black"/>
+                                                        <DataGridTemplateColumn Width="90">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <Button Margin="0" Width="50" HorizontalAlignment="Right" Command="{Binding DeleteUser}">Delete</Button>
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
                                                     </DataGrid.Columns>
                                                 </DataGrid>
                                             </Border>
@@ -670,6 +710,7 @@
                                                                             Foreground="{x:Null}" SelectedItem="{Binding SelectedUser.Stats}" >
                                                                     <DataGrid.Columns>
                                                                         <DataGridTextColumn Binding="{Binding Name}" Width="*" FontSize="24" Foreground="Black"/>
+                                                                        
                                                                     </DataGrid.Columns>
                                                                 </DataGrid>
                                                             </Border>
@@ -720,6 +761,13 @@
                                                     <DataGrid.Columns>
                                                         <DataGridTextColumn Binding="{Binding Name}" FontSize="24" Width="Auto" Foreground="Black"/>
                                                         <DataGridTextColumn Binding="{Binding Salary}" FontSize="24" Width="Auto" Foreground="Black"/>
+                                                        <DataGridTemplateColumn Width="100">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <Button Width="50" HorizontalAlignment="Right" Command="{Binding DeleteRole}">Delete</Button>
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
                                                     </DataGrid.Columns>
                                                 </DataGrid>
                                             </Border>
@@ -812,7 +860,7 @@
                                             <TextBlock Text="Date: " FontSize="24"/>
                                         </Label>
                                         <DatePicker Grid.Row="0" Grid.Column="3" FontSize="24" Width="200" SelectedDate="{Binding TicketSell.DateFilter}"></DatePicker>
-                                        
+
                                         <Button Grid.Column="4" Content="Search" Height="35" HorizontalAlignment="Center" Margin="0,0,20,0" Command="{Binding TicketSearch}"/>
                                     </Grid>
                                 </Border>
@@ -837,7 +885,7 @@
                                                 </ItemsControl.ItemsPanel>
 
                                                 <!-- Each item will be drawn using this template -->
-                                                
+
                                                 <ItemsControl.ItemTemplate >
                                                     <DataTemplate>
                                                         <Grid Width="200">
@@ -849,8 +897,8 @@
 
                                                             <ItemsControl Grid.Row="1" ItemsSource="{Binding Shows}" ItemTemplate="{StaticResource TicketCard}" />
                                                         </Grid>
-                                                        
-                                                        
+
+
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>
                                             </ItemsControl>
@@ -880,8 +928,141 @@
                                     </ScrollViewer>
                                 </Border>
                             </GroupBox>
-                            
 
+
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Buffet Warehouse">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <!--#region ProductsSection -->
+                            <Grid Grid.Row="0" Height="550" VerticalAlignment="Top">
+                                <GroupBox Padding="0" Background="Wheat">
+                                    <GroupBox.Header >
+                                        <Grid Background="Wheat">
+                                            <Label Content="Warehouse:" FontSize="24" Height="50" BorderBrush="Black" BorderThickness="3" />
+                                            <Grid HorizontalAlignment="Right" Width="350">
+                                                <Button Width="150" FontSize="20" Margin="0,0,10,0" Padding="10,0,10,0" Height="30" HorizontalAlignment="Left" Command="{Binding AddNewProduct}" Content="Add Product" Foreground="Black" BorderBrush="Black" BorderThickness="3" Background="Wheat"/>
+                                                <Button Width="150" FontSize="20" Margin="0,0,10,0" Padding="10,0,10,0" Height="30" HorizontalAlignment="Right" Click="ProductSell" Content="Sell Products" Foreground="Black" BorderBrush="Black" BorderThickness="3" Background="Wheat"/>
+                                            </Grid>
+                                        </Grid>
+                                    </GroupBox.Header>
+                                    <Border>
+                                        <Grid>
+                                            <Border CornerRadius="0" BorderThickness="3,0,3,3" BorderBrush="Black">
+                                                <DataGrid ItemsSource="{Binding Warehouse}"
+                                                VerticalContentAlignment="Stretch"  IsReadOnly="True"
+                                                AutoGenerateColumns="False" HeadersVisibility="Column" 
+                                                Foreground="{x:Null}" SelectedItem="{Binding SelectedProduct}">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="SelectionChanged">
+                                                            <i:InvokeCommandAction
+                                                            Command="{Binding SelectProduct}"
+                                                            CommandParameter="{
+                                                            Binding Path=SelectedItem,
+                                                            RelativeSource={
+                                                                RelativeSource
+                                                                AncestorType={x:Type DataGrid},
+                                                                AncestorLevel=1}}" />
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+
+                                                    <DataGrid.Columns >
+                                                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" FontSize="24" Width="*" Foreground="Black"/>
+                                                        <DataGridTextColumn Header="Price" Binding="{Binding Price}" FontSize="24" Width="*" Foreground="Black"/>
+                                                        <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" FontSize="24" Width="*" Foreground="Black"/>
+                                                        <DataGridTemplateColumn Width="200">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <Button Width="50" HorizontalAlignment="Right" Command="{Binding DeleteProduct}">Delete</Button>
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                    </DataGrid.Columns>
+                                                </DataGrid>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </GroupBox>
+                            </Grid>
+                            <!--#endregion-->
+
+                            <!--#region DetailsSection -->
+                            <Grid Grid.Row="1" Visibility="Hidden" x:Name="ProductMenu" Background="White" Margin="0,10,0,0">
+                                <GroupBox Padding="0" >
+                                    <GroupBox.Header>
+                                        <Label Content="Details:" Background="Wheat" BorderBrush="Black" BorderThickness="3" />
+                                    </GroupBox.Header>
+                                    <Border BorderBrush="Black" BorderThickness="3,0,3,3">
+                                        <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" >
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="700"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <!--#region Details-->
+                                                <Grid Grid.Column="0">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition/>
+                                                        <RowDefinition/>
+                                                        <RowDefinition Height="70"/>
+                                                        <RowDefinition Height="70"/>
+                                                        <RowDefinition Height="70"/>
+                                                        <RowDefinition Height="70"/>
+                                                    </Grid.RowDefinitions>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="200"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid Grid.Row="0" Grid.ColumnSpan="3">
+                                                        <Image  Margin="5" 
+                                                        VerticalAlignment="Center" 
+                                                        HorizontalAlignment="Center" MaxHeight="300"
+                                                        TextSearch.Text="asdf"
+                                                        Source="{Binding SelectedProduct.Image, TargetNullValue={x:Null}}"/>
+                                                        <TextBlock Text="No image available" VerticalAlignment="Center" 
+                                                        HorizontalAlignment="Center" Foreground="{Binding SelectedProduct.ImageForeground}">
+
+                                                        </TextBlock>
+                                                    </Grid>
+
+                                                    <Button Grid.Row="1" Grid.ColumnSpan="3" HorizontalAlignment="Center"
+                                                        Content="Change image"
+                                                        VerticalAlignment="Center"
+                                                        Width="Auto" FontSize="24"  Margin="5"
+                                                        Command="{Binding ChangeImageCommand2}"/>
+
+
+                                                    <Label Grid.Column="0" Grid.Row="2" Margin="0,10,0,10">
+                                                        <TextBlock Width="Auto" Text="Name: " FontSize="24"/>
+                                                    </Label>
+                                                    <TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="2" Width="400" Margin="0,10,0,10" Text="{Binding SelectedProduct.Name, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
+
+                                                    <Label Grid.Column="0" Grid.Row="3" Margin="0,10,0,10">
+                                                        <TextBlock Text="Price: " FontSize="24"/>
+                                                    </Label>
+                                                    <TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="3" Width="400" Margin="0,10,0,10" Text="{Binding SelectedProduct.Price, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
+
+                                                    <Label Grid.Column="0" Grid.Row="4" Margin="0,10,0,10">
+                                                        <TextBlock Text="Quantity: " FontSize="24"/>
+                                                    </Label>
+                                                    <TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="4" Width="400" Margin="0,10,0,10" Text="{Binding SelectedProduct.Quantity, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
+
+                                                    <Button Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="5" HorizontalAlignment="Center" Background="Wheat" BorderBrush="Black" BorderThickness="3" Foreground="Black" Content="Update Product" Margin="0,10,0,15" Command="{Binding UpdateProduct}"/>
+                                                </Grid>
+                                                <!--#endregion-->
+                                            </Grid>
+                                        </ScrollViewer>
+                                    </Border>
+                                </GroupBox>
+                            </Grid>
+                            <!--#endregion-->
                         </Grid>
                     </TabItem>
                 </TabControl>

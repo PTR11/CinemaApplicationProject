@@ -15,6 +15,16 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
         public CategoryViewModel()
         {
             _category = "";
+            DeleteMovieCategory = new DelegateCommand(async _ => await DeleteCategory());
+        }
+
+        public DelegateCommand DeleteMovieCategory { get; set; }
+
+        public async Task DeleteCategory()
+        {
+            var main = (MainViewModel)this.MainModel;
+            await main.DeleteEntity("api/Categories", main.SelectedMovie.Id, this.Id, main.LoadInit);
+            main.MovieVisibility(false);
         }
 
         public string Category

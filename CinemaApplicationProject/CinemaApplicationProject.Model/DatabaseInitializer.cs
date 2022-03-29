@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace CinemaApplicationProject.Model
 		private static RoleManager<StatsAndPays> _roleManager;
 
 
-		public static void Initialize(IServiceProvider serviceProvider)
+		public static void Initialize(IServiceProvider serviceProvider, string imageFolder)
 		{
 			_context = serviceProvider.GetRequiredService<DatabaseContext>();
 			_userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -25,9 +26,27 @@ namespace CinemaApplicationProject.Model
 
 			// Adatbázis migrációk végrehajtása, amennyiben szükséges
 			_context.Database.EnsureDeleted();
-			 _context.Database.EnsureCreated();
+			_context.Database.EnsureCreated();
 			// Városok, épületek, apartmanok inicializálás
-			_context.Products.Add(new Products { Name = "Sajt", Price = 100 });
+			Products p = new Products { Name = "Sajt", Price = 100 };
+			_context.Products.Add(p);
+			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = p, Quantity = 12 });
+			_context.Products.Add(p);
+			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = p, Quantity = 12 });
+			_context.Products.Add(p);
+			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = p, Quantity = 12 });
+			_context.Products.Add(p);
+			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = p, Quantity = 12 });
+			_context.Products.Add(p);
+			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = p, Quantity = 12 });
+			_context.Products.Add(p);
+			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = p, Quantity = 12 });
+			_context.Products.Add(p);
+			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = p, Quantity = 12 });
+			_context.Products.Add(p);
+			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = p, Quantity = 12 });
+			_context.Products.Add(p);
+			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = p, Quantity = 12 });
 
 			List<Actors> actors = new List<Actors>
 			{
@@ -145,6 +164,7 @@ namespace CinemaApplicationProject.Model
 					Length = 124,
 					Description = "A Halálcsillag elpusztítása után Luke Skywalker, Han Solo, Leia Organa hercegnő és a Lázadó Szövetség menekülni kényszerülnek a Galaktikus Birodalom Darth Vader által vezetett erői elől. Luke elszakad barátaitól és egy félreeső bolygón Yoda jedi mestertől megtanulja használni az Erőt.",
 					Trailer = "",
+					Image = File.ReadAllBytes(Path.Combine(imageFolder,"birodalomvisszavag.jpg")),
 					Actors = actors.GetRange(0,3),
 					Categories = new List<Categories>
                     {

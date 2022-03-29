@@ -13,5 +13,7 @@ namespace CinemaApplicationProject.Model.Database
         public String Name { get; set; }
 
         public int Price { get; set; }
+
+        public byte[] Image { get; set; }
     }
 }

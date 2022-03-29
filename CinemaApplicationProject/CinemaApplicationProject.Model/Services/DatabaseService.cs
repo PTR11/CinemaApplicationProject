@@ -39,15 +39,30 @@ namespace CinemaApplicationProject.Model.Services
             return context.Actors.Where(a => a.Movies.Contains(movie)).ToList();
         }
 
-
-
         public void ConnectMovieWithActor(int movieId, int actorId) {
             if (movieId != 0)
             {
                 var hasConnection = context.Movies.Include(m => m.Actors).FirstOrDefault(m => m.Id == movieId).Actors.FirstOrDefault(m => m.Id == actorId);
                 if (hasConnection == null)
                 {
-                    context.Movies.FirstOrDefault(m => m.Id == movieId).Actors.Add(context.Actors.FirstOrDefault(m => m.Id == actorId));
+                    var actor = context.Actors.FirstOrDefault(m => m.Id == actorId);
+                    if(actor != null)
+                    {
+                        context.Movies.FirstOrDefault(m => m.Id == movieId).Actors.Add(actor);
+                        context.SaveChanges();
+                    }
+                }
+            }
+        }
+
+        public void DeleteActorFromMovie(int movieId, int actorId)
+        {
+            if (movieId != 0)
+            {
+                var hasConnection = context.Movies.Include(m => m.Actors).FirstOrDefault(m => m.Id == movieId).Actors.FirstOrDefault(m => m.Id == actorId);
+                if (hasConnection != null)
+                {
+                    context.Movies.FirstOrDefault(m => m.Id == movieId).Actors.Remove(context.Actors.FirstOrDefault(m => m.Id == actorId));
                     context.SaveChanges();
                 }
             }
@@ -85,7 +100,9 @@ namespace CinemaApplicationProject.Model.Services
         #endregion
 
         #region BuffetWarehouse
-        public List<BuffetWarehouse> GetWarehouse() => context.BuffetWarehouse.ToList();
+        public List<BuffetWarehouse> GetWarehouse() => context.BuffetWarehouse.Include(m => m.Product).ToList();
+
+        public BuffetWarehouse GetProductInWareHouse(int id) => context.BuffetWarehouse.Include(m => m.Product).FirstOrDefault(m => m.Id == id);
 
         public int GetQuantityofProductById(int id) => context.BuffetWarehouse.FirstOrDefault(m => m.ProductId == id).Quantity;
 
@@ -126,7 +143,27 @@ namespace CinemaApplicationProject.Model.Services
             return context.Movies.Include(m => m.Categories).Include(m => m.Actors).Where(m => m.Categories.Contains(cat)).ToList();
         }
 
-        
+        public async Task UpdateMovieActors(List<Actors> actors, int movieId)
+        {
+
+            var movie = context.Movies.FirstOrDefault(m => m.Id == movieId);
+            movie.Actors.Clear();
+            var movieActors = movie.Actors.ToList();
+            foreach(var actor in movie.Actors)
+            {
+                var updated = actors.Contains(actor);
+                if (!updated)
+                {
+                    movieActors.Remove(actor);
+                }
+                actors.Remove(actor);
+            }
+            foreach (var actor in movie.Actors)
+            {
+                movie.Actors.Add(actor);
+            }
+            await context.SaveChangesAsync();
+        }
         #endregion
 
         #region MoviesStatistics
@@ -199,7 +236,11 @@ namespace CinemaApplicationProject.Model.Services
             #endregion
 
         #region Products
-            public List<Products> GetAllProducts() => context.Products.ToList();
+        public List<Products> GetAllProducts() => context.Products.ToList();
+
+        public Products GetProductByName(String name) => context.Products.FirstOrDefault(m => m.Name.Equals(name));
+
+        public BuffetWarehouse GetProductById(int id) => context.BuffetWarehouse.Include(m => m.Product).FirstOrDefault(m => m.Id == id);
 
         public int GetProductPrice(String name = null) => context.Products.Where(m => m.Name.Equals(name)).Select(m => m.Price).Single();
 
@@ -435,6 +476,19 @@ namespace CinemaApplicationProject.Model.Services
             }
         }
 
+        public void DeleteCategoryFromMovie(int movieId, int catId)
+        {
+            if (movieId != 0)
+            {
+
+                var hasConnection = context.Movies.Include(m => m.Categories).FirstOrDefault(m => m.Id == movieId).Categories.FirstOrDefault(m => m.Id == catId);
+                if (hasConnection != null)
+                {
+                    context.Movies.FirstOrDefault(m => m.Id == movieId).Categories.Remove(context.Categories.FirstOrDefault(m => m.Id == catId));
+                    context.SaveChanges();
+                }
+            }
+        }
         #endregion
 
         #region Guest

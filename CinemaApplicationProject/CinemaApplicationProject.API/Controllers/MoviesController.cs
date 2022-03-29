@@ -87,13 +87,18 @@ namespace CinemaApplicationProject.API.Controllers
         // PUT: api/Movies/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public IActionResult PutMovies(int id, MoviesDTO movies)
+        public async Task<IActionResult> PutMovies(int id, MoviesDTO movies)
         {
             if (id != movies.Id)
             {
                 return BadRequest();
             }
-            if (DatabaseManipulation.UpdateElementAsync((Movies)movies))
+            
+            var tmp = (Movies)movies;
+            tmp.Actors.Clear();
+            tmp.Categories.Clear();
+            //Függvényhívás
+            if (DatabaseManipulation.UpdateElementAsync(tmp)) 
             {
                 return Ok();
             }
@@ -121,9 +126,26 @@ namespace CinemaApplicationProject.API.Controllers
 
 
 
-            var movie = DatabaseManipulation.AddElement((Movies)movies);
+            var movie = DatabaseManipulation.AddElement((Movies)tmp);
 
-            
+            foreach(var actor in movies.Actors)
+            {
+                if(actor.Id == 0)
+                {
+                    actor.Id = DatabaseManipulation.AddElement((Actors)actor).Id;
+                }
+                _service.ConnectMovieWithActor(movie.Id, actor.Id);
+            }
+
+            foreach (var category in movies.Categories)
+            {
+                if (category.Id == 0)
+                {
+                    category.Id = DatabaseManipulation.AddElement((Categories)category).Id;
+                }
+                _service.ConnectMovieWithCategory(movie.Id, category.Id);
+            }
+
             if (movie == null)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);

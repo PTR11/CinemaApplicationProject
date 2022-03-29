@@ -5,10 +5,12 @@ using CinemaApplicationProject.Desktop.View.Admin.Pages;
 using CinemaApplicationProject.Desktop.Viewmodel.EventArguments;
 using CinemaApplicationProject.Desktop.Viewmodel.Models;
 using CinemaApplicationProject.Desktop.Viewmodel.Models.ForView;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -25,6 +27,7 @@ namespace CinemaApplicationProject.Desktop
         private MainViewModel _mainViewModel;
         private LoginViewModel _loginViewModel;
         private TicketSellViewModel _ticketSellViewModel;
+        private ProductSellingWindow _pr;
         public App()
         {
             Startup += App_Startup;
@@ -39,7 +42,10 @@ namespace CinemaApplicationProject.Desktop
             _mainViewModel.TicketDetailsVisible += TicketDetailsVisible;
             _mainViewModel.UserDetailsVisible += UserDetailsVisible;
             _mainViewModel.RoleDetailsVisible += RoleDetailsVisible;
+            _mainViewModel.ProductDetailsVisible += ProductDetailsVisible;
             _mainViewModel.MessageApplication += MessageApplication;
+            _mainViewModel.ImageChanger += ImageChangerForMovie;
+            _mainViewModel.ImageChanger2 += ImageChangerForProduct;
             _view = new AdminMainWindow
             {
                 DataContext = _mainViewModel
@@ -51,8 +57,13 @@ namespace CinemaApplicationProject.Desktop
             {
                 DataContext = _loginViewModel
             };
+            _pr = new ProductSellingWindow
+            {
+                DataContext = _mainViewModel
+            };
+            _mainViewModel.CreateProductsFieldAsync();
+            _pr.Show();
 
-            _login.Show();
         }
 
         private void AfterLogin(object sender, int e)
@@ -61,6 +72,38 @@ namespace CinemaApplicationProject.Desktop
             _mainViewModel.UserId = e;
             _view.Show();
         }
+        private async void ImageChangerForMovie(object sender, bool e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog
+            {
+                CheckFileExists = true,
+                Filter = "Images|*.jpg;*.jpeg;*.bmp;*.tif;*.gif;*.png;",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures)
+            };
+
+            if (dialog.ShowDialog().GetValueOrDefault(false))
+            {
+                _mainViewModel.SelectedMovie.Image = await File.ReadAllBytesAsync(dialog.FileName);
+                _mainViewModel.SelectedMovie.ImageForeground = "Transparent";
+            }
+        }
+
+        private async void ImageChangerForProduct(object sender, bool e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog
+            {
+                CheckFileExists = true,
+                Filter = "Images|*.jpg;*.jpeg;*.bmp;*.tif;*.gif;*.png;",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures)
+            };
+
+            if (dialog.ShowDialog().GetValueOrDefault(false))
+            {
+                _mainViewModel.SelectedProduct.Image = await File.ReadAllBytesAsync(dialog.FileName);
+                _mainViewModel.SelectedProduct.ImageForeground = "Transparent";
+            }
+        }
+
 
         private void MovieDetailsVisible(object sender, bool e)
         {
@@ -78,7 +121,11 @@ namespace CinemaApplicationProject.Desktop
         {
             _view.TicketMenu.Visibility = e ? Visibility.Visible : Visibility.Hidden;
         }
-
+        private void ProductDetailsVisible(object sender, bool e)
+        {
+            _view.ProductMenu.Visibility = e ? Visibility.Visible : Visibility.Hidden;
+        }
+        
         private void UserDetailsVisible(object sender, bool e)
         {
             

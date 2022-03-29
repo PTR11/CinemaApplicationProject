@@ -16,7 +16,11 @@ namespace CinemaApplicationProject.Model.DTOs
 
         public String Description { get; set; }
 
+        public String Director { get; set; }
+
         public String Trailer { get; set; }
+
+        public byte[] Image { get; set; }
 
         public List<CategoriesDTO> Categories { get; set; }
 
@@ -45,6 +49,8 @@ namespace CinemaApplicationProject.Model.DTOs
             Title = m.Title,
             Length = m.Length,
             Description = m.Description,
+            Image = m.Image,
+            Director = m.Director,
             Shows = m.Shows != null ? ConvertShowsToDTO(m.Shows) : null, 
             Actors = m.Actors != null ? ConvertActorsToDTO(m.Actors) : null,
             Categories = m.Categories != null ? ConvertCategoriesToDTO(m.Categories) : null
@@ -55,9 +61,11 @@ namespace CinemaApplicationProject.Model.DTOs
             Id = m.Id,
             Title = m.Title,
             Length = m.Length,
+            Image = m.Image,
+            Director = m.Director,
             Description = m.Description,
-            Actors = new List<Actors>(m.Actors.ToList().Select(a => new Actors { Name = a.Name })),
-            Categories = new List<Categories>(m.Categories.ToList().Select(a => new Categories { Category = a.Category })),
+            Actors = ConvertActorsDTOToClass(m.Actors),
+            Categories = ConvertCategoriesDTOToClass(m.Categories),
         };
 
     }

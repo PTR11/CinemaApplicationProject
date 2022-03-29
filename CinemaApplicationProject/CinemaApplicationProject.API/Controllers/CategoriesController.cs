@@ -53,6 +53,26 @@ namespace CinemaApplicationProject.API.Controllers
             _service.ConnectMovieWithCategory(cat.MovieId, category.Id);
             return CreatedAtAction(nameof(GetCategoryById), new { id = category.Id }, (CategoriesDTO)category);
         }
+        [HttpDelete("{movieId}/{id}")]
+        public IActionResult DeleteCategory(int movieId, int id)
+        {
+            var actors = _service.GetCategoryById(id);
+            if (actors == null)
+            {
+                return NotFound();
+            }
+
+            var movie = _service.GetMovieById(movieId);
+            if (movie == null)
+            {
+                return NotFound();
+            }
+
+            _service.DeleteCategoryFromMovie(movieId, id);
+
+
+            return NoContent();
+        }
 
 
     }

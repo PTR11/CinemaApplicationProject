@@ -20,7 +20,7 @@ namespace CinemaApplicationProject.Desktop.Model.Services
         {
             _client = new HttpClient()
             {
-                BaseAddress = new Uri(baseAddress)
+                BaseAddress = new Uri(baseAddress),
             };
         }
 
@@ -106,6 +106,16 @@ namespace CinemaApplicationProject.Desktop.Model.Services
         public async Task DeleteAsync(string route,int id)
         {
             HttpResponseMessage response = await _client.DeleteAsync(route+"/"+id);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new NetworkException("Service returned response: " + response.StatusCode);
+            }
+        }
+
+        public async Task DeleteAsync(string route, int id, int id2)
+        {
+            HttpResponseMessage response = await _client.DeleteAsync(route + "/" + id + "/" + id2);
 
             if (!response.IsSuccessStatusCode)
             {

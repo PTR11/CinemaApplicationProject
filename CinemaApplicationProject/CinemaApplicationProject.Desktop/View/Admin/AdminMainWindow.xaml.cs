@@ -51,7 +51,21 @@ namespace CinemaApplicationProject.Desktop.View.Admin
             var text = (TextBlock)e.OriginalSource;
             var ctx = text.DataContext;
             dataContext.SelectedTicketShow.CopyFrom((ShowViewModel)ctx);
-            dataContext.CreateFieldAsync();
+            dataContext.CreateMoviesFieldAsync();
+            tsw.ShowDialog();
+
+        }
+
+        private void ProductSell(object sender, RoutedEventArgs e)
+        {
+
+            ProductSellingWindow tsw = new ProductSellingWindow()
+            {
+                DataContext = this.DataContext,
+            };
+            var dataContext = (MainViewModel)this.DataContext;
+            
+            dataContext.CreateProductsFieldAsync();
             tsw.ShowDialog();
 
         }

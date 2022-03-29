@@ -20,6 +20,7 @@ namespace CinemaApplicationProject.Model
 			builder.Entity<Guests>().ToTable("Guests");
 			builder.Entity<StatsAndPays>().ToTable("Stats");
 			builder.Entity<Categories>().HasIndex(u => u.Category).IsUnique();
+			
 		}
 
 		public virtual DbSet<Actors> Actors { get; set; }

@@ -12,6 +12,18 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
     {
         private String _name;
         private int _salary;
+        public StatsViewModel()
+        {
+            DeleteRole = new DelegateCommand(async _ => await Delete());
+        }
+
+        public DelegateCommand DeleteRole { get; set; }
+        public async Task Delete()
+        {
+            var main = (MainViewModel)this.MainModel;
+            await main.DeleteEntity("api/StatsAndPays", this.Id, main.LoadInit);
+            main.RoleVisibility(false);
+        }
 
         public string Name
         {

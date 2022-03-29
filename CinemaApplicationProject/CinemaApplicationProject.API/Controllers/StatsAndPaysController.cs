@@ -24,6 +24,7 @@ namespace CinemaApplicationProject.API.Controllers
         {
             _service = service;
             _roleManager = roleManager;
+            DatabaseManipulation.context = _service.GetContext();
         }
 
         // GET: api/StatsAndPays

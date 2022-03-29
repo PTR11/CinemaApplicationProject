@@ -18,10 +18,13 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
         private int _length;
         private String _description;
         public String _trailer;
+        private byte[] _image;
+        private String _imageForeground;
         public List<ShowViewModel> _shows;
         public ObservableCollection<ActorViewModel> _actors;
         public ObservableCollection<CategoryViewModel> _categories;
-
+        public ActorViewModel _selectedActor;
+        public CategoryViewModel _selectedCategory;
         public MovieViewModel()
         {
             this.Id = 0;
@@ -33,8 +36,12 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             this.Shows = new List<ShowViewModel>();
             this.Actors = new ObservableCollection<ActorViewModel>();
             this.Categories = new ObservableCollection<CategoryViewModel>();
+            this.SelectedActor = new ActorViewModel();
+            this.SelectedCategory = new CategoryViewModel();
             DeleteMovie = new DelegateCommand(async _ => await Delete());
         }
+
+        
 
         public async Task Delete()
         {
@@ -73,6 +80,18 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             set { _trailer = value; OnPropertyChanged(); }
         }
 
+        public String ImageForeground
+        {
+            get { return _image != null ? "Transparent" : "Red"; }
+            set { _imageForeground = value; OnPropertyChanged(); }
+        }
+
+        public Byte[] Image
+        {
+            get { return _image; }
+            set { _image = value; OnPropertyChanged(); }
+        }
+
         public List<ShowViewModel> Shows
         {
             get { return _shows; }
@@ -83,6 +102,17 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
         {
             get { return _actors; }
             set { _actors = value; OnPropertyChanged(); }
+        }
+
+        public ActorViewModel SelectedActor
+        {
+            get { return _selectedActor; }
+            set { _selectedActor = value; OnPropertyChanged(); }
+        }
+        public CategoryViewModel SelectedCategory
+        {
+            get { return _selectedCategory; }
+            set { _selectedCategory = value; OnPropertyChanged(); }
         }
 
         public ObservableCollection<CategoryViewModel> Categories
@@ -97,6 +127,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
         }
 
         public DelegateCommand DeleteMovie { get; set; }
+        
 
         public void CopyFrom(MovieViewModel rhs)
         {
@@ -109,6 +140,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             Shows = rhs.Shows;
             Actors = rhs.Actors;
             Categories = rhs.Categories;
+            Image = rhs.Image;
         }
 
         public static explicit operator MovieViewModel(MoviesDTO dto) => new MovieViewModel
@@ -117,7 +149,9 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             Title = dto.Title,
             Length = dto.Length,
             Description = dto.Description,
+            Director = dto.Director,
             Trailer = dto.Trailer,
+            Image = dto.Image,
             Shows = new(dto.Shows.ToList().Select(x => (ShowViewModel)x)),
             Actors = new(dto.Actors.ToList().Select(x => (ActorViewModel)x)),
             Categories = new(dto.Categories.ToList().Select(x => (CategoryViewModel)x)),
@@ -130,6 +164,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             Length = mvm.Length,
             Description = mvm.Description,
             Trailer = mvm.Trailer,
+            Image = mvm.Image,
+            Director = mvm.Director,
             Shows = new(mvm.Shows.ToList().Select(x => (ShowsDTO)x)),
             Actors = new(mvm.Actors.ToList().Select(x => (ActorsDTO)x)),
             Categories = new(mvm.Categories.ToList().Select(x => (CategoriesDTO)x)),

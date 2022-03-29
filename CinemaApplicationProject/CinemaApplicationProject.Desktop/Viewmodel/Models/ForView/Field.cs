@@ -11,7 +11,9 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
     {
         private String _background;
         private String _image;
-
+        private byte[] _imageInBytes;
+        private string _text;
+        private int _price;
         public Field()
         {
 
@@ -23,10 +25,28 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             set { _background = value; OnPropertyChanged(); }
         }
 
+        public int Price
+        {
+            get { return _price; }
+            set { _price = value; OnPropertyChanged(); }
+        }
+
         public String Image
         {
             get { return _image; }
             set { _image = value; OnPropertyChanged(); }
+        }
+
+        public String Text
+        {
+            get { return _text; }
+            set { _text = value; OnPropertyChanged(); }
+        }
+
+        public byte[] ImageInBytes
+        {
+            get { return _imageInBytes; }
+            set { _imageInBytes = value; OnPropertyChanged(); }
         }
 
         public Int32 X { get; set; }

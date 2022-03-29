@@ -29,7 +29,19 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             _address = "";
             _birthday = "";
             _stats = new ObservableCollection<StatsViewModel>();
+            DeleteUser = new DelegateCommand(async _ => await Delete());
         }
+
+        public DelegateCommand DeleteUser { get; set; }
+
+        public async Task Delete()
+        {
+            var main = (MainViewModel)this.MainModel;
+            await main.DeleteEntity("api/Users", this.Id, main.LoadInit);
+            main.UserVisibility(false);
+        }
+
+
         public String UserName {
             get { return _userName; }
             set { _userName = value; OnPropertyChanged(); }

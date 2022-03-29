@@ -41,6 +41,17 @@
             .get("http://localhost:7384/api/Movies/today")
             .then((result) => {
               this.movies = result.data;
+              this.movies.forEach((m) => {
+
+                console.log(m.image);
+                var asd = "data:image/jpg;base64,"+m.image;
+                m.image = asd;
+                console.log(m.image);
+
+
+
+              })
+              console.log(this.movies);
             });
       }
     }

@@ -17,7 +17,11 @@ namespace CinemaApplicationProject.Model.Database
         [DataType(DataType.MultilineText)]
         public String Description { get; set; }
 
+        public String Director { get; set; }
+
         public String Trailer { get; set; }
+
+        public byte[] Image { get; set; }
 
         public Movies()
         {

@@ -159,5 +159,23 @@ namespace CinemaApplicationProject.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteMoviesAsync(int id)
+        {
+            var employee = await _service.GetEmployeeById(id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if(user.Id == id)
+            {
+                return BadRequest();
+            }
+            DatabaseManipulation.DeleteElement(employee);
+
+            return NoContent();
+        }
     }
 }
