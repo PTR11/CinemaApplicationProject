@@ -57,11 +57,15 @@ namespace CinemaApplicationProject.Model.Services
         public int GetPriceOfQuantityOfProductById(int id);
         public BuffetWarehouse GetProductInWareHouse(int id);
 
+        public bool SellProducts(ProductSellingDTO dto);
+
         #endregion
 
         #region EmployeePresence
 
         public EmployeePresence GetEmployeePresenceById(int id);
+
+        public bool AddEmployeeToEmployeePresence(Employees employee, string type);
 
         //public List<Employees> GetEmployeesFromPresenceByDate(DateTime date);
 
@@ -82,6 +86,8 @@ namespace CinemaApplicationProject.Model.Services
         public List<Movies> GetMoviesByCategory(String category);
 
         public Task UpdateMovieActors(List<Actors> actors, int movieId);
+
+        public List<MoviesDTO> GetStatisticsForMovies();
 
         #endregion
 

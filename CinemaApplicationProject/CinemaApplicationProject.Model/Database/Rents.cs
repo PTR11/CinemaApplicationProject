@@ -28,6 +28,8 @@ namespace CinemaApplicationProject.Model.Database
 
         public Tickets Ticket { get; set; }
 
+        public Shows Show { get; set; }
+
 
     }
 }

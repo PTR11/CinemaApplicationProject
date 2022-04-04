@@ -70,6 +70,20 @@ namespace CinemaApplicationProject.Desktop.View.Admin
 
         }
 
+        private void MovieStat(object sender, RoutedEventArgs e)
+        {
+
+            MovieStatisticsWindows tsw = new MovieStatisticsWindows()
+            {
+                DataContext = this.DataContext,
+            };
+            var dataContext = (MainViewModel)this.DataContext;
+
+            dataContext.LoadMoviesStat();
+            tsw.ShowDialog();
+
+        }
+
         private void IsNumber(object sender, TextCompositionEventArgs e)
         {
             e.Handled = !IsTextAllowed(e.Text);

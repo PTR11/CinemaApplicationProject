@@ -108,11 +108,75 @@ namespace CinemaApplicationProject.Model.Services
 
         public int GetPriceOfQuantityOfProductById(int id) => context.BuffetWarehouse.FirstOrDefault(m => m.ProductId == id).Quantity * context.Products.FirstOrDefault(m => m.Id == id).Price;
 
+
+        public bool SellProducts(ProductSellingDTO dto)
+        {
+            foreach(var product in dto.Products)
+            {
+                var item = context.BuffetWarehouse.Include(m => m.Product).FirstOrDefault(m => m.Id == product.ProductId);
+                if(item != null)
+                {
+                    int quantity = item.Quantity;
+                    if(quantity-product.Count < 0)
+                    {
+                        throw new Exception("There is not enough product ("+item.Product.Name+")");
+                    }
+                    else
+                    {
+                        item.Quantity -= product.Count;
+                    }
+                }
+                else
+                {
+                    throw new Exception("Current product is not found");
+                }
+            }
+
+
+            try
+            {
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                
+                return false;
+            }
+            return true;
+        }
         #endregion
 
         #region EmployeePresence
 
         public EmployeePresence GetEmployeePresenceById(int id) => context.EmployeePresence.FirstOrDefault(m => m.Id == id);
+
+        public bool AddEmployeeToEmployeePresence(Employees employee, string type)
+        {
+            if (type.Equals("login"))
+            {
+                context.EmployeePresence.Add(new EmployeePresence
+                {
+                    DutyTime = 0,
+                    Employee = employee,
+                    Login = DateTime.Now.Date
+                });
+            }
+            else
+            {
+                var find = context.EmployeePresence.Where(e => e.Id == employee.Id).OrderByDescending(e => e.Login).First();
+                find.Logout = DateTime.Now.Date;
+                find.DutyTime = (int)(find.Logout - find.Login).TotalHours;
+            }
+
+            try
+            {
+                context.SaveChanges();
+                return true;
+            }catch(DbUpdateException)
+            {
+                return false;
+            }
+        }
 
         //public List<Employees> GetEmployeesFromPresenceByDate(DateTime date) => context.EmployeePresence.Where(m => m.Day.Date.Equals(date.Date)).Select(m => m.Employee).ToList();
 
@@ -163,6 +227,20 @@ namespace CinemaApplicationProject.Model.Services
                 movie.Actors.Add(actor);
             }
             await context.SaveChangesAsync();
+        }
+
+        public List<MoviesDTO> GetStatisticsForMovies()
+        {
+            var listOfMovies = context.Movies.Include(m => m.Opinions).ToList();
+            List<MoviesDTO> result = new List<MoviesDTO>(listOfMovies.Select(m => (MoviesDTO)m).ToList());
+            foreach(var movie in result)
+            {
+                movie.TicketsCount = context.Rents.Include(m => m.Show).ThenInclude(m => m.Movie).Where(r => r.EmployeeId != 0 && r.Show.MovieId == movie.Id).ToList().Count;
+                int count = listOfMovies.FirstOrDefault(m => m.Id == movie.Id).Opinions.Count;  
+                if(count != 0)
+                    movie.Average = listOfMovies.FirstOrDefault(m => m.Id == movie.Id).Opinions.Sum(m => m.Ranking) / (double)count;
+            }
+            return result;
         }
         #endregion
 
@@ -501,7 +579,7 @@ namespace CinemaApplicationProject.Model.Services
 
         public async Task<List<Employees>> GetEmployees()
         {
-            var emps = context.Employees.ToList();
+            var emps = context.Employees.Include(m => m.Presence).ToList();
             foreach(var employee in emps)
             {
                 var rolesString = await guestManager.GetRolesAsync(employee);
@@ -517,6 +595,7 @@ namespace CinemaApplicationProject.Model.Services
             var rolesString =await guestManager.GetRolesAsync(user);
             var roles = context.StatsAndPays.Where(m => rolesString.Contains(m.Name));
             user.Stat = new List<StatsAndPays>(roles);
+            
             return user;
         }
 

@@ -23,11 +23,20 @@ namespace CinemaApplicationProject.Model.DTOs
 
         public List<StatsDTO> Stats { get; set; }
 
+        public List<PresenceDTO> Presence { get; set; }
+
         private static List<StatsDTO> ConvertStatsToDTO(ICollection<StatsAndPays> m) => new(m.ToList().Select(x => new StatsDTO
         {
             Id = x.Id,
             Name = x.Name,
             Salary = x.Salary
+        }));
+
+        private static List<PresenceDTO> ConvertPresenceToDTO(ICollection<EmployeePresence> m) => new(m.ToList().Select(x => new PresenceDTO
+        {
+            Id = x.Id,
+            Login = x.Login,
+            Logout = x.Logout,
         }));
 
         public static explicit operator EmployeesDTO(Employees m) => new EmployeesDTO
@@ -38,7 +47,8 @@ namespace CinemaApplicationProject.Model.DTOs
             Email = m.Email,
             Address = m.Address,
             Birthday = m.Birthday,
-            Stats = ConvertStatsToDTO(m.Stat)
+            Stats = ConvertStatsToDTO(m.Stat),
+            Presence = ConvertPresenceToDTO(m.Presence),
         };
 
         public static explicit operator Employees(EmployeesDTO m) => new Employees

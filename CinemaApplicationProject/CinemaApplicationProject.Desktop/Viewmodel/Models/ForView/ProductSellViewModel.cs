@@ -95,12 +95,11 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             if (exist != null)
             {
                 exist.Count = exist.Count + 1;
-                
                 CalculatePrice(act.Price);
             }
             else
             {
-                this.ProductsCounter.Add(new ProductsCounterViewModel { Type = act.Text, Count = 1, Price = act.Price});
+                this.ProductsCounter.Add(new ProductsCounterViewModel { Type = act.Text, Count = 1, Price = act.Price, Id = act.Id});
                 Price = Price;
                 CalculatePrice(act.Price);
             }

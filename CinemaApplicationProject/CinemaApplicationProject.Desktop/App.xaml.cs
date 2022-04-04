@@ -62,7 +62,7 @@ namespace CinemaApplicationProject.Desktop
                 DataContext = _mainViewModel
             };
             _mainViewModel.CreateProductsFieldAsync();
-            _pr.Show();
+            _login.Show();
 
         }
 

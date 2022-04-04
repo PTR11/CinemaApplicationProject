@@ -18,8 +18,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
         public String _address;
         public String _birthday;
         public ObservableCollection<StatsViewModel> _stats;
-
-
+        public ObservableCollection<PresenceViewModel> _presence;
         public EmployeeViewModel()
         {
             _userName = "";
@@ -29,6 +28,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             _address = "";
             _birthday = "";
             _stats = new ObservableCollection<StatsViewModel>();
+            _presence = new ObservableCollection<PresenceViewModel>();
             DeleteUser = new DelegateCommand(async _ => await Delete());
         }
 
@@ -83,6 +83,12 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             set { _stats = value; OnPropertyChanged(); }
         }
 
+        public ObservableCollection<PresenceViewModel> Presence
+        {
+            get { return _presence; }
+            set { _presence = value; OnPropertyChanged(); }
+        }
+
         public MovieViewModel ShallowClone()
         {
             return (MovieViewModel)this.MemberwiseClone();
@@ -109,7 +115,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             Birthday = dto.Birthday,
             Password = dto.Password,
             Email = dto.Email,
-            Stats = new(dto.Stats.ToList().Select(x => (StatsViewModel)x))
+            Stats = new(dto.Stats.ToList().Select(x => (StatsViewModel)x)),
+            Presence = new(dto.Presence.ToList().Select(x => (PresenceViewModel)x)),
         };
 
         public static explicit operator EmployeesDTO(EmployeeViewModel mvm) => new EmployeesDTO

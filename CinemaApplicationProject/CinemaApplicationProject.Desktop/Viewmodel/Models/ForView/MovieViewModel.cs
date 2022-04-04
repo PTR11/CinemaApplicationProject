@@ -12,7 +12,6 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
 {
     public class MovieViewModel : ViewModelBase
     {
-        private int _id;
         private String _title;
         private String _director;
         private int _length;
@@ -20,6 +19,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
         public String _trailer;
         private byte[] _image;
         private String _imageForeground;
+        public double _avarage;
+        private int _ticketsCount;
         public List<ShowViewModel> _shows;
         public ObservableCollection<ActorViewModel> _actors;
         public ObservableCollection<CategoryViewModel> _categories;
@@ -33,6 +34,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             this.Length = 0;
             this.Description = "";
             this.Trailer = "";
+            //this.Average = "";
             this.Shows = new List<ShowViewModel>();
             this.Actors = new ObservableCollection<ActorViewModel>();
             this.Categories = new ObservableCollection<CategoryViewModel>();
@@ -90,6 +92,18 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
         {
             get { return _image; }
             set { _image = value; OnPropertyChanged(); }
+        }
+
+        public double Average
+        {
+            get { return _avarage; }
+            set { _avarage = value; OnPropertyChanged(); }
+        }
+
+        public int TicketsCount
+        {
+            get { return _ticketsCount; }
+            set { _ticketsCount = value; OnPropertyChanged(); }
         }
 
         public List<ShowViewModel> Shows
@@ -155,6 +169,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             Shows = new(dto.Shows.ToList().Select(x => (ShowViewModel)x)),
             Actors = new(dto.Actors.ToList().Select(x => (ActorViewModel)x)),
             Categories = new(dto.Categories.ToList().Select(x => (CategoryViewModel)x)),
+            Average = dto.Average,
+            TicketsCount = dto.TicketsCount,
         };
 
         public static explicit operator MoviesDTO(MovieViewModel mvm) => new MoviesDTO

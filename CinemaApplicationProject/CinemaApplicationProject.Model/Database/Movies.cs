@@ -28,6 +28,8 @@ namespace CinemaApplicationProject.Model.Database
             Actors = new HashSet<Actors>();
             Shows = new HashSet<Shows>();
             Categories = new HashSet<Categories>();
+            Opinions = new HashSet<Opinions>();
+            Rents = new HashSet<Rents>();
         }
 
         public ICollection<Actors> Actors { get; set; }
@@ -35,6 +37,9 @@ namespace CinemaApplicationProject.Model.Database
         public ICollection<Shows> Shows { get; set; }
 
         public ICollection<Categories> Categories { get; set; }
+
+        public ICollection<Opinions> Opinions { get; set; }
+        public ICollection<Rents> Rents { get; set; }
 
         public override bool Equals(Object obj)
         {

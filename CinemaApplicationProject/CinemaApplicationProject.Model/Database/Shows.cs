@@ -23,5 +23,7 @@ namespace CinemaApplicationProject.Model.Database
 
         public Movies Movie { get; set; }
 
+        public ICollection<Rents> Rents { get; set; }
+
     }
 }

@@ -48,6 +48,10 @@ namespace CinemaApplicationProject.Model
 			_context.Products.Add(p);
 			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = p, Quantity = 12 });
 
+
+			
+
+
 			List<Actors> actors = new List<Actors>
 			{
 				new Actors
@@ -233,6 +237,8 @@ namespace CinemaApplicationProject.Model
 				}
 			};
 
+			
+
 			_context.Movies.AddRange(movies);
 
 			List<Rooms> rooms = new List<Rooms>
@@ -340,14 +346,50 @@ namespace CinemaApplicationProject.Model
 				CreditCardNumber = "KurvaAnyádat"
 			};
 			var adminPassword = "Almafa123";
+
 			
+
 			//adminUser.Stat = new List<StatsAndPays>();
 			//adminUser.Stat.Add(adminRole);
-            _ = _userManager.CreateAsync(adminUser, adminPassword).Result;
+			_ = _userManager.CreateAsync(adminUser, adminPassword).Result;
             _ = _userManager.CreateAsync(adminUser2, adminPassword).Result;
 			_ = _userManager.CreateAsync(guest, adminPassword).Result;
 			_ = _roleManager.CreateAsync(adminRole).Result;
 			_ = _userManager.AddToRoleAsync(adminUser, adminRole.Name).Result;
-        }
+
+			_context.Opinions.Add(new Opinions
+			{
+				
+				DateTime = DateTime.Now,
+				Description = "I liked it so much",
+				Ranking = 5,
+				Anonymus = true,
+				Movie = movies[0],
+				Guest = guest,
+			});
+
+			_context.Opinions.Add(new Opinions
+			{
+
+				DateTime = DateTime.Now,
+				Description = "I liked it so much",
+				Ranking = 2,
+				Anonymus = true,
+				Movie = movies[0],
+				Guest = guest,
+			});
+
+			_context.Opinions.Add(new Opinions
+			{
+
+				DateTime = DateTime.Now,
+				Description = "I liked it so much",
+				Ranking = 1,
+				Anonymus = true,
+				Movie = movies[0],
+				Guest = guest,
+			});
+			_context.SaveChanges();
+		}
 	}
 }

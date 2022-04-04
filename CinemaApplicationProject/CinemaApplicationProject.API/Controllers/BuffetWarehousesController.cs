@@ -83,6 +83,19 @@ namespace CinemaApplicationProject.API.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
+        // POST: api/BuffetWarehouses
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("sell")]
+        public ActionResult<ProductSellingDTO> PostProductList(ProductSellingDTO product)
+        {
+            var p = _service.SellProducts(product);
+            if (p)
+            {
+                return Ok();
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
 
 
         // DELETE: api/BuffetWarehouses/5

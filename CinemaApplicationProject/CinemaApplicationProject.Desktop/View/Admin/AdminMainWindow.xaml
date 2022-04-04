@@ -222,7 +222,10 @@
                                     <GroupBox.Header >
                                         <Grid Background="Wheat">
                                             <Label Content="Movies:" FontSize="24" Height="50" BorderBrush="Black" BorderThickness="3" />
-                                            <Button FontSize="20" Margin="0,0,10,0" Padding="10,0,10,0" Height="30" HorizontalAlignment="Right" Command="{Binding AddNewMovie}" Content="Add Movie" Foreground="Black" BorderBrush="Black" BorderThickness="3" Background="Wheat"/>
+                                            <Grid HorizontalAlignment="Right" Width="300">
+                                                <Button FontSize="20" Padding="10,0,10,0" Height="30" HorizontalAlignment="Left" Command="{Binding AddNewMovie}" Content="Add Movie" Foreground="Black" BorderBrush="Black" BorderThickness="3" Background="Wheat"/>
+                                                <Button FontSize="20" Margin="0,0,10,0" Padding="10,0,10,0" Height="30" HorizontalAlignment="Right" Click="MovieStat" Content="Statistics" Foreground="Black" BorderBrush="Black" BorderThickness="3" Background="Wheat"/>
+                                            </Grid>
                                         </Grid>
                                     </GroupBox.Header>
                                     <Border>
@@ -651,27 +654,27 @@
                                                         </Grid.ColumnDefinitions>
 
                                                         <Label Grid.Column="0" Grid.Row="0" Margin="0,10,0,10">
-                                                            <TextBlock Width="Auto" Text="User: " FontSize="24"/>
+                                                            <TextBlock Width="Auto" Text="Username: " FontSize="24"/>
                                                         </Label>
                                                         <TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0" Width="400" Margin="0,10,0,10" Text="{Binding SelectedUser.UserName, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
 
                                                         <Label Grid.Column="0" Grid.Row="1" Margin="0,10,0,10">
-                                                            <TextBlock Text="Director: " FontSize="24"/>
+                                                            <TextBlock Text="Name: " FontSize="24"/>
                                                         </Label>
                                                         <TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Width="400" Margin="0,10,0,10" Text="{Binding SelectedUser.Name, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
 
                                                         <Label Grid.Column="0" Grid.Row="2" Margin="0,10,0,10">
-                                                            <TextBlock Text="Length: " FontSize="24"/>
+                                                            <TextBlock Text="Address: " FontSize="24"/>
                                                         </Label>
                                                         <TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="2" Width="400" Margin="0,10,0,10" Text="{Binding SelectedUser.Address, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
 
                                                         <Label Grid.Column="0" Grid.Row="3" Margin="0,10,0,10">
-                                                            <TextBlock Text="Description: " FontSize="24"/>
+                                                            <TextBlock Text="Email: " FontSize="24"/>
                                                         </Label>
                                                         <TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="3" Width="400" Margin="0,10,0,10" Text="{Binding SelectedUser.Email, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
 
                                                         <Label Grid.Column="0" Grid.Row="4" Margin="0,10,0,10">
-                                                            <TextBlock Text="Trailer: " FontSize="24"/>
+                                                            <TextBlock Text="Birthday: " FontSize="24"/>
                                                         </Label>
                                                         <TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="4" Width="400" Margin="0,10,0,10" Text="{Binding SelectedUser.Birthday, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
 
@@ -682,7 +685,7 @@
 
 
                                                         <Label Grid.Column="0" Grid.Row="6" Margin="0,10,0,10">
-                                                            <TextBlock Text="New category: " FontSize="24"/>
+                                                            <TextBlock Text="New role: " FontSize="24"/>
                                                         </Label>
                                                         <ComboBox BorderBrush="Black" FontSize="24" SelectedItem="{Binding NewRole.Name}" Text="{Binding NewRole.Name}" Margin="0,10,10,10" BorderThickness="1" Height="50" IsEditable="True" Padding="0" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="6" Width="260" ItemsSource="{Binding RolesList}"/>
                                                         <Button Grid.Column="2" Width="130" Grid.Row="6" HorizontalAlignment="Left" Height="35" Content="Add Role" Command="{Binding AddNewRole}"/>
@@ -711,6 +714,25 @@
                                                                     <DataGrid.Columns>
                                                                         <DataGridTextColumn Binding="{Binding Name}" Width="*" FontSize="24" Foreground="Black"/>
                                                                         
+                                                                    </DataGrid.Columns>
+                                                                </DataGrid>
+                                                            </Border>
+                                                        </GroupBox>
+                                                        <GroupBox Grid.Row="1" Padding="0" Margin="0" Height="200" VerticalAlignment="Center" Background="Wheat" Width="400">
+                                                            <GroupBox.Header >
+                                                                <Grid Background="Wheat" Margin="0">
+                                                                    <Label Content="Roles:" FontSize="24" Height="50"  BorderBrush="Black" BorderThickness="3" />
+                                                                </Grid>
+                                                            </GroupBox.Header>
+                                                            <Border CornerRadius="0" BorderThickness="3,0,3,3" BorderBrush="Black">
+                                                                <DataGrid ItemsSource="{Binding SelectedUser.Presence}"
+                                                                            VerticalContentAlignment="Stretch"  IsReadOnly="True"
+                                                                            AutoGenerateColumns="False" HeadersVisibility="Column"
+                                                                            Foreground="{x:Null}" >
+                                                                    <DataGrid.Columns>
+                                                                        <DataGridTextColumn Header="Login" Binding="{Binding Login}" Width="*" FontSize="24" Foreground="Black"/>
+                                                                        <DataGridTextColumn Header="Logout" Binding="{Binding Logout}" Width="*" FontSize="24" Foreground="Black"/>
+                                                                        <DataGridTextColumn Header="DutyTime(hr)" Binding="{Binding DutyTime}" Width="*" FontSize="24" Foreground="Black"/>
                                                                     </DataGrid.Columns>
                                                                 </DataGrid>
                                                             </Border>

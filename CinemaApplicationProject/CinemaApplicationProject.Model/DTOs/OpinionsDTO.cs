@@ -30,7 +30,7 @@ namespace CinemaApplicationProject.Model.DTOs
             Description = m.Description,
             Ranking = m.Ranking,
             Anonymus = m.Anonymus,
-            GuestName = m.Anonymus ? m.Guest.UserName : "Anonymus",
+            GuestName = m.Anonymus && m.Guest != null ? m.Guest.UserName : "Anonymus",
         };
 
 

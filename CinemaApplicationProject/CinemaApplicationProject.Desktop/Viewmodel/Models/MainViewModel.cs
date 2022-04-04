@@ -20,6 +20,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
     {
         private ObservableCollection<MovieViewModel> _movies = new ObservableCollection<MovieViewModel>();
 
+        private ObservableCollection<MovieViewModel> _moviesStat = new ObservableCollection<MovieViewModel>();
+
         private ObservableCollection<ShowViewModel> _shows = new ObservableCollection<ShowViewModel>();
 
         private ObservableCollection<ActorViewModel> _actors = new ObservableCollection<ActorViewModel>();
@@ -153,6 +155,12 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         {
             get { return _movies; }
             set { _movies = value; OnPropertyChanged(); }
+        }
+
+        public ObservableCollection<MovieViewModel> MoviesStat
+        {
+            get { return _moviesStat; }
+            set { _moviesStat = value; OnPropertyChanged(); }
         }
 
         public ObservableCollection<EmployeeViewModel> Users
@@ -321,6 +329,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         public DelegateCommand AddNewRole { get; set; }
         public DelegateCommand AddNewRents { get; set; }
         public DelegateCommand AddNewProduct { get; set; }
+        public DelegateCommand AddNewSellingProducts { get; set; }
 
 
         public DelegateCommand UpdateShow { get; set; }
@@ -368,7 +377,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             AddNewUser = new DelegateCommand(_ => Adder(SelectedUser = new EmployeeViewModel(), ref _addUser, UserDetailsVisible));
             AddNewRents = new DelegateCommand(_ => !(TicketSell is null), async _ => await AddRent());
             AddNewProduct = new DelegateCommand(_ => Adder(SelectedProduct = new ProductViewModel(), ref _addProduct, ProductDetailsVisible));
-
+            AddNewSellingProducts = new DelegateCommand(_ => !(ProductSell is null), async _ => await AddNewProducts());
             //Updates
             UpdateShow = new DelegateCommand(_ => !(SelectedShow is null), async _ => await UpdateSelectedItem(_addShow, AddCreatedShow, SelectedShow.Id != 0, SetupShowUpdate, "api/Shows", LoadShows, LoadRooms));
             UpdateMovie = new DelegateCommand(_ => !(SelectedMovie is null), async _ => await UpdateSelectedItem(_addMovie, AddCreatedMovie, SelectedMovie.Title != null, SetupMovieUpdate, "api/Movies", LoadMovies, LoadShows, LoadActors, LoadCategories));
@@ -469,6 +478,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             {
                 ProductSell.Field.Add(new Field
                 {
+                    Id = Warehouse[i].Id,
                     ImageInBytes = Warehouse[i].Image,
                     Text = Warehouse[i].Name,
                     Price = Warehouse[i].Price,
@@ -778,6 +788,22 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             MoviesList = new ObservableCollection<string>(tmpMovies.Select(m => m.Title).ToList());
         }
 
+        public async Task LoadMoviesStat()
+        {
+            List<MovieViewModel> tmpMovies = new List<MovieViewModel>();
+            try
+            {
+                tmpMovies = new List<MovieViewModel>((await _service.LoadingAsync<MoviesDTO>("api/Movies/statistics"))
+                    .Select(movie => (MovieViewModel)movie));
+            }
+            catch (Exception ex) when (ex is NetworkException || ex is HttpRequestException)
+            {
+                OnMessageApplication($"Unexpected error occured! ({ex.Message})");
+            }
+            MoviesStat = new ObservableCollection<MovieViewModel>(tmpMovies);
+            
+        }
+
         private async Task LoadProducts()
         {
             List<ProductViewModel> tmpProducts = new List<ProductViewModel>();
@@ -1070,6 +1096,19 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             await LoadActors();
         }
 
+        public async Task AddNewProducts()
+        {
+            var dto = new ProductSellingDTO();
+            dto.UserId = this.UserId;
+            dto.Products = new List<ProductsForSell>();
+            foreach (var product in ProductSell.ProductsCounter)
+            {
+                dto.Products.Add(new ProductsForSell { Count = product.Count, ProductId = product.Id});
+            }
+            await this.AddRent("api/BuffetWarehouses/sell", dto);
+
+        }
+
         private async Task AddRent()
         {
             var dto = new RentFromGuestDTO();
@@ -1252,7 +1291,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             }
         }
 
-        private async Task AddRent(String route, RentFromGuestDTO entity)
+        private async Task AddRent<T>(String route, T entity) where T : RespondDTO
         {
             try
             {

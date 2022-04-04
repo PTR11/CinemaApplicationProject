@@ -80,7 +80,7 @@
                                     </Grid.RowDefinitions>
                                     <Label Grid.Row="0" Grid.Column="0" FontSize="24" Content="Total:" VerticalAlignment="Center"/>
                                     <Label Grid.Row="0" Grid.Column="1" FontSize="24" Content="{Binding ProductSell.Price}" VerticalAlignment="Center"/>
-                                    <Button Grid.ColumnSpan="2" Grid.Row="1" Margin="10" Command="{Binding AddNewRents}">Sell</Button>
+                                    <Button Grid.ColumnSpan="2" Grid.Row="1" Margin="10" Command="{Binding AddNewSellingProducts}">Sell</Button>
                                 </Grid>
                             </Grid>
                         </Border>

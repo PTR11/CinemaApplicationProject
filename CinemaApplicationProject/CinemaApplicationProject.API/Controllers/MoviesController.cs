@@ -54,6 +54,13 @@ namespace CinemaApplicationProject.API.Controllers
             return _service.GetTodaysMovies().Select(list => (MoviesDTO)list).ToList();
         }
 
+        [EnableCors("_myAllowSpecificOrigins")]
+        [HttpGet("statistics")]
+        public ActionResult<IEnumerable<MoviesDTO>> GetStatistics()
+        {
+            return _service.GetStatisticsForMovies();
+        }
+
 
         // GET: api/Movies/5
         [HttpGet("{id}")]

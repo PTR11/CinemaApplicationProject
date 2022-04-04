@@ -34,7 +34,15 @@ namespace CinemaApplicationProject.API.Controllers
             var result = await _signInManager.PasswordSignInAsync(login.UserName, login.Password, false, false);
             if (result.Succeeded)
             {
-                return Ok(_service.GetEmployeeByUserName(login.UserName).Id);
+                var user = _service.GetEmployeeByUserName(login.UserName);
+                if (_service.AddEmployeeToEmployeePresence(user, "login"))
+                {
+                    return Ok(user.Id);
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError);
+                }
             }
             return Unauthorized("Login failed");
         }
