@@ -46,5 +46,19 @@ namespace CinemaApplicationProject.API.Controllers
             }
             return Unauthorized("Login failed");
         }
+        [HttpPost("Logout/{id}")]
+        public async Task<IActionResult> Logout(int id)
+        {
+            var user = await _service.GetEmployeeById(id);
+            await _signInManager.SignOutAsync();
+            if (_service.AddEmployeeToEmployeePresence(user, "logout"))
+            {
+                return Ok(user.Id);
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }

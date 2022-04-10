@@ -11,7 +11,7 @@
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" xmlns:local1="clr-namespace:CinemaApplicationProject.Desktop.View.Admin.Pages"
     x:Class="CinemaApplicationProject.Desktop.View.Admin.AdminMainWindow"
         mc:Ignorable="d"
-        Title="AdminMainWindow" Height="1000" Width="1700">
+        Title="AdminMainWindow" Height="1000" Width="1700" Closing="Window_Closing"  ResizeMode="NoResize">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Background" Value="Wheat"></Setter>
@@ -124,26 +124,38 @@
                                         </Grid>
                                     </Border>
                                 </GroupBox>
-                                <Grid Grid.Row="1" Visibility="Hidden" x:Name="RoomMenu">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="100"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="65"/>
-                                        <RowDefinition Height="65"/>
-                                        <RowDefinition Height="65"/>
-                                        <RowDefinition Height="40"/>
-                                    </Grid.RowDefinitions>
-                                    <Label Grid.Row="0" Grid.Column="0" Content="Name:" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Row="0" Grid.Column="1"  Width="400" Margin="0,10,0,10" Text="{Binding SelectedRoom.Name, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
-                                    <Label Grid.Row="1" Grid.Column="0" Content="Width:" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Row="1" PreviewTextInput="IsNumber" Grid.Column="1"  Width="400" Margin="0,10,0,10" Text="{Binding SelectedRoom.Width, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
-                                    <Label Grid.Row="2" Grid.Column="0" Content="Height:" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Row="2" PreviewTextInput="IsNumber" Grid.Column="1"  Width="400" Margin="0,10,0,10" Text="{Binding SelectedRoom.Heigth, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
-                                    <Button Content="Update Show" Command="{Binding UpdateRoom}" Height="35" Grid.Row="3" Width="150" HorizontalAlignment="Center" Grid.ColumnSpan="2"/>
-                                    
-                                </Grid>
+                                <GroupBox Padding="0" Margin="0,10,10,0" Grid.Row="1" Visibility="Hidden" x:Name="RoomMenu">
+                                    <GroupBox.Header >
+                                        <Grid Background="Wheat">
+                                            <Label Content="Details:" FontSize="24" Height="50" BorderBrush="Black" BorderThickness="3" />
+                                        </Grid>
+                                    </GroupBox.Header>
+                                    <Border  BorderBrush="Black" BorderThickness="3,0,3,3" >
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="65"/>
+                                                <RowDefinition Height="65"/>
+                                                <RowDefinition Height="65"/>
+                                                <RowDefinition Height="40"/>
+                                            </Grid.RowDefinitions>
+                                            <Label Grid.Row="0" Grid.Column="0" Content="Name:" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Row="0" Grid.Column="1"  Width="400" Margin="0,10,0,10" Text="{Binding SelectedRoom.Name, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
+                                            <Label Grid.Row="1" Grid.Column="0" Content="Width:" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Row="1" PreviewTextInput="IsNumber" Grid.Column="1"  Width="400" Margin="0,10,0,10" Text="{Binding SelectedRoom.Width, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
+                                            <Label Grid.Row="2" Grid.Column="0" Content="Height:" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Row="2" PreviewTextInput="IsNumber" Grid.Column="1"  Width="400" Margin="0,10,0,10" Text="{Binding SelectedRoom.Heigth, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
+                                            <Button Content="Update Room" Command="{Binding UpdateRoom}" Height="35" Grid.Row="3" Width="150" HorizontalAlignment="Center" Grid.ColumnSpan="2"/>
+
+                                        </Grid>
+                                    </Border>
+
+                                </GroupBox>
+                                
+                                
                             </Grid>
                             <!--#endregion-->
                             
@@ -188,24 +200,36 @@
                                         </Grid>
                                     </Border>
                                 </GroupBox>
-                                <Grid Grid.Row="1" Visibility="Hidden" x:Name="TicketMenu">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="100"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="65"/>
-                                        <RowDefinition Height="65"/>
-                                        <RowDefinition Height="65"/>
-                                        <RowDefinition Height="30"/>
-                                    </Grid.RowDefinitions>
-                                    <Label Grid.Row="0" Grid.Column="0" Content="Name:" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Row="0" Grid.Column="1"  Width="400" Margin="0,10,0,10" Text="{Binding SelectedTicket.Type, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
-                                    <Label Grid.Row="1" Grid.Column="0" Content="Width:" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Row="1" Grid.Column="1"  Width="400" Margin="0,10,0,10" Text="{Binding SelectedTicket.Price, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
-                                    <Button Content="Update Show" Command="{Binding UpdateTicket}" Height="35" Grid.Row="2" Width="150" HorizontalAlignment="Center" Grid.ColumnSpan="2"/>
 
-                                </Grid>
+                                <GroupBox Padding="0" Margin="10,10,0,0" Grid.Row="1" Visibility="Hidden" x:Name="TicketMenu">
+                                    <GroupBox.Header >
+                                        <Grid Background="Wheat">
+                                            <Label Content="Details:" FontSize="24" Height="50" BorderBrush="Black" BorderThickness="3" />
+                                        </Grid>
+                                    </GroupBox.Header>
+                                    <Border  BorderBrush="Black" BorderThickness="3,0,3,3">
+                                        <Grid >
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="65"/>
+                                                <RowDefinition Height="65"/>
+                                                <RowDefinition Height="65"/>
+                                                <RowDefinition Height="30"/>
+                                            </Grid.RowDefinitions>
+                                            <Label Grid.Row="0" Grid.Column="0" Content="Name:" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Row="0" Grid.Column="1"  Width="400" Margin="0,10,0,10" Text="{Binding SelectedTicket.Type, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
+                                            <Label Grid.Row="1" Grid.Column="0" Content="Width:" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Row="1" Grid.Column="1"  Width="400" Margin="0,10,0,10" Text="{Binding SelectedTicket.Price, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
+                                            <Button Content="Update Show" Command="{Binding UpdateTicket}" Height="35" Grid.Row="2" Width="150" HorizontalAlignment="Center" Grid.ColumnSpan="2"/>
+
+                                        </Grid>
+                                    </Border>
+                                </GroupBox>
+                                
+                                
                             </Grid>
                             <!--#endregion-->
                         </Grid>
@@ -545,7 +569,7 @@
                                                         <RowDefinition/>
                                                         <RowDefinition/>
                                                     </Grid.RowDefinitions>
-                                                    <Label Grid.Row="0" Grid.Column="0" Content="Movie:" Margin="20,0,0,0"/>
+                                                    <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="Movie:" Margin="20,0,0,0"/>
                                                     <ComboBox Grid.Row="0" Grid.Column="1" Width="400" BorderBrush="Black" FontSize="24" SelectedItem="{Binding SelectedShow.MovieTitle}" Text="{Binding SelectedShow.MovieTitle}" Margin="0,10,10,10" BorderThickness="1" Height="30" IsEditable="True" Padding="0"  HorizontalAlignment="Left"  ItemsSource="{Binding MoviesList}"/>
                                                     <Label Grid.Row="1" Grid.Column="0" Content="Room:"  Margin="20,0,0,0"/>
                                                     <ComboBox Grid.Row="1" Grid.Column="1" Width="400" BorderBrush="Black" FontSize="24" SelectedItem="{Binding SelectedShow.RoomName}" Text="{Binding SelectedShow.RoomName}" Margin="0,0,10,10" BorderThickness="1" Height="30" IsEditable="True" Padding="0"  HorizontalAlignment="Left" ItemsSource="{Binding RoomsList}"/>
@@ -966,9 +990,10 @@
                                     <GroupBox.Header >
                                         <Grid Background="Wheat">
                                             <Label Content="Warehouse:" FontSize="24" Height="50" BorderBrush="Black" BorderThickness="3" />
-                                            <Grid HorizontalAlignment="Right" Width="350">
+                                            <Grid HorizontalAlignment="Right" Width="550">
                                                 <Button Width="150" FontSize="20" Margin="0,0,10,0" Padding="10,0,10,0" Height="30" HorizontalAlignment="Left" Command="{Binding AddNewProduct}" Content="Add Product" Foreground="Black" BorderBrush="Black" BorderThickness="3" Background="Wheat"/>
-                                                <Button Width="150" FontSize="20" Margin="0,0,10,0" Padding="10,0,10,0" Height="30" HorizontalAlignment="Right" Click="ProductSell" Content="Sell Products" Foreground="Black" BorderBrush="Black" BorderThickness="3" Background="Wheat"/>
+                                                <Button Width="150" FontSize="20" Margin="0,0,10,0" Padding="10,0,10,0" Height="30" HorizontalAlignment="Center" Click="ProductSell" Content="Sell Products" Foreground="Black" BorderBrush="Black" BorderThickness="3" Background="Wheat"/>
+                                                <Button Width="150" FontSize="20" Margin="0,0,10,0" Padding="10,0,10,0" Height="30" HorizontalAlignment="Right" Click="ProductStat" Content="Statistics" Foreground="Black" BorderBrush="Black" BorderThickness="3" Background="Wheat"/>
                                             </Grid>
                                         </Grid>
                                     </GroupBox.Header>

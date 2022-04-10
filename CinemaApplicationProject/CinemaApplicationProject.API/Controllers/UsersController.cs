@@ -101,18 +101,19 @@ namespace CinemaApplicationProject.API.Controllers
         [HttpPost]
         public async Task<ActionResult<EmployeesDTO>> PostUser(EmployeesDTO newUser)
         {
-            var user = new Employees
-            {
-                UserName = newUser.UserName,
-                Name = newUser.Name,
-                Email = newUser.Email,
-                Address = newUser.Address,
-                Birthday = newUser.Birthday
-            };
+            var user = (Employees)newUser;
+            var stats = newUser.Stats;
 
             var result = await _userManager.CreateAsync(user, newUser.Password);
             if (result.Succeeded)
             {
+                foreach(var stat in stats)
+                {
+                    if (!await _service.ConnectUserWithRole(user.Id, stat.Id))
+                    {
+                        return BadRequest("Something went wrong");
+                    }
+                }
                 return (EmployeesDTO)await _service.GetEmployeeById(user.Id);
             }
             ModelState.AddModelError("", "Sikertelen regisztráció");
@@ -161,7 +162,7 @@ namespace CinemaApplicationProject.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMoviesAsync(int id)
+        public async Task<IActionResult> DeleteUserAsync(int id)
         {
             var employee = await _service.GetEmployeeById(id);
             if (employee == null)
@@ -177,5 +178,6 @@ namespace CinemaApplicationProject.API.Controllers
 
             return NoContent();
         }
+        
     }
 }

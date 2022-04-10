@@ -36,6 +36,12 @@ namespace CinemaApplicationProject.API.Controllers
             return (ProductDTO)_service.GetProductInWareHouse(id);
         }
 
+        [HttpGet("statistics")]
+        public ActionResult<IEnumerable<ProductStatDTO>> GetStat()
+        {
+            return _service.ProductStatistics();
+        }
+
         //// PUT: api/BuffetWarehouses/5
         //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

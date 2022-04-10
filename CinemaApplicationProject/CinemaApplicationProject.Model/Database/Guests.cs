@@ -15,8 +15,11 @@ namespace CinemaApplicationProject.Model.Database
         public Guests()
         {
             Rent = new HashSet<Rents>();
+            Opinions = new HashSet<Opinions>();
         }
         
         public ICollection<Rents> Rent { get; set; }
+        
+        public ICollection<Opinions> Opinions { get; set; }
     }
 }

@@ -21,6 +21,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
         {
             IncreaseProductCount = new DelegateCommand(_ => Increase());
             DecreaseProductCount = new DelegateCommand(_ => Decrease());
+            Price = 0;
         }
 
         public int Rows

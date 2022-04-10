@@ -25,29 +25,20 @@ namespace CinemaApplicationProject.Model
 			_roleManager = serviceProvider.GetRequiredService<RoleManager<StatsAndPays>>();
 
 			// Adatbázis migrációk végrehajtása, amennyiben szükséges
-			_context.Database.EnsureDeleted();
+			//_context.Database.EnsureDeleted();
 			_context.Database.EnsureCreated();
 			// Városok, épületek, apartmanok inicializálás
 			Products p = new Products { Name = "Sajt", Price = 100 };
+			Products t = new Products { Name = "Perec", Price = 100 };
+			Products f = new Products { Name = "kukac", Price = 100 };
 			_context.Products.Add(p);
 			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = p, Quantity = 12 });
-			_context.Products.Add(p);
-			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = p, Quantity = 12 });
-			_context.Products.Add(p);
-			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = p, Quantity = 12 });
-			_context.Products.Add(p);
-			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = p, Quantity = 12 });
-			_context.Products.Add(p);
-			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = p, Quantity = 12 });
-			_context.Products.Add(p);
-			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = p, Quantity = 12 });
-			_context.Products.Add(p);
-			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = p, Quantity = 12 });
-			_context.Products.Add(p);
-			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = p, Quantity = 12 });
-			_context.Products.Add(p);
-			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = p, Quantity = 12 });
+			_context.Products.Add(t);
+			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = t, Quantity = 12 });
+			_context.Products.Add(f);
+			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = f, Quantity = 12 });
 
+			//_context.ChangeTracker.LazyLoadingEnabled = false;
 
 			
 
@@ -234,6 +225,18 @@ namespace CinemaApplicationProject.Model
 					{
 						categories[0],categories[1],categories[2]
 					}
+				},
+				new Movies
+				{
+					Title = "Lego Kaland2",
+					Length = 100,
+					Description = "Emmet átlagos fickó. A keze sárga, két ujja van, a feje tetején pedig bütyök tartja a sapkát. A Lego-világ átlagembere, aki egy építkezésen dolgozik, és semmi pénzért se késné le kedvenc napi tévésorozatát. Egy félreértés folytán azonban mindenki más azt hiszi: ő a Kiválasztott, a világ megmentésének kulcsfigurája. Különleges alakok egy kis csapatával kell nekivágnia a nagy feladatnak, ami meghökkentő kalandokon és váratlan fordulatokon keresztül eljuttathatja hőseinket... majd meglátjuk, hova. Annyi biztos: a kettős életet élő Lord Biznisz a vesztükre tör, Emmet pedig Vitruvius, a bölcs öreg, egy vad Lego-lány, Batman és még néhány furcsa fickó oldalán, gyorsan alakuló járgányok és könnyen átépíthető világok között harcol – de alig érti, mi zajlik körülötte.",
+					Trailer = "",
+					Actors = actors.GetRange(15,3),
+					Categories = new List<Categories>
+					{
+						categories[0],categories[1],categories[2]
+					}
 				}
 			};
 
@@ -314,6 +317,8 @@ namespace CinemaApplicationProject.Model
 
 			_context.AddRange(tickets);
 
+			
+
 			var guest = new Guests
 			{
 				UserName = "ptr1",
@@ -323,6 +328,9 @@ namespace CinemaApplicationProject.Model
 				CreditCardNumber = "123asd321"
 			};
 
+			
+
+			
 
 			var adminRole = new StatsAndPays("administrator");
 			adminRole.Salary = 2500;
@@ -334,7 +342,8 @@ namespace CinemaApplicationProject.Model
 				Name = "Barnák Péter",
 				Email = "barnak.peter1@gmail.com",
 				Address = "Nyíregyháza, Honvéd utca 61",
-				Birthday = "2000/06/15"
+				Birthday = "2000/06/15",
+				
 			};
 
 			var adminUser2 = new Guests
@@ -344,6 +353,7 @@ namespace CinemaApplicationProject.Model
 				Email = "barnak.peter12@gmail.com",
 				Address = "faszomban",
 				CreditCardNumber = "KurvaAnyádat"
+
 			};
 			var adminPassword = "Almafa123";
 
@@ -357,39 +367,7 @@ namespace CinemaApplicationProject.Model
 			_ = _roleManager.CreateAsync(adminRole).Result;
 			_ = _userManager.AddToRoleAsync(adminUser, adminRole.Name).Result;
 
-			_context.Opinions.Add(new Opinions
-			{
-				
-				DateTime = DateTime.Now,
-				Description = "I liked it so much",
-				Ranking = 5,
-				Anonymus = true,
-				Movie = movies[0],
-				Guest = guest,
-			});
-
-			_context.Opinions.Add(new Opinions
-			{
-
-				DateTime = DateTime.Now,
-				Description = "I liked it so much",
-				Ranking = 2,
-				Anonymus = true,
-				Movie = movies[0],
-				Guest = guest,
-			});
-
-			_context.Opinions.Add(new Opinions
-			{
-
-				DateTime = DateTime.Now,
-				Description = "I liked it so much",
-				Ranking = 1,
-				Anonymus = true,
-				Movie = movies[0],
-				Guest = guest,
-			});
-			_context.SaveChanges();
+			
 		}
 	}
 }

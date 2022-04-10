@@ -50,9 +50,10 @@ namespace CinemaApplicationProject.Desktop
             {
                 DataContext = _mainViewModel
             };
+
             _loginViewModel = new LoginViewModel();
             _loginViewModel.MessageApplication += MessageApplication;
-            _loginViewModel.LoginSucceeded += AfterLogin;
+            _loginViewModel.LoginSucceeded += new EventHandler<int>(async(s,e) => await AfterLogin(s,e));
             _login = new LoginWindow
             {
                 DataContext = _loginViewModel
@@ -66,11 +67,12 @@ namespace CinemaApplicationProject.Desktop
 
         }
 
-        private void AfterLogin(object sender, int e)
+        private async Task AfterLogin(object sender, int e)
         {
             _login.Close();
             _mainViewModel.UserId = e;
             _view.Show();
+            await _mainViewModel.LoadInit();
         }
         private async void ImageChangerForMovie(object sender, bool e)
         {
@@ -125,12 +127,11 @@ namespace CinemaApplicationProject.Desktop
         {
             _view.ProductMenu.Visibility = e ? Visibility.Visible : Visibility.Hidden;
         }
-        
         private void UserDetailsVisible(object sender, bool e)
         {
-            
             _view.UserMenu.Visibility = e ? Visibility.Visible : Visibility.Hidden;
         }
+
 
         private void RoleDetailsVisible(object sender, bool e)
         {

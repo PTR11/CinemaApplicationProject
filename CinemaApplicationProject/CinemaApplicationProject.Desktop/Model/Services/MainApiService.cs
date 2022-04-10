@@ -44,6 +44,17 @@ namespace CinemaApplicationProject.Desktop.Model.Services
             throw new NetworkException("Service returned response: " + response.StatusCode);
         }
 
+        public async Task LogoutAsync(int id)
+        {
+            var response = await _client.PostAsync("api/Employee/Logout/"+id, null);
+            if (response.IsSuccessStatusCode)
+            {
+                return;
+            }
+
+            throw new NetworkException("Service returned response: " + response.StatusCode);
+        }
+
         public async Task<IEnumerable<T>> LoadingAsync<T>(String route)
         {
             var response = await _client.GetAsync(route);
@@ -122,5 +133,7 @@ namespace CinemaApplicationProject.Desktop.Model.Services
                 throw new NetworkException("Service returned response: " + response.StatusCode);
             }
         }
+
+        
     }
 }

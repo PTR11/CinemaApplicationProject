@@ -68,6 +68,7 @@ namespace CinemaApplicationProject.API
 
                 // Felhasználókezelésre vonatkozó konfiguráció
             });
+            
             services.AddTransient<IDatabaseService, DatabaseService>();
             services.AddControllers();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();

@@ -22,6 +22,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         private ObservableCollection<MovieViewModel> _moviesStat = new ObservableCollection<MovieViewModel>();
 
+        private ObservableCollection<ProductStatViewModel> _productsStat = new ObservableCollection<ProductStatViewModel>();
+
         private ObservableCollection<ShowViewModel> _shows = new ObservableCollection<ShowViewModel>();
 
         private ObservableCollection<ActorViewModel> _actors = new ObservableCollection<ActorViewModel>();
@@ -117,6 +119,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         private ProductViewModel _selectedProduct;
 
+        private ProductStatViewModel _selectedProductStat;
+
         private ActorViewModel _newActor;
 
         private CategoryViewModel _newCategory;
@@ -161,6 +165,12 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         {
             get { return _moviesStat; }
             set { _moviesStat = value; OnPropertyChanged(); }
+        }
+
+        public ObservableCollection<ProductStatViewModel> ProductsStat
+        {
+            get { return _productsStat; }
+            set { _productsStat = value; OnPropertyChanged(); }
         }
 
         public ObservableCollection<EmployeeViewModel> Users
@@ -253,6 +263,12 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             set { _selectedProduct = value; OnPropertyChanged(); }
         }
 
+        public ProductStatViewModel SelectedProductStat
+        {
+            get { return _selectedProductStat; }
+            set { _selectedProductStat = value; OnPropertyChanged(); }
+        }
+
         public ShowViewModel SelectedTicketShow
         {
             get { return _selectedTicketShow; }
@@ -312,11 +328,14 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         public event EventHandler<bool> ImageChanger2;
 
         public DelegateCommand SelectMovie { get; set; }
+        public DelegateCommand SelectMovieStat { get; set; }
         public DelegateCommand SelectRoom { get; set; }
         public DelegateCommand SelectTicket { get; set; }
         public DelegateCommand SelectUser { get; set; }
         public DelegateCommand SelectRole { get; set; }
         public DelegateCommand SelectProduct { get; set; }
+
+        public DelegateCommand SelectProductStat { get; set; }
 
         public DelegateCommand TicketSearch { get; set; }
         public DelegateCommand AddNewActor { get; set; }
@@ -355,12 +374,16 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         public MainViewModel()
         {
             //Selectors
+            bool tmp = true;
             SelectMovie = new DelegateCommand(_ => ShowDetails(SelectedMovie, ref _addMovie, MovieDetailsVisible));
+            SelectMovieStat = new DelegateCommand(_ => ShowDetails(SelectedMovie, ref tmp, null));
             SelectRoom = new DelegateCommand(_ => ShowDetails(SelectedRoom, ref _addRoom, RoomDetailsVisible));
             SelectTicket = new DelegateCommand(_ => ShowDetails(SelectedTicket, ref _addTicket, TicketDetailsVisible));
             SelectUser = new DelegateCommand(_ => ShowDetails(SelectedUser, ref _addUser, UserDetailsVisible));
             SelectRole = new DelegateCommand(_ => ShowDetails(SelectedRole, ref _addRole, RoleDetailsVisible));
             SelectProduct = new DelegateCommand(_ => ShowDetails(SelectedProduct, ref _addProduct, ProductDetailsVisible));
+            SelectProductStat = new DelegateCommand(_ => ShowDetails(SelectedProductStat, ref tmp, null));
+
 
             //Add news (in update menu)
             AddNewActor = new DelegateCommand(_ => !(NewActor is null), async _ => await AddActor());
@@ -408,8 +431,18 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             SelectedUser = new EmployeeViewModel();
             SelectedRole = new StatsViewModel();
             SelectedTicketShow = new ShowViewModel();
+        }
 
-            LoadInit();
+        public async Task LogoutAsync()
+        {
+            try
+            {
+                await _service.LogoutAsync(UserId);
+            }
+            catch (Exception ex) when (ex is NetworkException || ex is HttpRequestException)
+            {
+                OnMessageApplication($"Unexpected error occured! ({ex.Message})");
+            }
         }
 
         private void ImageChangerMethod(String caller)
@@ -465,7 +498,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
                     });
                 }
             }
-            width = Warehouse.Count >= 8 ? 8 : Warehouse.Count % 8;
+            width = Warehouse.Count >= 3 ? 3 : Warehouse.Count % 3;
         }
 
         public async Task CreateProductsFieldAsync()
@@ -473,7 +506,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             ProductSell = new ProductSellViewModel();
             ProductSell.MainModel = this;
             await LoadProducts();
-            ProductSell.Rows = Warehouse.Count % 8 == 0 ? Warehouse.Count / 8 : (Warehouse.Count / 8 )+ 1;
+            ProductSell.Rows = Warehouse.Count % 3 == 0 ? Warehouse.Count / 3 : (Warehouse.Count / 3 )+ 1;
             for (Int32 i = 0; i < Warehouse.Count; i++)
             {
                 ProductSell.Field.Add(new Field
@@ -483,13 +516,13 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
                     Text = Warehouse[i].Name,
                     Price = Warehouse[i].Price,
                     //Background = Background(i, 0),
-                    X = i / 8,
-                    Y = i % 8,
+                    X = i / 3,
+                    Y = i % 3,
                     Number = i,
                     OnClick = new DelegateCommand(param => ProductSell.PlaceManagement(Convert.ToInt32(param))),
                 }) ;
             }
-            int width = Warehouse.Count >= 8 ? 8 : Warehouse.Count % 8;
+            int width = Warehouse.Count >= 3 ? 3 : Warehouse.Count % 3;
         }
 
         private String Background(int i, int j)
@@ -800,8 +833,22 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             {
                 OnMessageApplication($"Unexpected error occured! ({ex.Message})");
             }
-            MoviesStat = new ObservableCollection<MovieViewModel>(tmpMovies);
-            
+            MoviesStat = new ObservableCollection<MovieViewModel>(tmpMovies.OrderBy(m => m.Average));
+        }
+
+        public async Task LoadProductsStat()
+        {
+            List<ProductStatViewModel> tmpProducts = new List<ProductStatViewModel>();
+            try
+            {
+                tmpProducts = new List<ProductStatViewModel>((await _service.LoadingAsync<ProductStatDTO>("api/BuffetWarehouses/statistics"))
+                    .Select(prod => (ProductStatViewModel)prod));
+            }
+            catch (Exception ex) when (ex is NetworkException || ex is HttpRequestException)
+            {
+                OnMessageApplication($"Unexpected error occured! ({ex.Message})");
+            }
+            ProductsStat = new ObservableCollection<ProductStatViewModel>(tmpProducts.OrderBy(m => m.AverageSell));
         }
 
         private async Task LoadProducts()
@@ -1106,7 +1153,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
                 dto.Products.Add(new ProductsForSell { Count = product.Count, ProductId = product.Id});
             }
             await this.AddRent("api/BuffetWarehouses/sell", dto);
-
+            await this.CreateProductsFieldAsync();
         }
 
         private async Task AddRent()

@@ -24,6 +24,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
         public List<ShowViewModel> _shows;
         public ObservableCollection<ActorViewModel> _actors;
         public ObservableCollection<CategoryViewModel> _categories;
+        public ObservableCollection<OpinionsViewModel> _opinions;
         public ActorViewModel _selectedActor;
         public CategoryViewModel _selectedCategory;
         public MovieViewModel()
@@ -38,6 +39,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             this.Shows = new List<ShowViewModel>();
             this.Actors = new ObservableCollection<ActorViewModel>();
             this.Categories = new ObservableCollection<CategoryViewModel>();
+            this.Opinions = new ObservableCollection<OpinionsViewModel>();
             this.SelectedActor = new ActorViewModel();
             this.SelectedCategory = new CategoryViewModel();
             DeleteMovie = new DelegateCommand(async _ => await Delete());
@@ -111,6 +113,11 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             get { return _shows; }
             set { _shows = value; OnPropertyChanged(); }
         }
+        public ObservableCollection<OpinionsViewModel> Opinions
+        {
+            get { return _opinions; }
+            set { _opinions = value; OnPropertyChanged(); }
+        }
 
         public ObservableCollection<ActorViewModel> Actors
         {
@@ -169,8 +176,10 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             Shows = new(dto.Shows.ToList().Select(x => (ShowViewModel)x)),
             Actors = new(dto.Actors.ToList().Select(x => (ActorViewModel)x)),
             Categories = new(dto.Categories.ToList().Select(x => (CategoryViewModel)x)),
+            Opinions = new(dto.Opinions.ToList().Select(x => (OpinionsViewModel)x)),
             Average = dto.Average,
             TicketsCount = dto.TicketsCount,
+
         };
 
         public static explicit operator MoviesDTO(MovieViewModel mvm) => new MoviesDTO

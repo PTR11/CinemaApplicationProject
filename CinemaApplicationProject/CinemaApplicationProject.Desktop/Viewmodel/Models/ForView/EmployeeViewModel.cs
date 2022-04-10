@@ -128,6 +128,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             Birthday = mvm.Birthday,
             Password = mvm.Password,
             Email = mvm.Email,
+            Stats = new(mvm.Stats.ToList().Select(x => (StatsDTO)x)),
             //Stats = mvmnew(mvm.Stats.ToList().Select(x => (StatsDTO)x))
         };
     }

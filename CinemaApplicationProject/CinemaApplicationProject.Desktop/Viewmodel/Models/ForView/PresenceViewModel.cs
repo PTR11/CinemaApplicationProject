@@ -10,7 +10,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
 {
     public class PresenceViewModel : ViewModelBase
     {
-        private int _dutyTime;
+        private double _dutyTime;
         private DateTime _login;
         private DateTime _logout;
 
@@ -19,7 +19,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             this.DutyTime = 0;
         }
 
-        public int DutyTime
+        public double DutyTime
         {
             get { return _dutyTime; }
             set { _dutyTime = value; OnPropertyChanged(); }
@@ -40,7 +40,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
         public static explicit operator PresenceViewModel(PresenceDTO dto) => new PresenceViewModel
         {
             Id = dto.Id,
-            DutyTime = dto.DutyTime,
+            DutyTime = Math.Round(dto.DutyTime, 2),
             Login = dto.Login,
             Logout = dto.Logout,
         };

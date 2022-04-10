@@ -17,6 +17,7 @@ namespace CinemaApplicationProject.Model.DTOs
 
         public byte[] Image { get; set; }
 
+
         public static explicit operator ProductDTO(BuffetWarehouse m) => new ProductDTO
         {
             Id = m.Id,

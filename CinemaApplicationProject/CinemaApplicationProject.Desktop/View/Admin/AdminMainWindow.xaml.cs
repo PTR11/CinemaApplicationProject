@@ -84,6 +84,20 @@ namespace CinemaApplicationProject.Desktop.View.Admin
 
         }
 
+        private void ProductStat(object sender, RoutedEventArgs e)
+        {
+
+            ProductStatisticsWindows tsw = new ProductStatisticsWindows()
+            {
+                DataContext = this.DataContext,
+            };
+            var dataContext = (MainViewModel)this.DataContext;
+
+            dataContext.LoadProductsStat();
+            tsw.ShowDialog();
+
+        }
+
         private void IsNumber(object sender, TextCompositionEventArgs e)
         {
             e.Handled = !IsTextAllowed(e.Text);
@@ -93,6 +107,13 @@ namespace CinemaApplicationProject.Desktop.View.Admin
         private static bool IsTextAllowed(string text)
         {
             return !_regex.IsMatch(text);
+        }
+
+        private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var dataContext = (MainViewModel)this.DataContext;
+            await dataContext.LogoutAsync();
+            this.Close();
         }
     }
 }

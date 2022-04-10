@@ -24,6 +24,8 @@ namespace CinemaApplicationProject.Model.Database
 
         public ICollection<StatsAndPays> Stat { get; set; }
 
+        public ICollection<EmployeesStats> UserRole { get; set; }
+
         public ICollection<Rents> Rent { get; set; }
 
     }

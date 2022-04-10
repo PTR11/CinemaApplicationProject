@@ -111,14 +111,20 @@ namespace CinemaApplicationProject.Model.Services
 
         public bool SellProducts(ProductSellingDTO dto)
         {
-            foreach(var product in dto.Products)
+
+            var user = context.Employees.FirstOrDefault(m => m.Id == dto.UserId);
+            foreach (var product in dto.Products)
             {
                 var item = context.BuffetWarehouse.Include(m => m.Product).FirstOrDefault(m => m.Id == product.ProductId);
+
+                context.BuffetSales.Add(new BuffetSale { Employee = user, Product = item.Product, Date = DateTime.Now, Quantity = product.Count });
+
                 if(item != null)
                 {
                     int quantity = item.Quantity;
                     if(quantity-product.Count < 0)
                     {
+                        //Frontend error
                         throw new Exception("There is not enough product ("+item.Product.Name+")");
                     }
                     else
@@ -133,6 +139,7 @@ namespace CinemaApplicationProject.Model.Services
             }
 
 
+
             try
             {
                 context.SaveChanges();
@@ -143,6 +150,55 @@ namespace CinemaApplicationProject.Model.Services
                 return false;
             }
             return true;
+        }
+
+        public List<ProductStatDTO> ProductStatistics()
+        {
+            var list = new List<ProductStatDTO>();
+            var tmp = new List<ProductSeller>();
+            foreach(var entity in context.BuffetSales.Include(m => m.Employee))
+            {
+                var find = tmp.FirstOrDefault(e => e.EmployeeId == entity.EmployeeId && e.ProductId == entity.ProductId);
+                if(find != null)
+                {
+                    find.Count += entity.Quantity;
+                }
+                else
+                {
+                    tmp.Add(new ProductSeller {
+                       EmployeeId = entity.EmployeeId,
+                       EmployeeName = entity.Employee.UserName,
+                       ProductId = entity.ProductId,
+                       Count = entity.Quantity
+                    });
+                }
+            }
+            foreach(var seller in tmp)
+            {
+                var find = list.FirstOrDefault(m => m.Id == seller.ProductId);
+                if(find != null)
+                {
+                    find.AllSent += seller.Count;
+                }
+                else
+                {
+                    list.Add(new ProductStatDTO
+                    {
+                        AllSent = seller.Count,
+                        AverageSell = seller.Count / 1,
+                        Id = seller.ProductId,
+                        ProductName = context.Products.FirstOrDefault(p => p.Id == seller.ProductId).Name,
+                        ProductSellerList = tmp.Where(m => m.ProductId == seller.ProductId).ToList()
+                    });
+                }
+            }
+
+            foreach (var entity in list)
+            {
+                entity.AverageSell = entity.AllSent / entity.ProductSellerList.Count;
+            }
+
+            return list;
         }
         #endregion
 
@@ -158,14 +214,16 @@ namespace CinemaApplicationProject.Model.Services
                 {
                     DutyTime = 0,
                     Employee = employee,
-                    Login = DateTime.Now.Date
+                    Login = DateTime.Now
                 });
             }
             else
             {
-                var find = context.EmployeePresence.Where(e => e.Id == employee.Id).OrderByDescending(e => e.Login).First();
-                find.Logout = DateTime.Now.Date;
-                find.DutyTime = (int)(find.Logout - find.Login).TotalHours;
+                var find = context.EmployeePresence.AsNoTracking().Where(e => e.EmployeeId == employee.Id).OrderByDescending(e => e.Login).First();
+                find.Logout = DateTime.Now;
+                double minutes = (double)(find.Logout - find.Login).TotalMinutes / 60;
+                find.DutyTime = ((int)(find.Logout - find.Login).TotalHours ) + minutes;
+                context.Update(find);
             }
 
             try
@@ -522,6 +580,8 @@ namespace CinemaApplicationProject.Model.Services
 
         public int GetSalaryOfStatById(int id) => context.StatsAndPays.Where(m => m.Id == id).Select(m => m.Salary).Single();
 
+
+        
         #endregion
 
         #region Tickets

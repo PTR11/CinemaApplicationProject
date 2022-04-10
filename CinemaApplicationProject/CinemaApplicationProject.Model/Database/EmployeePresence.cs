@@ -12,14 +12,14 @@ namespace CinemaApplicationProject.Model.Database
 
         public int EmployeeId { get; set; }
         //public int StatId { get; set; }
-        public int DutyTime { get; set; }
+        public Double DutyTime { get; set; }
 
         [DataType(DataType.DateTime)]
         public DateTime Login { get; set; }
         [DataType(DataType.DateTime)]
         public DateTime Logout { get; set; }
 
-        public Employees Employee { get; set; }
+        public virtual Employees Employee { get; set; }
         //public StatsAndPays Stat { get; set; }
 
 

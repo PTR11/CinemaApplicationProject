@@ -10,7 +10,7 @@ namespace CinemaApplicationProject.Model.DTOs
     public class PresenceDTO : RespondDTO
     {
 
-        public int DutyTime { get; set; }
+        public double DutyTime { get; set; }
 
         [DataType(DataType.DateTime)]
         public DateTime Login { get; set; }

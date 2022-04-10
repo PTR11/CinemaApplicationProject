@@ -59,6 +59,8 @@ namespace CinemaApplicationProject.Model.Services
 
         public bool SellProducts(ProductSellingDTO dto);
 
+        public List<ProductStatDTO> ProductStatistics();
+
         #endregion
 
         #region EmployeePresence

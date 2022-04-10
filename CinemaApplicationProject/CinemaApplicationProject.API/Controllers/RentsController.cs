@@ -51,7 +51,8 @@ namespace CinemaApplicationProject.API.Controllers
         [HttpGet("sellUsers/{id}")]
         public ActionResult<IEnumerable<GuestVDTO>> GetRentUsersForSellById(int id)
         {
-            return _service.GetAllRentUserByShowId(id).Select(m => (GuestVDTO)m).ToList();
+
+            return _service.GetAllRentUserByShowId(id).Select(m => m != null? (GuestVDTO)m : new GuestVDTO()).ToList();
         }
 
         //POST: api/Rents

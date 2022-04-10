@@ -17,8 +17,8 @@ namespace CinemaApplicationProject.Model.Database
         [DataType(DataType.DateTime)]
         public DateTime Date { get; set; }
 
-        public Products Product { get; set; }
+        public virtual Products Product { get; set; }
 
-        public Employees Employee { get; set; }
+        public virtual Employees Employee { get; set; }
     }
 }
