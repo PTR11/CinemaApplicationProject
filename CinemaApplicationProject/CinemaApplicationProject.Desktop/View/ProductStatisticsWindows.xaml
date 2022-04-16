@@ -6,7 +6,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:CinemaApplicationProject.Desktop.View"
         mc:Ignorable="d"
-        Title="MovieStatisticsWindows" Height="1000" Width="1700">
+        Title="ProductStatisticsWindows" Height="1000" Width="1700">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Background" Value="Wheat"></Setter>
@@ -22,7 +22,7 @@
         </Grid.RowDefinitions>
         <!--#region MoviesSection -->
         <Grid Grid.Row="0" Height="650" VerticalAlignment="Top">
-            <GroupBox Padding="0" Background="Wheat">
+            <GroupBox Padding="0" Background="Wheat" Margin="10,10,10,0">
                 <GroupBox.Header >
                     <Grid Background="Wheat">
                         <Label Content="Products:" FontSize="24" Height="50" BorderBrush="Black" BorderThickness="3" />
@@ -33,7 +33,7 @@
                         <Border CornerRadius="0" BorderThickness="3,0,3,3" BorderBrush="Black">
                             <DataGrid ItemsSource="{Binding ProductsStat}"
                                                 VerticalContentAlignment="Stretch"  IsReadOnly="True"
-                                                AutoGenerateColumns="False" HeadersVisibility="None"
+                                                AutoGenerateColumns="False"
                                                 Foreground="{x:Null}" SelectedItem="{Binding SelectedProductStat}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="SelectionChanged">
@@ -49,9 +49,9 @@
                                 </i:Interaction.Triggers>
 
                                 <DataGrid.Columns >
-                                    <DataGridTextColumn Binding="{Binding ProductName}" FontSize="24" Width="*" Foreground="Black"/>
-                                    <DataGridTextColumn Binding="{Binding AverageSell}" FontSize="24" Width="*" Foreground="Black"/>
-                                    <DataGridTextColumn Binding="{Binding AllSent }" FontSize="24" Width="*" Foreground="Black"/>
+                                    <DataGridTextColumn Header="Name" Binding="{Binding ProductName}" FontSize="24" Width="*" Foreground="Black"/>
+                                    <DataGridTextColumn Header="Average (count)" Binding="{Binding AverageSell}" FontSize="24" Width="*" Foreground="Black"/>
+                                    <DataGridTextColumn Header="All products sold (count)" Binding="{Binding AllSent }" FontSize="24" Width="*" Foreground="Black"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Border>
@@ -62,7 +62,7 @@
         <!--#endregion-->
 
         <!--#region DetailsSection -->
-        <Grid Grid.Row="1" Background="White" Margin="0,10,0,0">
+        <Grid Grid.Row="1" Background="White" Margin="10,10,10,10">
             <GroupBox Padding="0" Background="Wheat">
                 <GroupBox.Header >
                     <Grid Background="Wheat">
@@ -74,12 +74,12 @@
                         <Border CornerRadius="0" BorderThickness="3,0,3,3" BorderBrush="Black">
                             <DataGrid ItemsSource="{Binding SelectedProductStat.Sellers}"
                                                 VerticalContentAlignment="Stretch"  IsReadOnly="True"
-                                                AutoGenerateColumns="False" HeadersVisibility="None"
+                                                AutoGenerateColumns="False"
                                                 Foreground="{x:Null}">
 
                                 <DataGrid.Columns >
-                                    <DataGridTextColumn Binding="{Binding EmployeeName}" FontSize="24" Width="*" Foreground="Black"/>
-                                    <DataGridTextColumn Binding="{Binding Count}" FontSize="24" Width="*" Foreground="Black"/>
+                                    <DataGridTextColumn Header="Employee" Binding="{Binding EmployeeName}" FontSize="24" Width="*" Foreground="Black"/>
+                                    <DataGridTextColumn Header="Products sold (count)" Binding="{Binding Count}" FontSize="24" Width="*" Foreground="Black"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Border>

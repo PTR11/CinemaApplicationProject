@@ -183,6 +183,8 @@ namespace CinemaApplicationProject.Model.Services
 
         public StatsAndPays GetStatById(int id);
 
+        public Task<List<string>> GetStatsById(int id);
+
         public int GetSalaryOfStatById(int id);
 
         public StatsAndPays GetStatByName(String name);

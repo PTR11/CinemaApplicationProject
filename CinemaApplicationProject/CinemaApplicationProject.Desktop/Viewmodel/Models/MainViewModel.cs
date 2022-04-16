@@ -1,4 +1,5 @@
 ﻿using CinemaApplicationProject.Desktop.Model.Errors;
+using CinemaApplicationProject.Desktop.Model.Services;
 using CinemaApplicationProject.Desktop.Viewmodel.Base;
 using CinemaApplicationProject.Desktop.Viewmodel.Models.ForView;
 using CinemaApplicationProject.Model.DTOs;
@@ -12,6 +13,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace CinemaApplicationProject.Desktop.Viewmodel.Models
@@ -45,6 +47,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         private ObservableCollection<String> _rolesList = new ObservableCollection<String>();
         private ObservableCollection<String> _moviesList = new ObservableCollection<String>();
         private ObservableCollection<String> _roomsList = new ObservableCollection<String>();
+        private ObservableCollection<LoginRolesViewModel> _userRolesList = new ObservableCollection<LoginRolesViewModel>();
 
         private List<ActorViewModel> _allActors = new List<ActorViewModel>();
 
@@ -131,6 +134,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         public String name = "faszom";
 
+        private String _selectedRoleOfUser;
+
         public int UserId
         {
             get { return _userId; }
@@ -207,6 +212,12 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         {
             get { return _rolesList; }
             set { _rolesList = value; OnPropertyChanged(); }
+        }
+
+        public ObservableCollection<LoginRolesViewModel> UserRolesList
+        {
+            get { return _userRolesList; }
+            set { _userRolesList = value; OnPropertyChanged(); }
         }
 
         public ObservableCollection<String> CategoriesList
@@ -317,6 +328,14 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             set { _newRole = value; OnPropertyChanged(); }
         }
 
+        public String SelectedRoleOfUser
+        {
+            get { return _selectedRoleOfUser; }
+            set { _selectedRoleOfUser = value; OnPropertyChanged(); }
+        }
+
+        private ValidationService Validation { get; set; }
+
         public event EventHandler<bool> MovieDetailsVisible;
         public event EventHandler<bool> ShowDetailsVisible;
         public event EventHandler<bool> RoomDetailsVisible;
@@ -326,6 +345,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         public event EventHandler<bool> ProductDetailsVisible;
         public event EventHandler<bool> ImageChanger;
         public event EventHandler<bool> ImageChanger2;
+        public event EventHandler<String> Displayer;
 
         public DelegateCommand SelectMovie { get; set; }
         public DelegateCommand SelectMovieStat { get; set; }
@@ -359,7 +379,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         public DelegateCommand UpdateRole { get; set; }
         public DelegateCommand UpdateProduct { get; set; }
 
-        public DelegateCommand DeleteMovie { get; set; }
+        public DelegateCommand DisplayCommand { get; set; }
 
         public DelegateCommand ChangeImageCommand { get; set; }
         public DelegateCommand ChangeImageCommand2 { get; set; }
@@ -373,6 +393,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         public MainViewModel()
         {
+            Validation = new ValidationService();
+
             //Selectors
             bool tmp = true;
             SelectMovie = new DelegateCommand(_ => ShowDetails(SelectedMovie, ref _addMovie, MovieDetailsVisible));
@@ -383,7 +405,6 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             SelectRole = new DelegateCommand(_ => ShowDetails(SelectedRole, ref _addRole, RoleDetailsVisible));
             SelectProduct = new DelegateCommand(_ => ShowDetails(SelectedProduct, ref _addProduct, ProductDetailsVisible));
             SelectProductStat = new DelegateCommand(_ => ShowDetails(SelectedProductStat, ref tmp, null));
-
 
             //Add news (in update menu)
             AddNewActor = new DelegateCommand(_ => !(NewActor is null), async _ => await AddActor());
@@ -401,17 +422,27 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             AddNewRents = new DelegateCommand(_ => !(TicketSell is null), async _ => await AddRent());
             AddNewProduct = new DelegateCommand(_ => Adder(SelectedProduct = new ProductViewModel(), ref _addProduct, ProductDetailsVisible));
             AddNewSellingProducts = new DelegateCommand(_ => !(ProductSell is null), async _ => await AddNewProducts());
+
             //Updates
-            UpdateShow = new DelegateCommand(_ => !(SelectedShow is null), async _ => await UpdateSelectedItem(_addShow, AddCreatedShow, SelectedShow.Id != 0, SetupShowUpdate, "api/Shows", LoadShows, LoadRooms));
-            UpdateMovie = new DelegateCommand(_ => !(SelectedMovie is null), async _ => await UpdateSelectedItem(_addMovie, AddCreatedMovie, SelectedMovie.Title != null, SetupMovieUpdate, "api/Movies", LoadMovies, LoadShows, LoadActors, LoadCategories));
-            UpdateRoom = new DelegateCommand(_ => !(SelectedRoom is null), async _ => await UpdateSelectedItem(_addRoom, AddCreatedRoom, SelectedRoom.Id != 0, SetupRoomUpdate, "api/Rooms", LoadRooms, LoadShows));
-            UpdateTicket = new DelegateCommand(_ => !(SelectedTicket is null), async _ => await UpdateSelectedItem(_addTicket, AddCreatedTicket, SelectedTicket.Id != 0, SetupTicketUpdate, "api/Tickets", null));
-            UpdateUser = new DelegateCommand(_ => !(SelectedUser is null), async _ => await UpdateSelectedItem(_addUser, AddCreatedUser, SelectedUser.Id != 0, SetupUserUpdate, "api/Users", LoadUsers, LoadRoles));
-            UpdateRole = new DelegateCommand(_ => !(SelectedRole is null), async _ => await UpdateSelectedItem(_addRole, AddCreatedTicket, SelectedRole.Id != 0, SetupRoleUpdate, "api/StatsAndPays", LoadRoles));
-            UpdateProduct = new DelegateCommand(_ => !(SelectedProduct is null), async _ => await UpdateSelectedItem(_addProduct, AddCreatedProduct, SelectedProduct.Id != 0, SetupProductUpdate, "api/BuffetWarehouses", LoadProducts));
+            UpdateShow = new DelegateCommand(_ => !(SelectedShow is null), async _ => 
+                await UpdateSelectedItem(_addShow, AddCreatedShow, Validation.Validate(SelectedShow), SetupShowUpdate, "api/Shows", LoadShows, LoadRooms));
+            UpdateMovie = new DelegateCommand(_ => !(SelectedMovie is null), async _ => 
+                await UpdateSelectedItem(_addMovie, AddCreatedMovie, Validation.Validate(SelectedMovie), SetupMovieUpdate, "api/Movies", LoadMovies, LoadShows, LoadActors, LoadCategories));
+            UpdateRoom = new DelegateCommand(_ => !(SelectedRoom is null), async _ => 
+                await UpdateSelectedItem(_addRoom, AddCreatedRoom, Validation.Validate(SelectedRoom), SetupRoomUpdate, "api/Rooms", LoadRooms, LoadShows));
+            UpdateTicket = new DelegateCommand(_ => !(SelectedTicket is null), async _ => 
+                await UpdateSelectedItem(_addTicket, AddCreatedTicket, Validation.Validate(SelectedTicket), SetupTicketUpdate, "api/Tickets", null));
+            UpdateUser = new DelegateCommand(_ => !(SelectedUser is null), async _ => 
+                await UpdateSelectedItem(_addUser, AddCreatedUser, Validation.Validate(SelectedUser), SetupUserUpdate, "api/Users", LoadUsers, LoadRoles));
+            UpdateRole = new DelegateCommand(_ => !(SelectedRole is null), async _ => 
+                await UpdateSelectedItem(_addRole, AddCreatedTicket, Validation.Validate(SelectedRole), SetupRoleUpdate, "api/StatsAndPays", LoadRoles));
+            UpdateProduct = new DelegateCommand(_ => !(SelectedProduct is null), async _ => 
+                await UpdateSelectedItem(_addProduct, AddCreatedProduct, Validation.Validate(SelectedProduct), SetupProductUpdate, "api/BuffetWarehouses", LoadProducts));
 
             ChangeImageCommand = new DelegateCommand(_ => ImageChangerMethod("movie"));
             ChangeImageCommand2 = new DelegateCommand(_ => ImageChangerMethod("product"));
+
+            DisplayCommand = new DelegateCommand(_ => Displayer?.Invoke(this, SelectedRoleOfUser));
 
             LastWeek = new DelegateCommand(_ => ChangeWeekToLast());
             ActualWeek = new DelegateCommand(async _ => await LoadShows());
@@ -548,7 +579,11 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             var rooms = new List<RoomViewModel>(TicketSell.Rooms.ToList());
             var movie = TicketSell.MovieFilter;
             var date = TicketSell.DateFilter;
-            if (movie != null || date != DateTime.Now.Date)
+            if(movie == null && date.Date.Year == 1)
+            {
+                LoadRooms();
+            }
+            if (movie != null || date.Year != 1 )
             {
                 foreach (var room in rooms)
                 {
@@ -586,7 +621,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         private void ChangeWeekToNext()
         {
-            DateTime mondayOfNextWeek = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek - 6).AddDays(7);
+            DateTime mondayOfNextWeek = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek).AddDays(7);
             DateTime lastDayOfWeek = mondayOfNextWeek.AddDays(6);
             List<ShowViewModel> tmpShow = new List<ShowViewModel>(Shows.Where(m => mondayOfNextWeek.Ticks <= m.Date.Ticks && m.Date.Ticks <= lastDayOfWeek.Ticks).ToList());
             SeparateShowsByDay(tmpShow);
@@ -594,7 +629,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         private void ChangeWeekToLast()
         {
-            DateTime mondayOfLastWeek = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek - 6).AddDays(-7);
+            DateTime mondayOfLastWeek = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek).AddDays(-7);
             DateTime lastDayOfWeek = mondayOfLastWeek.AddDays(6);
             List<ShowViewModel> tmpShow = new List<ShowViewModel>(Shows.Where(m => mondayOfLastWeek.Ticks <= m.Date.Ticks && m.Date.Ticks <= lastDayOfWeek.Ticks).ToList());
             SeparateShowsByDay(tmpShow);
@@ -603,7 +638,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         private bool IsOnThisWeek(DateTime date)    
         {
-            DateTime startOfWeek = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek - 6);
+            DateTime startOfWeek = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek+1);
             DateTime endOfWeek = startOfWeek.AddDays(6).Date;
             return startOfWeek.Date.Ticks <= date.Date.Ticks && date.Date.Ticks <= endOfWeek.Date.Ticks;
         }
@@ -724,6 +759,26 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             {
                 SelectedProduct = new ProductViewModel();
                 SelectedProduct.MainModel = this;
+            }
+        }
+
+        public void RoomVisibility(bool visibility)
+        {
+            RoomDetailsVisible?.Invoke(this, visibility);
+            if (!visibility)
+            {
+                SelectedRoom = new RoomViewModel();
+                SelectedRoom.MainModel = this;
+            }
+        }
+
+        public void TicketVisibility(bool visibility)
+        {
+            TicketDetailsVisible?.Invoke(this, visibility);
+            if (!visibility)
+            {
+                SelectedTicket = new TicketViewModel();
+                SelectedTicket.MainModel = this;
             }
         }
         #endregion
@@ -851,6 +906,37 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             ProductsStat = new ObservableCollection<ProductStatViewModel>(tmpProducts.OrderBy(m => m.AverageSell));
         }
 
+        public async Task LoadUserRoles()
+        {
+            List<LoginRolesViewModel> tmp = new List<LoginRolesViewModel>();
+            try
+            {
+                tmp = new List<LoginRolesViewModel>((await _service.LoadingAsync<string>("api/Employee/roles/"+UserId))
+                    .Select(prod => new LoginRolesViewModel { Name = prod, Command = new DelegateCommand(CanSetRole, SetRole) }));
+            }
+            catch (Exception ex) when (ex is NetworkException || ex is HttpRequestException)
+            {
+                OnMessageApplication($"Unexpected error occured! ({ex.Message})");
+            }
+            UserRolesList = new ObservableCollection<LoginRolesViewModel>(tmp);
+        }
+
+        private bool CanSetRole(object parameter)
+        {
+            if (parameter != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void SetRole(object parameter)
+        {
+            SelectedRoleOfUser = (string)parameter;
+        }
         private async Task LoadProducts()
         {
             List<ProductViewModel> tmpProducts = new List<ProductViewModel>();
@@ -1171,7 +1257,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         private async Task AddCreatedShow()
         {
-            if (SelectedShow.Date != DateTime.MinValue && SelectedShow.MovieTitle != "" && SelectedShow.RoomName != "")
+            if (Validation.IsValid())
             {
                 var movie = Movies.FirstOrDefault(m => m.Title == SelectedShow.MovieTitle);
                 String roomN = SelectedShow.RoomName.Split("(")[0].Trim();
@@ -1190,7 +1276,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         private async Task AddCreatedMovie()
         {
-            if (SelectedMovie.Title != null)
+            if (Validation.IsValid())
             {
                 var movieDTO = (MoviesDTO)SelectedMovie;
                 movieDTO.Actors.Select(a => new ActorsDTO { Name = a.Name, Id = a.Id });
@@ -1205,7 +1291,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         private async Task AddCreatedRoom()
         {
-            if (SelectedRoom.Name != null && SelectedRoom.Heigth != 0 && SelectedRoom.Width != 0)
+            if (Validation.IsValid())
             {
                 var roomDTO = (RoomsDTO)SelectedRoom;
                 SelectedRoom.Id = await AddEntity("api/Rooms", roomDTO);
@@ -1218,7 +1304,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         private async Task AddCreatedTicket()
         {
-            if (SelectedTicket.Type != null && SelectedTicket.Price != 0)
+            if (Validation.IsValid())
             {
                 var ticketDTO = (TicketsDTO)SelectedTicket;
                 SelectedRoom.Id = await AddEntity("api/Tickets", ticketDTO);
@@ -1231,7 +1317,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         private async Task AddCreatedUser()
         {
-            if (SelectedUser.Name != null && SelectedUser.UserName != null)
+            if (Validation.IsValid())
             {
                 var userDTO = (EmployeesDTO)SelectedUser;
                 SelectedUser.Id = await AddEntity("api/Users/", userDTO);
@@ -1244,7 +1330,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         private async Task AddCreatedProduct()
         {
-            if (SelectedProduct.Name != "" && SelectedProduct.Price != 0 && SelectedProduct.Quantity != 0)
+            if (Validation.IsValid())
             {
                 var productDTO = (ProductDTO)SelectedProduct;
                 SelectedProduct.Id = await AddEntity("api/BuffetWarehouses/", productDTO);
@@ -1321,6 +1407,25 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             {
                 var dto = setup();
                 await UpdateEntity(route, dto);
+            }
+            await Loads(loadMethods);
+
+        }
+
+        private async Task UpdateSelectedItem<X>(bool adder, Func<Task> createMethod, (bool, String) validation, Func<X> setup, string route, params Func<Task>[] loadMethods) where X : RespondDTO
+        {
+            if (adder)
+            {
+                await createMethod();
+            }
+            else if (validation.Item1)
+            {
+                var dto = setup();
+                await UpdateEntity(route, dto);
+            }
+            if (!validation.Item1)
+            {
+                OnMessageApplication(validation.Item2);
             }
             await Loads(loadMethods);
 

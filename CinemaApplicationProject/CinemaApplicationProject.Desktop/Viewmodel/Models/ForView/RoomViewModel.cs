@@ -17,6 +17,23 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
         private ObservableCollection<ShowViewModel> _shows;
         private List<ShowViewModel> _tmpShows;
 
+        public RoomViewModel()
+        {
+            Name = "";
+            Width = 0;
+            Heigth = 0;
+            Shows = new ObservableCollection<ShowViewModel>();
+            TmpShows = new List<ShowViewModel>();
+            DeleteRoom = new DelegateCommand(async _ => await Delete());
+        }
+
+        public async Task Delete()
+        {
+            var main = (MainViewModel)this.MainModel;
+            await main.DeleteEntity("api/Rooms", this.Id, main.LoadInit);
+            main.RoomVisibility(false);
+        }
+
         public ObservableCollection<ShowViewModel> Shows
         {
             get { return _shows; }
@@ -45,6 +62,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             get { return _height; }
             set { _height = value; OnPropertyChanged(); }
         }
+
+        public DelegateCommand DeleteRoom { get; set; }
 
         public RoomViewModel ShallowClone()
         {

@@ -106,7 +106,7 @@
                 <RowDefinition Height="150"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <GroupBox Grid.Row="0" Padding="0" Background="Wheat" Margin="10,10,0,0">
+            <GroupBox Grid.Row="0" Padding="0" Background="Wheat" Margin="10,10,10,0">
                 <GroupBox.Header >
                     <Grid Background="Wheat">
                         <Label Content="Tickets:" FontSize="24" Height="50" BorderBrush="Black" BorderThickness="3" />

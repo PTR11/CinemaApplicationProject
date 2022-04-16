@@ -60,6 +60,9 @@ namespace CinemaApplicationProject.API
             {
                 // Jelszó komplexitására vonatkozó konfiguráció
                 options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireDigit = true;
 
                 // Hibás bejelentkezés esetén az (ideiglenes) kizárásra vonatkozó konfiguráció
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);

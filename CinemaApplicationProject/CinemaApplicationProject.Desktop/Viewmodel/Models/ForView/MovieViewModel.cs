@@ -27,6 +27,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
         public ObservableCollection<OpinionsViewModel> _opinions;
         public ActorViewModel _selectedActor;
         public CategoryViewModel _selectedCategory;
+
         public MovieViewModel()
         {
             this.Id = 0;

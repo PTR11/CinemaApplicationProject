@@ -51,16 +51,16 @@ namespace CinemaApplicationProject.API.Controllers
         [HttpPut("{id}")]
         public IActionResult PutRooms(int id, RoomsDTO rooms)
         {
-            var fasz = _service.GetRoomById(id);
-            fasz.Name = rooms.Name;
-            fasz.Width = rooms.Width;
-            fasz.Heigth = rooms.Heigth;
+            var room = _service.GetRoomById(id);
+            room.Name = rooms.Name;
+            room.Width = rooms.Width;
+            room.Heigth = rooms.Heigth;
 
-            if (id != fasz.Id)
+            if (id != room.Id)
             {
                 return BadRequest();
             }
-            if (DatabaseManipulation.UpdateElementAsync(fasz))
+            if (DatabaseManipulation.UpdateElementAsync(room))
             {
                 return Ok();
             }
@@ -97,7 +97,11 @@ namespace CinemaApplicationProject.API.Controllers
                 return NotFound();
             }
 
-            DatabaseManipulation.DeleteElement(rooms);
+            var delete =  DatabaseManipulation.DeleteElement(rooms);
+            if (!delete)
+            {
+                return BadRequest();
+            }
 
             return NoContent();
         }

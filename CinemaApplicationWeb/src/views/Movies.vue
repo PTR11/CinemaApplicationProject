@@ -58,6 +58,7 @@ export default {
           .get("http://localhost:7384/api/Movies/title/"+this.searchText)
           .then((result) => {
             this.movies = result.data;
+            this.setMoviesImage();
           });
 
     },
@@ -66,6 +67,7 @@ export default {
           .get("http://localhost:7384/api/Movies/category/"+this.selectedCategory)
           .then((result) => {
             this.movies = result.data;
+            this.setMoviesImage();
           });
     },
     fetchMovies() {
@@ -73,7 +75,14 @@ export default {
           .get("http://localhost:7384/api/Movies/")
           .then((result) => {
             this.movies = result.data;
+            this.setMoviesImage();
           });
+    },
+    setMoviesImage(){
+      this.movies.forEach((m) => {
+        var asd = "data:image/jpg;base64,"+m.image;
+        m.image = asd;
+      })
     }
   }
 };

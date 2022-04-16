@@ -65,7 +65,7 @@ namespace CinemaApplicationProject.API.Controllers
         // GET: api/Movies/5
         [HttpGet("{id}")]
         [EnableCors("_myAllowSpecificOrigins")]
-        public ActionResult<MoviesDTO> GetMovies(int id)
+        public ActionResult<MoviesDTO> GetMovie(int id)
         {
             var movie = (MoviesDTO)_service.GetMovieById(id);
 
@@ -133,13 +133,23 @@ namespace CinemaApplicationProject.API.Controllers
 
 
 
+
             var movie = DatabaseManipulation.AddElement((Movies)tmp);
+            if (movie == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
 
             foreach(var actor in movies.Actors)
             {
                 if(actor.Id == 0)
                 {
-                    actor.Id = DatabaseManipulation.AddElement((Actors)actor).Id;
+                    var act = DatabaseManipulation.AddElement((Actors)actor);
+                    if(act == null)
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError);
+                    }
+                    actor.Id = act.Id;
                 }
                 _service.ConnectMovieWithActor(movie.Id, actor.Id);
             }
@@ -148,19 +158,19 @@ namespace CinemaApplicationProject.API.Controllers
             {
                 if (category.Id == 0)
                 {
-                    category.Id = DatabaseManipulation.AddElement((Categories)category).Id;
+                    var cat = DatabaseManipulation.AddElement((Categories)category);
+                    if(cat == null)
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError);
+                    }
+                    category.Id = cat.Id;
                 }
                 _service.ConnectMovieWithCategory(movie.Id, category.Id);
             }
 
-            if (movie == null)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-            else
-            {
-                return CreatedAtAction(nameof(GetMovieById), new { id = movie.Id }, (MoviesDTO)movie);
-            }
+            
+            
+            return CreatedAtAction(nameof(GetMovieById), new { id = movie.Id }, (MoviesDTO)movie);
         }
 
         // DELETE: api/Movies/5

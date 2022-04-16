@@ -7,14 +7,10 @@ using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.Model.Database
 {
-    public class Categories
+    public class Categories : DatabaseBase
     {
-
-        [Key]
         public string Category { get; set; }
 
-        [Key]
-        public int Id { get; set; }
 
         public ICollection<Movies> Movies { get; set; }
 

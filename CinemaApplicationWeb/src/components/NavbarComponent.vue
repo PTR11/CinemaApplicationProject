@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-navbar toggleable="sm" type="dark" variant="warning" class="col-sm-7 mx-auto mt-3 text-dark border b-1 border-dark" align="center" v-model="active">
-      <b-navbar-brand href="#">NavBar</b-navbar-brand>
+      <b-navbar-brand class="text-dark">Cinema Application</b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -13,9 +13,7 @@
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
-        <b-navbar-nav class="ml-auto" align="center">
-
-
+        <b-navbar-nav class="ml-auto" align="center" >
           <b-nav-item-dropdown right v-if="user">
             <!-- Using 'button-content' slot -->
             <template #button-content>
@@ -25,10 +23,10 @@
             <b-dropdown-item to="/login">Rents</b-dropdown-item>
             <b-dropdown-item @click="clickItem">Log out</b-dropdown-item>
           </b-nav-item-dropdown>
-          <b-nav-item-dropdown right v-else>
+          <b-nav-item-dropdown right v-else >
             <!-- Using 'button-content' slot -->
             <template #button-content>
-              <em>User</em>
+              <em >User</em>
             </template>
             <b-dropdown-item to="/login">Log In</b-dropdown-item>
             <b-dropdown-item to="/sign">Sign In</b-dropdown-item>
@@ -63,5 +61,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

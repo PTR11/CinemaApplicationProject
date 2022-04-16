@@ -10,13 +10,13 @@
     </b-card-text>
 
     <b-card-text>
-      Szereplők: {{actorsList}}
+      Actors: {{actorsList}}
     </b-card-text>
 
     <b-card-text class="short-text">
         {{element.description}}
     </b-card-text>
-    <div v-if="site == 'Main'">
+    <div v-if="site === 'Main'">
       <b-button variant="warning" class="border border-1 border-dark circle" @click="visible = !visible">Tonight's availability</b-button>
       <b-collapse :visible="!visible">
         <v-card-text>
@@ -26,7 +26,7 @@
                 column
             >
               <router-link :to="'reserve/'+1" class="text-decoration-none">
-              <v-chip v-for="ti in element.shows" :key="ti">
+              <v-chip v-for="ti in element.shows" :key="ti.date">
                 {{ timeChange(ti.date) }}
               </v-chip>
               </router-link>
@@ -52,10 +52,9 @@ export default {
   computed:{
     actorsList(){
       this.clearString();
-      this.element.actors.forEach(e => {
+      this.element?.actors.forEach(e => {
         this.actorsString = this.actorsString.concat('',e.name, ', ');
       });
-
       return this.actorsString.slice(0, -2);
     },
   },

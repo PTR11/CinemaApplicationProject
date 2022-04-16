@@ -92,7 +92,12 @@ namespace CinemaApplicationProject.API.Controllers
                 {
                     return Ok(new Uri("http://localhost:8080/"));
                 }
-                ModelState.AddModelError("", "Sikertelen regisztráció");
+                var errors = "";
+                foreach(var error in result.Errors)
+                {
+                    errors += error.Description+"\n";
+                }
+                ModelState.AddModelError("", "Unsuccess registration ("+errors+")");
             }
             return BadRequest(ModelState);
         }

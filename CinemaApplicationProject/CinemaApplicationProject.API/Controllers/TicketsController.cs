@@ -74,21 +74,19 @@ namespace CinemaApplicationProject.API.Controllers
             }
         }
 
-        //// DELETE: api/Tickets/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteTickets(int id)
-        //{
-        //    var tickets = await _context.Tickets.FindAsync(id);
-        //    if (tickets == null)
-        //    {
-        //        return NotFound();
-        //    }
+        // DELETE: api/Tickets/5
+        [HttpDelete("{id}")]
+        public IActionResult DeleteTickets(int id)
+        {
+            var ticket = _service.GetTicketById(id);
+            var delete = DatabaseManipulation.DeleteElement(ticket);
+            if (!delete)
+            {
+                return BadRequest();
+            }
 
-        //    _context.Tickets.Remove(tickets);
-        //    await _context.SaveChangesAsync();
-
-        //    return NoContent();
-        //}
+            return NoContent();
+        }
 
         //private bool TicketsExists(int id)
         //{

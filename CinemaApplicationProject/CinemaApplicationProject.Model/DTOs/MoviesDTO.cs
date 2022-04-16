@@ -59,6 +59,7 @@ namespace CinemaApplicationProject.Model.DTOs
             Description = m.Description,
             Image = m.Image,
             Director = m.Director,
+            Trailer = m.Trailer,
             Shows = m.Shows != null ? ConvertShowsToDTO(m.Shows) : null, 
             Actors = m.Actors != null ? ConvertActorsToDTO(m.Actors) : null,
             Categories = m.Categories != null ? ConvertCategoriesToDTO(m.Categories) : null,
@@ -73,6 +74,7 @@ namespace CinemaApplicationProject.Model.DTOs
             Image = m.Image,
             Director = m.Director,
             Description = m.Description,
+            Trailer = m.Trailer,
             Actors = ConvertActorsDTOToClass(m.Actors),
             Categories = ConvertCategoriesDTOToClass(m.Categories),
         };

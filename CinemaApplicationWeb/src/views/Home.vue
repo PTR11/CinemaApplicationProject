@@ -1,7 +1,7 @@
 <template>
   <div class="col-sm-7 mx-auto p-10">
     <ErrorCard v-if="!movies.length" :error-message="'No movies found today'"/>
-    <Card v-else v-for="movie in movies" :element="movie" :key="movie.title" :site="'Main'" />
+    <Card v-else v-for="movie in movies" :element="movie" :key="movie.id" :site="'Main'" />
 
   </div>
 </template>
@@ -34,24 +34,15 @@
     },
     methods:{
       fetchShows(){
-        console.log("kukiii")
-        console.log(this.$cookies.keys());
-        console.log(document.cookie);
         axios
             .get("http://localhost:7384/api/Movies/today")
             .then((result) => {
               this.movies = result.data;
+              console.log(this.movies);
               this.movies.forEach((m) => {
-
-                console.log(m.image);
                 var asd = "data:image/jpg;base64,"+m.image;
                 m.image = asd;
-                console.log(m.image);
-
-
-
               })
-              console.log(this.movies);
             });
       }
     }

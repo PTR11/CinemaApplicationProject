@@ -21,10 +21,7 @@ namespace CinemaApplicationProject.Model
 			builder.Entity<Guests>().ToTable("Guests");
 			//builder.Entity<StatsAndPays>().ToTable("Stats");
 			builder.Entity<Categories>().HasIndex(u => u.Category).IsUnique();
-			builder.Entity<Categories>().HasKey(u => new
-            {
-				u.Id, u.Category
-            });
+			
 			builder.Entity<EmployeesStats>(userRole =>
 			{
 

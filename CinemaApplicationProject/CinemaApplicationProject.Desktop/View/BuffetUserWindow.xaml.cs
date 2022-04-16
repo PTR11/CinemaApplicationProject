@@ -1,5 +1,4 @@
-﻿using CinemaApplicationProject.Desktop.Viewmodel.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,22 +10,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CinemaApplicationProject.Desktop.View.Admin.Pages
+namespace CinemaApplicationProject.Desktop.View
 {
     /// <summary>
-    /// Interaction logic for MoviesPage.xaml
+    /// Interaction logic for BuffetUserWindow.xaml
     /// </summary>
-    public partial class MoviesPage : UserControl
+    public partial class BuffetUserWindow : Window
     {
-       
-        public MoviesPage()
-        { 
-            
+        public BuffetUserWindow()
+        {
             InitializeComponent();
-            this.DataContext = this;
         }
     }
 }

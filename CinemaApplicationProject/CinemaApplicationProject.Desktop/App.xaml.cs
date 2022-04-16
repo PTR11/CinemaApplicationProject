@@ -1,7 +1,6 @@
 ﻿using CinemaApplicationProject.Desktop.Model.Services;
 using CinemaApplicationProject.Desktop.View;
 using CinemaApplicationProject.Desktop.View.Admin;
-using CinemaApplicationProject.Desktop.View.Admin.Pages;
 using CinemaApplicationProject.Desktop.Viewmodel.EventArguments;
 using CinemaApplicationProject.Desktop.Viewmodel.Models;
 using CinemaApplicationProject.Desktop.Viewmodel.Models.ForView;
@@ -27,6 +26,8 @@ namespace CinemaApplicationProject.Desktop
         private MainViewModel _mainViewModel;
         private LoginViewModel _loginViewModel;
         private TicketSellViewModel _ticketSellViewModel;
+        private RolesPickerWindow _rolesPickerWindow;
+        private TicketUserWindow _ticketUserWindow;
         private ProductSellingWindow _pr;
         public App()
         {
@@ -46,6 +47,7 @@ namespace CinemaApplicationProject.Desktop
             _mainViewModel.MessageApplication += MessageApplication;
             _mainViewModel.ImageChanger += ImageChangerForMovie;
             _mainViewModel.ImageChanger2 += ImageChangerForProduct;
+            _mainViewModel.Displayer += DisplayerMethod;
             _view = new AdminMainWindow
             {
                 DataContext = _mainViewModel
@@ -62,18 +64,56 @@ namespace CinemaApplicationProject.Desktop
             {
                 DataContext = _mainViewModel
             };
+            _ticketUserWindow = new TicketUserWindow
+            {
+                DataContext = _mainViewModel
+            };
             _mainViewModel.CreateProductsFieldAsync();
             _login.Show();
 
+        }
+
+        private async void DisplayerMethod(object sender, string e)
+        {
+            _rolesPickerWindow.Close();
+            await _mainViewModel.LoadInit();
+            switch (e)
+            {
+                case "administrator": _view.Show(); break;
+                case "ticket seller": _ticketUserWindow.Show(); break;
+                case "buffet seller": _pr.Show(); break;
+                default: return;
+            }
         }
 
         private async Task AfterLogin(object sender, int e)
         {
             _login.Close();
             _mainViewModel.UserId = e;
-            _view.Show();
-            await _mainViewModel.LoadInit();
+            await _mainViewModel.LoadUserRoles();
+            if(_mainViewModel.UserRolesList.Count > 1)
+            {
+                _rolesPickerWindow = new RolesPickerWindow
+                {
+                    DataContext = _mainViewModel
+                };
+                _rolesPickerWindow.ShowDialog();
+            }
+            else
+            {
+                await _mainViewModel.LoadInit();
+                switch (_mainViewModel.UserRolesList[0].Name)
+                {
+                    case "administrator": _view.Show(); break;
+                    case "ticket seller": _ticketUserWindow.Show(); break;
+                    case "buffet seller": _pr.Show(); break;
+                    default: return;
+                }
+
+            }
         }
+
+
         private async void ImageChangerForMovie(object sender, bool e)
         {
             OpenFileDialog dialog = new OpenFileDialog
@@ -132,7 +172,6 @@ namespace CinemaApplicationProject.Desktop
             _view.UserMenu.Visibility = e ? Visibility.Visible : Visibility.Hidden;
         }
 
-
         private void RoleDetailsVisible(object sender, bool e)
         {
             _view.RoleMenu.Visibility = e ? Visibility.Visible : Visibility.Hidden;
@@ -140,7 +179,7 @@ namespace CinemaApplicationProject.Desktop
 
         private void MessageApplication(object sender, MessageEventArgs e)
         {
-            MessageBox.Show(e.Message, "CinemaHW", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            MessageBox.Show(e.Message, "CinemaApplicationProject_Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
         }
     }
 }

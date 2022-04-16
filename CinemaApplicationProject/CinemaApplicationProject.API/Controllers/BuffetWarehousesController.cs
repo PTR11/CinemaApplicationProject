@@ -77,7 +77,7 @@ namespace CinemaApplicationProject.API.Controllers
             {
                 var tmpProduct = DatabaseManipulation.AddElement(new Products { Name = product.Name, Price = product.Price, Image = product.Image });
                 var tmpB = DatabaseManipulation.AddElement(new BuffetWarehouse { Product = tmpProduct, Quantity = product.Quantity });
-                if (tmpB == null && tmpProduct == null)
+                if (tmpB == null || tmpProduct == null)
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError);
                 }
@@ -114,7 +114,11 @@ namespace CinemaApplicationProject.API.Controllers
                 return NotFound();
             }
 
-            DatabaseManipulation.DeleteElement(product);
+            var delete = DatabaseManipulation.DeleteElement(product);
+            if (!delete)
+            {
+                return BadRequest();
+            }
 
             return NoContent();
         }

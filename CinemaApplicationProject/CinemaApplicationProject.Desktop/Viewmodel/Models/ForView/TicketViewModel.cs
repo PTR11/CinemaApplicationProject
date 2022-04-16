@@ -13,6 +13,20 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
         private string _type;
         private int _price;
 
+        public TicketViewModel()
+        {
+            Type = "";
+            Price = 0;
+            DeleteTicket = new DelegateCommand(async _ => await Delete());
+        }
+
+        public async Task Delete()
+        {
+            var main = (MainViewModel)this.MainModel;
+            await main.DeleteEntity("api/Tickets", this.Id, main.LoadInit);
+            main.TicketVisibility(false);
+        }
+
         public string Type
         {
             get { return _type; }
@@ -24,6 +38,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             get { return _price; }
             set { _price = value; OnPropertyChanged(); }
         }
+
+        public DelegateCommand DeleteTicket { get; set; }
 
         public TicketViewModel ShallowClone()
         {

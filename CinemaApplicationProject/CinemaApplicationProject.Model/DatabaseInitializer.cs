@@ -25,7 +25,7 @@ namespace CinemaApplicationProject.Model
 			_roleManager = serviceProvider.GetRequiredService<RoleManager<StatsAndPays>>();
 
 			// Adatbázis migrációk végrehajtása, amennyiben szükséges
-			//_context.Database.EnsureDeleted();
+			_context.Database.EnsureDeleted();
 			_context.Database.EnsureCreated();
 			// Városok, épületek, apartmanok inicializálás
 			Products p = new Products { Name = "Sajt", Price = 100 };
@@ -328,13 +328,15 @@ namespace CinemaApplicationProject.Model
 				CreditCardNumber = "123asd321"
 			};
 
-			
 
 			
 
 			var adminRole = new StatsAndPays("administrator");
 			adminRole.Salary = 2500;
-
+			var ticketerRole = new StatsAndPays("ticket seller");
+			ticketerRole.Salary = 1250;
+			var buffetSellerRole = new StatsAndPays("buffet seller");
+			buffetSellerRole.Salary = 1600;
 
 			var adminUser = new Employees
 			{
@@ -366,8 +368,9 @@ namespace CinemaApplicationProject.Model
 			_ = _userManager.CreateAsync(guest, adminPassword).Result;
 			_ = _roleManager.CreateAsync(adminRole).Result;
 			_ = _userManager.AddToRoleAsync(adminUser, adminRole.Name).Result;
+			_ = _roleManager.CreateAsync(ticketerRole).Result;
+			_ = _roleManager.CreateAsync(buffetSellerRole).Result;
 
-			
 		}
 	}
 }

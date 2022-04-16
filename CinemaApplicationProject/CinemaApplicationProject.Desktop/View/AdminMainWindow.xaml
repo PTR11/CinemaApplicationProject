@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:CinemaApplicationProject.Desktop.View.Admin"
         xmlns:ForView="clr-namespace:CinemaApplicationProject.Desktop.Viewmodel.Models.ForView"
         xmlns:Models="clr-namespace:CinemaApplicationProject.Desktop.Viewmodel.Models"
-        xmlns:syncfusion="http://schemas.syncfusion.com/wpf" xmlns:local1="clr-namespace:CinemaApplicationProject.Desktop.View.Admin.Pages"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
     x:Class="CinemaApplicationProject.Desktop.View.Admin.AdminMainWindow"
         mc:Ignorable="d"
         Title="AdminMainWindow" Height="1000" Width="1700" Closing="Window_Closing"  ResizeMode="NoResize">
@@ -118,6 +118,13 @@
                                                         <DataGridTextColumn Binding="{Binding Name}" FontSize="24" Width="200" Foreground="Black"/>
                                                         <DataGridTextColumn Binding="{Binding Width}" FontSize="24" Width="200" Foreground="Black"/>
                                                         <DataGridTextColumn Binding="{Binding Heigth}" FontSize="24" Width="*" Foreground="Black"/>
+                                                        <DataGridTemplateColumn Width="200">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <Button Width="50" HorizontalAlignment="Right" Command="{Binding DeleteRoom}">Delete</Button>
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
                                                     </DataGrid.Columns>
                                                 </DataGrid>
                                             </Border>
@@ -192,15 +199,21 @@
                                                         </i:EventTrigger>
                                                     </i:Interaction.Triggers>
                                                     <DataGrid.Columns>
-                                                        <DataGridTextColumn Binding="{Binding Type}" FontSize="24" Width="200" Foreground="Black"/>
-                                                        <DataGridTextColumn Binding="{Binding Price}" FontSize="24" Width="200" Foreground="Black"/>
+                                                        <DataGridTextColumn Binding="{Binding Type}" FontSize="24" Width="300" Foreground="Black"/>
+                                                        <DataGridTextColumn Binding="{Binding Price}" FontSize="24" Width="320" Foreground="Black"/>
+                                                        <DataGridTemplateColumn Width="200">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <Button Width="50" HorizontalAlignment="Right" Command="{Binding DeleteTicket}">Delete</Button>
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
                                                     </DataGrid.Columns>
                                                 </DataGrid>
                                             </Border>
                                         </Grid>
                                     </Border>
                                 </GroupBox>
-
                                 <GroupBox Padding="0" Margin="10,10,0,0" Grid.Row="1" Visibility="Hidden" x:Name="TicketMenu">
                                     <GroupBox.Header >
                                         <Grid Background="Wheat">
@@ -390,7 +403,7 @@
                                                         <RowDefinition/>
                                                         <RowDefinition/>
                                                     </Grid.RowDefinitions>
-                                                    <GroupBox Grid.Row="0" Padding="0" Margin="0,300,0,0" Height="200" VerticalAlignment="Center" Background="Wheat" Width="300">
+                                                    <GroupBox Grid.Row="0" Padding="0" Margin="0,300,0,0" Height="200" VerticalAlignment="Center" Background="Wheat" Width="Auto">
                                                         <GroupBox.Header >
                                                             <Grid Background="Wheat" Margin="0">
                                                                 <Label Content="Actors:" FontSize="24" Height="50"  BorderBrush="Black" BorderThickness="3" />
@@ -652,9 +665,9 @@
                                         </GroupBox.Header>
                                         <Border BorderBrush="Black" BorderThickness="3,0,3,3">
                                             <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" >
-                                                <Grid>
+                                                <Grid Margin="10">
                                                     <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="700"/>
+                                                        <ColumnDefinition Width="610"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
@@ -714,7 +727,7 @@
                                                         <ComboBox BorderBrush="Black" FontSize="24" SelectedItem="{Binding NewRole.Name}" Text="{Binding NewRole.Name}" Margin="0,10,10,10" BorderThickness="1" Height="50" IsEditable="True" Padding="0" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="6" Width="260" ItemsSource="{Binding RolesList}"/>
                                                         <Button Grid.Column="2" Width="130" Grid.Row="6" HorizontalAlignment="Left" Height="35" Content="Add Role" Command="{Binding AddNewRole}"/>
 
-                                                        <Button Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="7" HorizontalAlignment="Center" Background="Wheat" BorderBrush="Black" BorderThickness="3" Foreground="Black" Content="Update Movie" Margin="0,10,0,15" Command="{Binding UpdateUser}"/>
+                                                        <Button Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="7" HorizontalAlignment="Center" Background="Wheat" BorderBrush="Black" BorderThickness="3" Foreground="Black" Content="Update User" Margin="0,10,0,15" Command="{Binding UpdateUser}"/>
                                                     </Grid>
                                                     <!--#endregion-->
 
@@ -742,7 +755,7 @@
                                                                 </DataGrid>
                                                             </Border>
                                                         </GroupBox>
-                                                        <GroupBox Grid.Row="1" Padding="0" Margin="0" Height="200" VerticalAlignment="Center" Background="Wheat" Width="400">
+                                                        <GroupBox Grid.Row="1" Padding="0" Margin="0" Height="200" VerticalAlignment="Center" Background="Wheat" Width="580">
                                                             <GroupBox.Header >
                                                                 <Grid Background="Wheat" Margin="0">
                                                                     <Label Content="Roles:" FontSize="24" Height="50"  BorderBrush="Black" BorderThickness="3" />
@@ -756,7 +769,7 @@
                                                                     <DataGrid.Columns>
                                                                         <DataGridTextColumn Header="Login" Binding="{Binding Login}" Width="*" FontSize="24" Foreground="Black"/>
                                                                         <DataGridTextColumn Header="Logout" Binding="{Binding Logout}" Width="*" FontSize="24" Foreground="Black"/>
-                                                                        <DataGridTextColumn Header="DutyTime(hr)" Binding="{Binding DutyTime}" Width="*" FontSize="24" Foreground="Black"/>
+                                                                        <DataGridTextColumn Header="DutyTime" Binding="{Binding DutyTime}" Width="100" FontSize="24" Foreground="Black"/>
                                                                     </DataGrid.Columns>
                                                                 </DataGrid>
                                                             </Border>

@@ -12,11 +12,11 @@
       </b-card-sub-title>
       <br>
       <b-card-text style="font-size: 20px">
-        Rendező: {{movie.director}}
+        Director: {{movie.director}}
       </b-card-text>
       <br>
       <b-card-text style="font-size: 20px">
-        Szereplők:
+        Actors:
         <ul>
           <li v-for="actor in movie.actors" :key="actor.name">
             {{actor.name}}

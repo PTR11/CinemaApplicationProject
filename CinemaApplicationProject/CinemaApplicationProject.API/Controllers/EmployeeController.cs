@@ -60,5 +60,11 @@ namespace CinemaApplicationProject.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpGet("roles/{id}")]
+        public async Task<ActionResult<IEnumerable<string>>> GetRoles(int id)
+        {
+            return await _service.GetStatsById(id);
+        }
     }
 }

@@ -44,14 +44,20 @@ export default {
   },
   methods: {
     fetchShows() {
-      console.log("ITTEN HAL EL")
-
       axios
           .get("http://localhost:7384/api/Shows/"+this.filterDate.toDateString())
           .then((result) => {
 
             //window.location.href = result.data.headers[0].value[0]
             this.programs = result.data;
+            this.programs.forEach((m) => {
+              var asd = "data:image/jpg;base64,"+m.image;
+              m.image = asd;
+
+
+
+            })
+            console.log(this.programs);
           });
     }
   }

@@ -34,10 +34,9 @@ namespace CinemaApplicationProject.Desktop.View.Admin
 
             var text = (TextBlock)e.OriginalSource;
             var ctx = text.DataContext;
-            var fasz = (MainViewModel)this.DataContext;
-            fasz.SelectedShow.CopyFrom((ShowViewModel)ctx);
-            fasz.InvokeShowDetails();
-            Debug.WriteLine(e.OriginalSource);
+            var mainCTX = (MainViewModel)this.DataContext;
+            mainCTX.SelectedShow.CopyFrom((ShowViewModel)ctx);
+            mainCTX.InvokeShowDetails();
         }
 
         private void TicketSell(object sender, MouseButtonEventArgs e)
@@ -115,5 +114,9 @@ namespace CinemaApplicationProject.Desktop.View.Admin
             await dataContext.LogoutAsync();
             this.Close();
         }
+
+        
+
+        
     }
 }

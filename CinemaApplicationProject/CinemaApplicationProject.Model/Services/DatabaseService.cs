@@ -251,7 +251,7 @@ namespace CinemaApplicationProject.Model.Services
         public List<Movies> GetTodaysMovies() {
 
             var shows = this.GetTodaysShows().Select(x => x.MovieId).Distinct().ToList();
-            return context.Movies.Where(x => shows.Contains(x.Id)).ToList();
+            return context.Movies.Include(m => m.Actors).Where(x => shows.Contains(x.Id)).ToList();
         }
 
         public Movies GetMovieById(int id) => context.Movies.Include(m => m.Actors).Include(m => m.Shows).FirstOrDefault(m => m.Id == id);
@@ -539,7 +539,7 @@ namespace CinemaApplicationProject.Model.Services
 
         public List<Shows> GetAllShowsByRoomId(int id) => context.Shows.Where(m => m.RoomId == id).ToList();
 
-        public List<DateTime> GetAvailableDates() => new List<DateTime>() { context.Shows.Where(m => m.Date.Date >= DateTime.Now.Date && m.IsActiveShow).Select(m => m.Date).OrderBy(m => m.Date).ToList().First(), context.Shows.Where(m => m.Date.Date >= DateTime.Now.Date && m.IsActiveShow).Select(m => m.Date).OrderBy(m => m.Date).ToList().Last() };
+        public List<DateTime> GetAvailableDates() => new List<DateTime>() { context.Shows.Where(m => m.Date.Date >= DateTime.Now.Date && m.IsActiveShow).Select(m => m.Date).OrderBy(m => m.Date).ToList().First(), context.Shows.Where(m => m.Date.Date >= DateTime.Now.Date && m.IsActiveShow).Select(m => m.Date).OrderBy(m => m.Date).ToList().Last().AddDays(1) };
 
         public String DateTimeToString(DateTime date) => date.Date.ToString("MM/dd/yyyy");
 
@@ -575,6 +575,14 @@ namespace CinemaApplicationProject.Model.Services
         public List<StatsAndPays> GetStats() => context.StatsAndPays.ToList();
 
         public StatsAndPays GetStatByName(String name) => context.StatsAndPays.FirstOrDefault(m => m.Name.Equals(name));
+
+        public async Task<List<string>> GetStatsById(int id)
+        {
+            var user = context.Employees.FirstOrDefault(m => m.Id == id);
+            var rolesString = await guestManager.GetRolesAsync(user);
+            return rolesString.ToList();
+        }
+        
 
         public StatsAndPays GetStatById(int id) => context.StatsAndPays.FirstOrDefault(m => m.Id == id);
 
