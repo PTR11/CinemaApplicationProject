@@ -24,12 +24,25 @@ namespace CinemaApplicationProject.API.Controllers
         public ShowsController(IDatabaseService service)
         {
             _service = service;
+            DatabaseManipulation.context = _service.GetContext();
         }
+
+
+        [EnableCors("_myAllowSpecificOrigins")]
+        [HttpGet]
+        public ActionResult<IEnumerable<ShowsDTO>> GetShows()
+        {
+            //var respone = new HttpResponseMessage();
+            //respone.Headers.Location = new Uri("http://google.com");
+            //return respone;
+            return _service.GetAllShows().Select(m => (ShowsDTO)m).ToList();
+        }
+
 
         // GET: api/Shows
         [EnableCors("_myAllowSpecificOrigins")]
         [HttpGet("{date}")]
-        public ActionResult<IEnumerable<MoviesDTO>> GetShows(String date)
+        public ActionResult<IEnumerable<MoviesDTO>> GetShowsByDate(String date)
         {
             //var respone = new HttpResponseMessage();
             //respone.Headers.Location = new Uri("http://google.com");
@@ -55,9 +68,9 @@ namespace CinemaApplicationProject.API.Controllers
         // GET: api/Shows/today
         [EnableCors("_myAllowSpecificOrigins")]
         [HttpGet("today")]
-        public ActionResult<IEnumerable<Shows>> GetTodaysShows()
+        public ActionResult<IEnumerable<ShowsDTO>> GetTodaysShows()
         {
-            return _service.GetTodaysShows();
+            return _service.GetTodaysShows().Select(m => (ShowsDTO)m).ToList();
         }
 
         // GET: api/Shows/5
@@ -77,27 +90,39 @@ namespace CinemaApplicationProject.API.Controllers
         // PUT: api/Shows/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public IActionResult PutShows(int id, Shows shows)
+        public IActionResult PutShows(int id, ShowsDTO shows)
         {
             if (id != shows.Id)
             {
                 return BadRequest();
             }
-
-            DatabaseManipulation.UpdateElement(shows);
-
-
-            return NoContent();
+            if (DatabaseManipulation.UpdateElementAsync((Shows)shows))
+            {
+                return Ok();
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         // POST: api/Shows
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public ActionResult<Shows> PostShows(Shows shows)
+        public ActionResult<Shows> PostShows(ShowsDTO shows)
         {
-            DatabaseManipulation.AddElement(shows);
+            var s = (Shows)shows;
+            s.IsActiveShow =  true;
+            var show = DatabaseManipulation.AddElement(s);
 
-            return CreatedAtAction("GetShows", new { id = shows.Id }, shows);
+            if (show == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+            else
+            {
+                return CreatedAtAction(nameof(GetShowById), new { id = show.Id }, (ShowsDTO)show);
+            }
         }
 
         // DELETE: api/Shows/5

@@ -7,18 +7,33 @@ using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.Model.Database
 {
-    public class Actors
+    public class Actors : DatabaseBase
     {
-        [Key]
-        public int Id { get; set; }
-
         public String Name { get; set; }
 
         public Actors()
         {
             Movies = new HashSet<Movies>();
         }
+        public virtual ICollection<Movies> Movies { get; set; }
 
-        public ICollection<Movies> Movies { get; set; }
+
+        public override bool Equals(Object obj)
+        {
+            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                Actors actor = (Actors)obj;
+                return (Name.Equals(actor.Name));
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return Id;
+        }
     }
 }

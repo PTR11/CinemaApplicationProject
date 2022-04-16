@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.Model.Database
 {
-    public class BuffetSale
+    public class BuffetSale : DatabaseBase
     {
-        [Key]
-        public int Id { get; set; }
 
         public int ProductId { get; set; }
         public int EmployeeId { get; set; }
@@ -19,8 +17,8 @@ namespace CinemaApplicationProject.Model.Database
         [DataType(DataType.DateTime)]
         public DateTime Date { get; set; }
 
-        public Products Product { get; set; }
+        public virtual Products Product { get; set; }
 
-        public Employees Employee { get; set; }
+        public virtual Employees Employee { get; set; }
     }
 }

@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.Model.Database
 {
-    public class Movies
+    public class Movies : DatabaseBase
     {
-        [Key]
-        public int Id { get; set; }
 
         public String Title { get; set; }
 
@@ -19,13 +17,19 @@ namespace CinemaApplicationProject.Model.Database
         [DataType(DataType.MultilineText)]
         public String Description { get; set; }
 
+        public String Director { get; set; }
+
         public String Trailer { get; set; }
+
+        public byte[] Image { get; set; }
 
         public Movies()
         {
             Actors = new HashSet<Actors>();
             Shows = new HashSet<Shows>();
             Categories = new HashSet<Categories>();
+            Opinions = new HashSet<Opinions>();
+            Rents = new HashSet<Rents>();
         }
 
         public ICollection<Actors> Actors { get; set; }
@@ -33,5 +37,23 @@ namespace CinemaApplicationProject.Model.Database
         public ICollection<Shows> Shows { get; set; }
 
         public ICollection<Categories> Categories { get; set; }
+
+        public ICollection<Opinions> Opinions { get; set; }
+        public ICollection<Rents> Rents { get; set; }
+
+        public override bool Equals(Object obj)
+        {
+            //Check for null and compare run-time types.
+            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                Movies movie = (Movies)obj;
+                return (Title == movie.Title) && (Length == movie.Length);
+            }
+        }
     }
+
 }

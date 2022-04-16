@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.Model.Database
 {
-    public class Rents
+    public class Rents : DatabaseBase
     {
-        [Key]
-        public int Id { get; set; }
 
         public int ShowId { get; set; }
 
@@ -22,13 +20,15 @@ namespace CinemaApplicationProject.Model.Database
 
         public int?  EmployeeId { get; set; }
 
-        public int GuestId { get; set; }
+        public int? GuestId { get; set; }
 
         public virtual Employees Employee { get; set; }
 
-        public Guests Guest { get; set; }
+        public virtual Guests Guest { get; set; }
 
         public Tickets Ticket { get; set; }
+
+        public Shows Show { get; set; }
 
 
     }

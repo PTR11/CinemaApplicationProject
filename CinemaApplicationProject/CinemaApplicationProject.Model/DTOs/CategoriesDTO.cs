@@ -9,13 +9,18 @@ namespace CinemaApplicationProject.Model.DTOs
 {
     public class CategoriesDTO : RespondDTO
     {
-        public int Id { get; set; }
 
         public string Category { get; set; }
 
-
+        public int MovieId { get; set; }
 
         public static explicit operator CategoriesDTO(Categories m) => new CategoriesDTO
+        {
+            Id = m.Id,
+            Category = m.Category,
+        };
+
+        public static explicit operator Categories(CategoriesDTO m) => new Categories
         {
             Id = m.Id,
             Category = m.Category,

@@ -22,6 +22,21 @@ namespace CinemaApplicationProject.API.Controllers
         public MoviesController(IDatabaseService service)
         {
             _service = service;
+            DatabaseManipulation.context = _service.GetContext();
+        }
+
+        [HttpGet("only/{id}")]
+        [EnableCors("_myAllowSpecificOrigins")]
+        public ActionResult<MoviesDTO> GetMovieById(int id)
+        {
+            var movie = (MoviesDTO)_service.GetMovieById(id);
+
+            if (movie == null)
+            {
+                return NotFound();
+            }
+
+            return movie;
         }
 
         // GET: api/Movies
@@ -39,11 +54,18 @@ namespace CinemaApplicationProject.API.Controllers
             return _service.GetTodaysMovies().Select(list => (MoviesDTO)list).ToList();
         }
 
+        [EnableCors("_myAllowSpecificOrigins")]
+        [HttpGet("statistics")]
+        public ActionResult<IEnumerable<MoviesDTO>> GetStatistics()
+        {
+            return _service.GetStatisticsForMovies();
+        }
+
 
         // GET: api/Movies/5
         [HttpGet("{id}")]
         [EnableCors("_myAllowSpecificOrigins")]
-        public ActionResult<MoviesDTO> GetMovies(int id)
+        public ActionResult<MoviesDTO> GetMovie(int id)
         {
             var movie = (MoviesDTO)_service.GetMovieById(id);
 
@@ -72,26 +94,83 @@ namespace CinemaApplicationProject.API.Controllers
         // PUT: api/Movies/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public IActionResult PutMovies(int id, Movies movies)
+        public async Task<IActionResult> PutMovies(int id, MoviesDTO movies)
         {
             if (id != movies.Id)
             {
                 return BadRequest();
             }
-
-            DatabaseManipulation.UpdateElement(movies);
-
-            return NoContent();
+            
+            var tmp = (Movies)movies;
+            tmp.Actors.Clear();
+            tmp.Categories.Clear();
+            //Függvényhívás
+            if (DatabaseManipulation.UpdateElementAsync(tmp)) 
+            {
+                return Ok();
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         // POST: api/Movies
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public ActionResult<Movies> PostMovies(Movies movies)
+        public ActionResult<MoviesDTO> PostMovies(MoviesDTO movies)
         {
-            DatabaseManipulation.AddElement(movies);
+            var tmp = new MoviesDTO
+            {
+                Id = movies.Id,
+                Title = movies.Title,
+                Actors = new List<ActorsDTO>(),
+                Categories = new List<CategoriesDTO>(),
+                Length = movies.Length,
+                Description = movies.Description,
+                Trailer = movies.Trailer
+            };
 
-            return CreatedAtAction("GetMovies", new { id = movies.Id }, movies);
+
+
+
+            var movie = DatabaseManipulation.AddElement((Movies)tmp);
+            if (movie == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            foreach(var actor in movies.Actors)
+            {
+                if(actor.Id == 0)
+                {
+                    var act = DatabaseManipulation.AddElement((Actors)actor);
+                    if(act == null)
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError);
+                    }
+                    actor.Id = act.Id;
+                }
+                _service.ConnectMovieWithActor(movie.Id, actor.Id);
+            }
+
+            foreach (var category in movies.Categories)
+            {
+                if (category.Id == 0)
+                {
+                    var cat = DatabaseManipulation.AddElement((Categories)category);
+                    if(cat == null)
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError);
+                    }
+                    category.Id = cat.Id;
+                }
+                _service.ConnectMovieWithCategory(movie.Id, category.Id);
+            }
+
+            
+            
+            return CreatedAtAction(nameof(GetMovieById), new { id = movie.Id }, (MoviesDTO)movie);
         }
 
         // DELETE: api/Movies/5

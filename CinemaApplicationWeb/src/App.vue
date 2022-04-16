@@ -1,6 +1,5 @@
 <template>
   <div id="background">
-    <SideMenu />
     <Slider />
     <NavbarComponent/>
     <div id="app">
@@ -10,7 +9,6 @@
 </template>
 
 <script>
-import SideMenu from "./components/SideMenu.vue";
 import Slider from "./components/Slider.vue";
 import NavbarComponent from "./components/NavbarComponent";
 
@@ -19,7 +17,6 @@ import NavbarComponent from "./components/NavbarComponent";
 export default {
   name: "App",
   components: {
-    SideMenu,
     Slider,
     NavbarComponent
   },

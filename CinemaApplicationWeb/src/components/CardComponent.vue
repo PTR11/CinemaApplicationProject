@@ -1,5 +1,5 @@
 <template>
-  <b-card img-src="https://placekitten.com/300/300" center img-alt="Card image" img-left class="mb-3 bg-warning text-dark h-25 border-dark rounded-30 mh-10">
+  <b-card :img-src="element.image" center img-alt="Card image" img-left class="mb-3 bg-warning text-dark h-25 border-dark rounded-30 mh-10">
     <b-card-title >
       <router-link :to="'movie/'+element.id" class="text-dark text-decoration-none">
         <div >{{ element.title }} <span v-if="element.length != nil">({{ element.length }} min)</span></div>
@@ -10,13 +10,13 @@
     </b-card-text>
 
     <b-card-text>
-      Szereplők: {{actorsList}}
+      Actors: {{actorsList}}
     </b-card-text>
 
     <b-card-text class="short-text">
         {{element.description}}
     </b-card-text>
-    <div v-if="site == 'Main'">
+    <div v-if="site === 'Main'">
       <b-button variant="warning" class="border border-1 border-dark circle" @click="visible = !visible">Tonight's availability</b-button>
       <b-collapse :visible="!visible">
         <v-card-text>
@@ -26,7 +26,7 @@
                 column
             >
               <router-link :to="'reserve/'+1" class="text-decoration-none">
-              <v-chip v-for="ti in element.shows" :key="ti">
+              <v-chip v-for="ti in element.shows" :key="ti.date">
                 {{ timeChange(ti.date) }}
               </v-chip>
               </router-link>
@@ -52,12 +52,11 @@ export default {
   computed:{
     actorsList(){
       this.clearString();
-      this.element.actors.forEach(e => {
+      this.element?.actors.forEach(e => {
         this.actorsString = this.actorsString.concat('',e.name, ', ');
       });
-
       return this.actorsString.slice(0, -2);
-    }
+    },
   },
   methods:{
     clearString(){

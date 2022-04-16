@@ -12,7 +12,7 @@ namespace CinemaApplicationProject.Model.Services
 {
     public class DatabaseService : IDatabaseService
     {
-        private readonly DatabaseContext context;
+        private DatabaseContext context;
         private readonly UserManager<ApplicationUser> guestManager;
 
         public DatabaseService(DatabaseContext dc, UserManager<ApplicationUser> um)
@@ -20,6 +20,8 @@ namespace CinemaApplicationProject.Model.Services
             context = dc;
             guestManager = um;
         }
+
+        public DatabaseContext GetContext() => this.context;
 
         #region Actors
 
@@ -29,11 +31,42 @@ namespace CinemaApplicationProject.Model.Services
 
         public Actors GetActorById(int id) => context.Actors.FirstOrDefault(m => m.Id == id);
 
-        public List<Actors> GetActorsByNameParts(String part) => context.Actors.Where(m => m.Name.StartsWith(part)).ToList();
+        public Actors GetActorsByName(String name) => context.Actors.FirstOrDefault(m => m.Name.Equals(name));
 
-        //TODO rework a little bit that
-        public List<Actors> GetActorsByMovieName(String name) => context.Actors.Where(m => m.Movies.Contains(new Movies { Title = name })).ToList();
+        public List<Actors> GetActorsByMovie(int movieId)
+        {
+            Movies movie = context.Movies.FirstOrDefault(m => m.Id == movieId);
+            return context.Actors.Where(a => a.Movies.Contains(movie)).ToList();
+        }
 
+        public void ConnectMovieWithActor(int movieId, int actorId) {
+            if (movieId != 0)
+            {
+                var hasConnection = context.Movies.Include(m => m.Actors).FirstOrDefault(m => m.Id == movieId).Actors.FirstOrDefault(m => m.Id == actorId);
+                if (hasConnection == null)
+                {
+                    var actor = context.Actors.FirstOrDefault(m => m.Id == actorId);
+                    if(actor != null)
+                    {
+                        context.Movies.FirstOrDefault(m => m.Id == movieId).Actors.Add(actor);
+                        context.SaveChanges();
+                    }
+                }
+            }
+        }
+
+        public void DeleteActorFromMovie(int movieId, int actorId)
+        {
+            if (movieId != 0)
+            {
+                var hasConnection = context.Movies.Include(m => m.Actors).FirstOrDefault(m => m.Id == movieId).Actors.FirstOrDefault(m => m.Id == actorId);
+                if (hasConnection != null)
+                {
+                    context.Movies.FirstOrDefault(m => m.Id == movieId).Actors.Remove(context.Actors.FirstOrDefault(m => m.Id == actorId));
+                    context.SaveChanges();
+                }
+            }
+        }
         #endregion
 
         #region BuffetSales
@@ -67,32 +100,158 @@ namespace CinemaApplicationProject.Model.Services
         #endregion
 
         #region BuffetWarehouse
-        public List<BuffetWarehouse> GetWarehouse() => context.BuffetWarehouse.ToList();
+        public List<BuffetWarehouse> GetWarehouse() => context.BuffetWarehouse.Include(m => m.Product).ToList();
+
+        public BuffetWarehouse GetProductInWareHouse(int id) => context.BuffetWarehouse.Include(m => m.Product).FirstOrDefault(m => m.Id == id);
 
         public int GetQuantityofProductById(int id) => context.BuffetWarehouse.FirstOrDefault(m => m.ProductId == id).Quantity;
 
         public int GetPriceOfQuantityOfProductById(int id) => context.BuffetWarehouse.FirstOrDefault(m => m.ProductId == id).Quantity * context.Products.FirstOrDefault(m => m.Id == id).Price;
 
+
+        public bool SellProducts(ProductSellingDTO dto)
+        {
+
+            var user = context.Employees.FirstOrDefault(m => m.Id == dto.UserId);
+            foreach (var product in dto.Products)
+            {
+                var item = context.BuffetWarehouse.Include(m => m.Product).FirstOrDefault(m => m.Id == product.ProductId);
+
+                context.BuffetSales.Add(new BuffetSale { Employee = user, Product = item.Product, Date = DateTime.Now, Quantity = product.Count });
+
+                if(item != null)
+                {
+                    int quantity = item.Quantity;
+                    if(quantity-product.Count < 0)
+                    {
+                        //Frontend error
+                        throw new Exception("There is not enough product ("+item.Product.Name+")");
+                    }
+                    else
+                    {
+                        item.Quantity -= product.Count;
+                    }
+                }
+                else
+                {
+                    throw new Exception("Current product is not found");
+                }
+            }
+
+
+
+            try
+            {
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                
+                return false;
+            }
+            return true;
+        }
+
+        public List<ProductStatDTO> ProductStatistics()
+        {
+            var list = new List<ProductStatDTO>();
+            var tmp = new List<ProductSeller>();
+            foreach(var entity in context.BuffetSales.Include(m => m.Employee))
+            {
+                var find = tmp.FirstOrDefault(e => e.EmployeeId == entity.EmployeeId && e.ProductId == entity.ProductId);
+                if(find != null)
+                {
+                    find.Count += entity.Quantity;
+                }
+                else
+                {
+                    tmp.Add(new ProductSeller {
+                       EmployeeId = entity.EmployeeId,
+                       EmployeeName = entity.Employee.UserName,
+                       ProductId = entity.ProductId,
+                       Count = entity.Quantity
+                    });
+                }
+            }
+            foreach(var seller in tmp)
+            {
+                var find = list.FirstOrDefault(m => m.Id == seller.ProductId);
+                if(find != null)
+                {
+                    find.AllSent += seller.Count;
+                }
+                else
+                {
+                    list.Add(new ProductStatDTO
+                    {
+                        AllSent = seller.Count,
+                        AverageSell = seller.Count / 1,
+                        Id = seller.ProductId,
+                        ProductName = context.Products.FirstOrDefault(p => p.Id == seller.ProductId).Name,
+                        ProductSellerList = tmp.Where(m => m.ProductId == seller.ProductId).ToList()
+                    });
+                }
+            }
+
+            foreach (var entity in list)
+            {
+                entity.AverageSell = entity.AllSent / entity.ProductSellerList.Count;
+            }
+
+            return list;
+        }
         #endregion
 
         #region EmployeePresence
 
         public EmployeePresence GetEmployeePresenceById(int id) => context.EmployeePresence.FirstOrDefault(m => m.Id == id);
 
-        public List<Employees> GetEmployeesFromPresenceByDate(DateTime date) => context.EmployeePresence.Where(m => m.Day.Date.Equals(date.Date)).Select(m => m.Employee).ToList();
+        public bool AddEmployeeToEmployeePresence(Employees employee, string type)
+        {
+            if (type.Equals("login"))
+            {
+                context.EmployeePresence.Add(new EmployeePresence
+                {
+                    DutyTime = 0,
+                    Employee = employee,
+                    Login = DateTime.Now
+                });
+            }
+            else
+            {
+                var find = context.EmployeePresence.AsNoTracking().Where(e => e.EmployeeId == employee.Id).OrderByDescending(e => e.Login).First();
+                find.Logout = DateTime.Now;
+                double minutes = (double)(find.Logout - find.Login).TotalMinutes / 60;
+                find.DutyTime = ((int)(find.Logout - find.Login).TotalHours ) + minutes;
+                context.Update(find);
+            }
 
-        public List<Employees> GetEmployeesFromPresenceByDateAndStat(DateTime date, StatsAndPays stat) => context.EmployeePresence.Where(m => m.Day.Date.Equals(date.Date)).Select(m => m.Employee).Where(m => m.Stat.Contains(stat)).ToList();
+            try
+            {
+                context.SaveChanges();
+                return true;
+            }catch(DbUpdateException)
+            {
+                return false;
+            }
+        }
+
+        //public List<Employees> GetEmployeesFromPresenceByDate(DateTime date) => context.EmployeePresence.Where(m => m.Day.Date.Equals(date.Date)).Select(m => m.Employee).ToList();
+
+        //public List<Employees> GetEmployeesFromPresenceByDateAndStat(DateTime date, StatsAndPays stat) => context.EmployeePresence.Where(m => m.Day.Date.Equals(date.Date)).Select(m => m.Employee).Where(m => m.Stat.Contains(stat)).ToList();
 
         #endregion
 
         #region Movies
 
-        public List<Movies> GetMovies() => context.Movies.Include(m => m.Actors).ToList();
+        public Movies GetMovie(int id) => context.Movies.Include(m => m.Shows).Include(m => m.Actors).Include(m => m.Categories).FirstOrDefault(m => m.Id==id);
+
+        public List<Movies> GetMovies() => context.Movies.Include(m => m.Actors).Include(m => m.Categories).ToList();
 
         public List<Movies> GetTodaysMovies() {
 
             var shows = this.GetTodaysShows().Select(x => x.MovieId).Distinct().ToList();
-            return context.Movies.Where(x => shows.Contains(x.Id)).ToList();
+            return context.Movies.Include(m => m.Actors).Where(x => shows.Contains(x.Id)).ToList();
         }
 
         public Movies GetMovieById(int id) => context.Movies.Include(m => m.Actors).Include(m => m.Shows).FirstOrDefault(m => m.Id == id);
@@ -104,6 +263,42 @@ namespace CinemaApplicationProject.Model.Services
             Categories cat = context.Categories.FirstOrDefault(m => m.Category.Equals(category));
 
             return context.Movies.Include(m => m.Categories).Include(m => m.Actors).Where(m => m.Categories.Contains(cat)).ToList();
+        }
+
+        public async Task UpdateMovieActors(List<Actors> actors, int movieId)
+        {
+
+            var movie = context.Movies.FirstOrDefault(m => m.Id == movieId);
+            movie.Actors.Clear();
+            var movieActors = movie.Actors.ToList();
+            foreach(var actor in movie.Actors)
+            {
+                var updated = actors.Contains(actor);
+                if (!updated)
+                {
+                    movieActors.Remove(actor);
+                }
+                actors.Remove(actor);
+            }
+            foreach (var actor in movie.Actors)
+            {
+                movie.Actors.Add(actor);
+            }
+            await context.SaveChangesAsync();
+        }
+
+        public List<MoviesDTO> GetStatisticsForMovies()
+        {
+            var listOfMovies = context.Movies.Include(m => m.Opinions).ToList();
+            List<MoviesDTO> result = new List<MoviesDTO>(listOfMovies.Select(m => (MoviesDTO)m).ToList());
+            foreach(var movie in result)
+            {
+                movie.TicketsCount = context.Rents.Include(m => m.Show).ThenInclude(m => m.Movie).Where(r => r.EmployeeId != 0 && r.Show.MovieId == movie.Id).ToList().Count;
+                int count = listOfMovies.FirstOrDefault(m => m.Id == movie.Id).Opinions.Count;  
+                if(count != 0)
+                    movie.Average = listOfMovies.FirstOrDefault(m => m.Id == movie.Id).Opinions.Sum(m => m.Ranking) / (double)count;
+            }
+            return result;
         }
         #endregion
 
@@ -176,8 +371,12 @@ namespace CinemaApplicationProject.Model.Services
 
             #endregion
 
-            #region Products
-            public List<Products> GetAllProducts() => context.Products.ToList();
+        #region Products
+        public List<Products> GetAllProducts() => context.Products.ToList();
+
+        public Products GetProductByName(String name) => context.Products.FirstOrDefault(m => m.Name.Equals(name));
+
+        public BuffetWarehouse GetProductById(int id) => context.BuffetWarehouse.Include(m => m.Product).FirstOrDefault(m => m.Id == id);
 
         public int GetProductPrice(String name = null) => context.Products.Where(m => m.Name.Equals(name)).Select(m => m.Price).Single();
 
@@ -198,48 +397,105 @@ namespace CinemaApplicationProject.Model.Services
 
         public List<Rents> GetAllRentsByGuestId(int id) => context.Rents.Where(m => m.GuestId == id).ToList();
 
-        public List<Rents> GetAllRentsByShowId(int id) => context.Rents.Where(m => m.ShowId == id).ToList();
+        public List<Rents> GetAllRentsByShowId(int id) => context.Rents.Where(m => m.ShowId == id).Include(m => m.Guest).ToList();
 
+        public List<Guests> GetAllRentUserByShowId(int id) => context.Rents.Where(m => m.ShowId == id).Include(m => m.Guest).Select(m => m.Guest).Distinct().ToList();
         public Boolean IfReservedPlace(int showid, int x, int y) => context.Rents.Where(m => m.ShowId == showid).Where(m => m.X == x && m.Y == y).Any();
 
-        public async Task<Boolean> SaveRentsAsync(RentFromGuestDTO rfg)
+        public async Task<bool> SaveRents(RentFromGuestDTO rfg)
         {
-            if (rfg.UserId == 0 || rfg.ShowId == 0)
-            {
-                return false;
-            }
-            Guests guest = context.Guests.FirstOrDefault(m => m.Id == rfg.UserId);
-            //Guests guest = (Guests)await guestManager.FindByIdAsync(rfg.UserId.ToString());
-
-            if (guest == null)
+            if (rfg.ShowId == 0)
             {
                 return false;
             }
 
-            foreach (var place in rfg.Places)
+            if(rfg.IsEmployee && rfg.UserId != 0 && rfg.EmployeeId != 0)
             {
-                if (this.IfReservedPlace(rfg.ShowId, place.X, place.Y))
+                foreach(var place in rfg.Places)
+                {
+                    Rents find = context.Rents.FirstOrDefault(r => r.GuestId == rfg.UserId && r.ShowId == rfg.ShowId && r.X == place.X && r.Y ==place.Y && r.Ticket == context.Tickets.FirstOrDefault(t => t.Type == place.TicketCategory));
+                    if (find != null)
+                    {
+                        find.Employee = context.Employees.FirstOrDefault(m => m.Id == rfg.EmployeeId);
+
+                        context.Update(find);
+                    }
+                }
+            }
+            else
+            {
+                Guests guest = context.Guests.FirstOrDefault(m => m.Id == rfg.UserId);
+                //Guests guest = (Guests)await guestManager.FindByIdAsync(rfg.UserId.ToString());
+                Employees employees = context.Employees.FirstOrDefault(m => m.Id == rfg.EmployeeId);
+
+                if (guest == null && rfg.IsEmployee == false)
                 {
                     return false;
                 }
-            }
-            foreach (var place in rfg.Places)
-            {
-                Rents rent = new Rents
+                else if (guest != null)
                 {
-                    Guest = guest,
-                    ShowId = rfg.ShowId,
-                    X = place.X,
-                    Y = place.Y,
-                    Ticket = context.Tickets.FirstOrDefault(m => m.Type == place.TicketCategory)
-                };
+                    foreach (var place in rfg.Places)
+                    {
+                        if (this.IfReservedPlace(rfg.ShowId, place.X, place.Y))
+                        {
+                            return false;
+                        }
+                    }
+                    foreach (var place in rfg.Places)
+                    {
+                        Rents rent = new Rents
+                        {
+                            Guest = guest,
+                            ShowId = rfg.ShowId,
+                            X = place.X,
+                            Y = place.Y,
+                            Ticket = context.Tickets.FirstOrDefault(m => m.Type == place.TicketCategory)
+                        };
 
-                context.Rents.Add(rent); 
+                        context.Rents.Add(rent);
+                    }
+                }
+
+
+                if (employees == null && rfg.IsEmployee == true)
+                {
+                    return false;
+                }
+                else if (employees != null)
+                {
+                    foreach (var place in rfg.Places)
+                    {
+                        if (this.IfReservedPlace(rfg.ShowId, place.X, place.Y))
+                        {
+                            return false;
+                        }
+                    }
+                    foreach (var place in rfg.Places)
+                    {
+                        Place tmp = place;
+                        Rents rent = new Rents
+                        {
+                            Employee = employees,
+                            ShowId = rfg.ShowId,
+                            X = tmp.X,
+                            Y = tmp.Y,
+                            Ticket = context.Tickets.FirstOrDefault(m => m.Type == place.TicketCategory)
+                        };
+
+                        context.Rents.Add(rent);
+                    }
+                }
             }
+
+
+            
+
+            
             try
             {
                 context.SaveChanges();
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 Debug.WriteLine(ex.ToString());
                 return false;
@@ -247,18 +503,31 @@ namespace CinemaApplicationProject.Model.Services
             return true;
         }
 
+
+        
         #endregion
 
         #region Rooms
 
-        public List<Rooms> GetAllRooms() => context.Rooms.ToList();
+        public List<Rooms> GetAllRooms()
+        {
+            var list = context.Rooms.Include(m => m.Shows).ToList();
+            list.ForEach(r =>
+            {
+                foreach(var show in r.Shows)
+                {
+                    show.Movie = context.Movies.FirstOrDefault(m => m.Id == show.MovieId);
+                }
+            });
+            return list;
+        }
 
         public Rooms GetRoomById(int id) => context.Rooms.Where(m => m.Id == id).Single();
 
         #endregion
 
         #region Shows
-        public List<Shows> GetAllShows() => context.Shows.ToList();
+        public List<Shows> GetAllShows() => context.Shows.Include(m => m.Movie).Include(m => m.Room).ToList();
 
         public List<Shows> GetTodaysShows() => context.Shows.Where(x => x.Date.Date == DateTime.Now.Date).ToList();
 
@@ -270,7 +539,7 @@ namespace CinemaApplicationProject.Model.Services
 
         public List<Shows> GetAllShowsByRoomId(int id) => context.Shows.Where(m => m.RoomId == id).ToList();
 
-        public List<DateTime> GetAvailableDates() => new List<DateTime>() { context.Shows.Where(m => m.Date.Date >= DateTime.Now.Date && m.IsActiveShow).Select(m => m.Date).OrderBy(m => m.Date).ToList().First(), context.Shows.Where(m => m.Date.Date >= DateTime.Now.Date && m.IsActiveShow).Select(m => m.Date).OrderBy(m => m.Date).ToList().Last() };
+        public List<DateTime> GetAvailableDates() => new List<DateTime>() { context.Shows.Where(m => m.Date.Date >= DateTime.Now.Date && m.IsActiveShow).Select(m => m.Date).OrderBy(m => m.Date).ToList().First(), context.Shows.Where(m => m.Date.Date >= DateTime.Now.Date && m.IsActiveShow).Select(m => m.Date).OrderBy(m => m.Date).ToList().Last().AddDays(1) };
 
         public String DateTimeToString(DateTime date) => date.Date.ToString("MM/dd/yyyy");
 
@@ -305,25 +574,122 @@ namespace CinemaApplicationProject.Model.Services
         #region StatsAndPays
         public List<StatsAndPays> GetStats() => context.StatsAndPays.ToList();
 
+        public StatsAndPays GetStatByName(String name) => context.StatsAndPays.FirstOrDefault(m => m.Name.Equals(name));
+
+        public async Task<List<string>> GetStatsById(int id)
+        {
+            var user = context.Employees.FirstOrDefault(m => m.Id == id);
+            var rolesString = await guestManager.GetRolesAsync(user);
+            return rolesString.ToList();
+        }
+        
+
         public StatsAndPays GetStatById(int id) => context.StatsAndPays.FirstOrDefault(m => m.Id == id);
 
         public int GetSalaryOfStatById(int id) => context.StatsAndPays.Where(m => m.Id == id).Select(m => m.Salary).Single();
 
+
+        
         #endregion
 
         #region Tickets
         public int GetPriceOfTicketById(int id) => context.Tickets.Where(m => m.Id == id).Select(m => m.Price).Single();
+
+        public List<Tickets> GetTickets() => context.Tickets.ToList();
+
+        public Tickets GetTicketById(int id) => context.Tickets.FirstOrDefault(t => t.Id == id);
         #endregion
 
         #region Categories
 
         public List<Categories> GetCategories() => context.Categories.ToList();
 
+        public Categories GetCategoryById(int id) => context.Categories.FirstOrDefault(m => m.Id==id);
+
+        public Categories GetCategoryByName(String cat) => context.Categories.FirstOrDefault(c => c.Category.Equals(cat));
+
+        public void ConnectMovieWithCategory(int movieId, int catId)
+        {
+            if (movieId != 0)
+            {
+                
+                var hasConnection = context.Movies.Include(m => m.Categories).FirstOrDefault(m => m.Id == movieId).Categories.FirstOrDefault(m => m.Id == catId);
+                if (hasConnection == null)
+                {
+                    context.Movies.FirstOrDefault(m => m.Id == movieId).Categories.Add(context.Categories.FirstOrDefault(m => m.Id == catId));
+                    context.SaveChanges();
+                }
+            }
+        }
+
+        public void DeleteCategoryFromMovie(int movieId, int catId)
+        {
+            if (movieId != 0)
+            {
+
+                var hasConnection = context.Movies.Include(m => m.Categories).FirstOrDefault(m => m.Id == movieId).Categories.FirstOrDefault(m => m.Id == catId);
+                if (hasConnection != null)
+                {
+                    context.Movies.FirstOrDefault(m => m.Id == movieId).Categories.Remove(context.Categories.FirstOrDefault(m => m.Id == catId));
+                    context.SaveChanges();
+                }
+            }
+        }
         #endregion
 
         #region Guest
 
         public Guests GetGuestByUserName(String username) => context.Guests.FirstOrDefault(g => g.UserName.Equals(username));
+
+        #endregion
+
+        #region Employee
+
+        public async Task<List<Employees>> GetEmployees()
+        {
+            var emps = context.Employees.Include(m => m.Presence).ToList();
+            foreach(var employee in emps)
+            {
+                var rolesString = await guestManager.GetRolesAsync(employee);
+                var roles = context.StatsAndPays.Where(m => rolesString.Contains(m.Name));
+                employee.Stat = new List<StatsAndPays>(roles);
+            }
+            return emps;
+        }
+
+        public async Task<Employees> GetEmployeeById(int id)
+        {
+            var user = context.Employees.FirstOrDefault(m => m.Id == id);
+            var rolesString =await guestManager.GetRolesAsync(user);
+            var roles = context.StatsAndPays.Where(m => rolesString.Contains(m.Name));
+            user.Stat = new List<StatsAndPays>(roles);
+            
+            return user;
+        }
+
+
+        public async Task<bool> ConnectUserWithRole(int userId, int roleId)
+        {
+            if (userId != 0)
+            {
+                var user = context.Employees.FirstOrDefault(m => m.Id == userId);
+                var rolesString = await guestManager.GetRolesAsync(user);
+                var role = context.StatsAndPays.FirstOrDefault(m => m.Id == roleId);
+
+                var hasConnection = rolesString.Contains(role.Name);
+                if (hasConnection == false)
+                {
+                    var result = await guestManager.AddToRoleAsync(user, role.Name);
+                    if (result.Succeeded)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public Employees GetEmployeeByUserName(String userName) => context.Employees.FirstOrDefault(e => e.UserName.Equals(userName));
 
         #endregion
 

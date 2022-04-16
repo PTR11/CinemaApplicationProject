@@ -10,15 +10,17 @@ namespace CinemaApplicationProject.Model.Database
 {
     public class StatsAndPays : IdentityRole<int>
     {
+        public StatsAndPays() { }
+
 
         public StatsAndPays(String name) : base(name)
         {
             Salary = 0;
-            Employees = new HashSet<Employees>();
+            //Employee = new HashSet<Employees>();
         }
 
         public int Salary { get; set; }
 
-        public ICollection<Employees> Employees { get; set; }
+        public ICollection<EmployeesStats> UserRole { get; set; }
     }
 }

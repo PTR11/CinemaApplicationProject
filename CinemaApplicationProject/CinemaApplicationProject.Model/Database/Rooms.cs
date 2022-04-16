@@ -7,16 +7,21 @@ using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.Model.Database
 {
-    public class Rooms
+    public class Rooms : DatabaseBase
     {
-        [Key]
-        public int Id { get; set; }
 
         public String Name { get; set; }
 
         public int Width { get; set; }
 
         public int Heigth { get; set; }
+
+        public Rooms()
+        {
+            Shows = new HashSet<Shows>();
+        }
+
+        public ICollection<Shows> Shows { get; set; }
 
 
 

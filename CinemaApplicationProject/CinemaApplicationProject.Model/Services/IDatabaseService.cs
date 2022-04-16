@@ -11,6 +11,8 @@ namespace CinemaApplicationProject.Model.Services
     public interface IDatabaseService
     {
 
+        public DatabaseContext GetContext();
+
         #region Actors
 
         public List<Actors> GetActors();
@@ -19,9 +21,13 @@ namespace CinemaApplicationProject.Model.Services
 
         public Actors GetActorById(int id);
 
-        public List<Actors> GetActorsByNameParts(String part);
+        public Actors GetActorsByName(String name);
 
-        public List<Actors> GetActorsByMovieName(String name);
+        public List<Actors> GetActorsByMovie(int id);
+
+        public void ConnectMovieWithActor(int movieId, int actorId);
+
+        public void DeleteActorFromMovie(int movieId, int actorId);
 
         #endregion
 
@@ -49,6 +55,11 @@ namespace CinemaApplicationProject.Model.Services
         public int GetQuantityofProductById(int id);
 
         public int GetPriceOfQuantityOfProductById(int id);
+        public BuffetWarehouse GetProductInWareHouse(int id);
+
+        public bool SellProducts(ProductSellingDTO dto);
+
+        public List<ProductStatDTO> ProductStatistics();
 
         #endregion
 
@@ -56,9 +67,11 @@ namespace CinemaApplicationProject.Model.Services
 
         public EmployeePresence GetEmployeePresenceById(int id);
 
-        public List<Employees> GetEmployeesFromPresenceByDate(DateTime date);
+        public bool AddEmployeeToEmployeePresence(Employees employee, string type);
 
-        public List<Employees> GetEmployeesFromPresenceByDateAndStat(DateTime date, StatsAndPays stat);
+        //public List<Employees> GetEmployeesFromPresenceByDate(DateTime date);
+
+        //public List<Employees> GetEmployeesFromPresenceByDateAndStat(DateTime date, StatsAndPays stat);
 
         #endregion
 
@@ -73,6 +86,10 @@ namespace CinemaApplicationProject.Model.Services
         public List<Movies> GetMoviesByNamePart(String name = null);
 
         public List<Movies> GetMoviesByCategory(String category);
+
+        public Task UpdateMovieActors(List<Actors> actors, int movieId);
+
+        public List<MoviesDTO> GetStatisticsForMovies();
 
         #endregion
 
@@ -103,6 +120,10 @@ namespace CinemaApplicationProject.Model.Services
         #region Products
         public List<Products> GetAllProducts();
 
+        public Products GetProductByName(String name);
+
+        public BuffetWarehouse GetProductById(int id);
+
         public int GetProductPrice(String name = null);
 
         #endregion
@@ -123,10 +144,10 @@ namespace CinemaApplicationProject.Model.Services
         public List<Rents> GetAllRentsByGuestId(int id);
 
         public List<Rents> GetAllRentsByShowId(int id);
-
+        public List<Guests> GetAllRentUserByShowId(int id);
         public Boolean IfReservedPlace(int showid, int x, int y);
 
-        public Task<Boolean> SaveRentsAsync(RentFromGuestDTO rfg);
+        public Task<Boolean> SaveRents(RentFromGuestDTO rfg);
 
         #endregion
 
@@ -162,24 +183,50 @@ namespace CinemaApplicationProject.Model.Services
 
         public StatsAndPays GetStatById(int id);
 
+        public Task<List<string>> GetStatsById(int id);
+
         public int GetSalaryOfStatById(int id);
+
+        public StatsAndPays GetStatByName(String name);
 
         #endregion
 
         #region Tickets
         public int GetPriceOfTicketById(int id);
+
+        public List<Tickets> GetTickets();
+
+        public Tickets GetTicketById(int id);
         #endregion
 
         #region Categories
 
         public List<Categories> GetCategories();
 
+        public Categories GetCategoryById(int id);
+
+        public Categories GetCategoryByName(String cat);
+
+        public void ConnectMovieWithCategory(int movieId, int actorId);
+
+        public void DeleteCategoryFromMovie(int movieId, int catId);
+
         #endregion
 
-        #region Gues
+        #region Guest
 
         public Guests GetGuestByUserName(String username);
 
+        #endregion
+
+        #region Employee
+        public Task<List<Employees>> GetEmployees();
+
+        public Task<Employees> GetEmployeeById(int id);
+
+        public Task<bool> ConnectUserWithRole(int userId, int roleId);
+
+        public Employees GetEmployeeByUserName(String userName);
         #endregion
     }
 }

@@ -8,7 +8,9 @@ namespace CinemaApplicationProject.Model.DTOs
 {
     public class RespondDTO
     {
+        
         public String Message { get; set; }
 
+        public int Id { get; set; }
     }
 }

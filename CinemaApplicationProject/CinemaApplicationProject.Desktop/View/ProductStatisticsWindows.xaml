@@ -1,0 +1,92 @@
+﻿<Window x:Class="CinemaApplicationProject.Desktop.View.ProductStatisticsWindows"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:CinemaApplicationProject.Desktop.View"
+        mc:Ignorable="d"
+        Title="ProductStatisticsWindows" Height="1000" Width="1700">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="Wheat"></Setter>
+            <Setter Property="BorderBrush" Value="Black"></Setter>
+            <Setter Property="BorderThickness" Value="3"></Setter>
+            <Setter Property="Foreground" Value="Black"></Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!--#region MoviesSection -->
+        <Grid Grid.Row="0" Height="650" VerticalAlignment="Top">
+            <GroupBox Padding="0" Background="Wheat" Margin="10,10,10,0">
+                <GroupBox.Header >
+                    <Grid Background="Wheat">
+                        <Label Content="Products:" FontSize="24" Height="50" BorderBrush="Black" BorderThickness="3" />
+                    </Grid>
+                </GroupBox.Header>
+                <Border>
+                    <Grid>
+                        <Border CornerRadius="0" BorderThickness="3,0,3,3" BorderBrush="Black">
+                            <DataGrid ItemsSource="{Binding ProductsStat}"
+                                                VerticalContentAlignment="Stretch"  IsReadOnly="True"
+                                                AutoGenerateColumns="False"
+                                                Foreground="{x:Null}" SelectedItem="{Binding SelectedProductStat}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction
+                                                            Command="{Binding SelectProductStat}"
+                                                            CommandParameter="{
+                                                            Binding Path=SelectedItem,
+                                                            RelativeSource={
+                                                                RelativeSource
+                                                                AncestorType={x:Type DataGrid},
+                                                                AncestorLevel=1}}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
+                                <DataGrid.Columns >
+                                    <DataGridTextColumn Header="Name" Binding="{Binding ProductName}" FontSize="24" Width="*" Foreground="Black"/>
+                                    <DataGridTextColumn Header="Average (count)" Binding="{Binding AverageSell}" FontSize="24" Width="*" Foreground="Black"/>
+                                    <DataGridTextColumn Header="All products sold (count)" Binding="{Binding AllSent }" FontSize="24" Width="*" Foreground="Black"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Border>
+                    </Grid>
+                </Border>
+            </GroupBox>
+        </Grid>
+        <!--#endregion-->
+
+        <!--#region DetailsSection -->
+        <Grid Grid.Row="1" Background="White" Margin="10,10,10,10">
+            <GroupBox Padding="0" Background="Wheat">
+                <GroupBox.Header >
+                    <Grid Background="Wheat">
+                        <Label Content="Employees:" FontSize="24" Height="50" BorderBrush="Black" BorderThickness="3" />
+                    </Grid>
+                </GroupBox.Header>
+                <Border>
+                    <Grid>
+                        <Border CornerRadius="0" BorderThickness="3,0,3,3" BorderBrush="Black">
+                            <DataGrid ItemsSource="{Binding SelectedProductStat.Sellers}"
+                                                VerticalContentAlignment="Stretch"  IsReadOnly="True"
+                                                AutoGenerateColumns="False"
+                                                Foreground="{x:Null}">
+
+                                <DataGrid.Columns >
+                                    <DataGridTextColumn Header="Employee" Binding="{Binding EmployeeName}" FontSize="24" Width="*" Foreground="Black"/>
+                                    <DataGridTextColumn Header="Products sold (count)" Binding="{Binding Count}" FontSize="24" Width="*" Foreground="Black"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Border>
+                    </Grid>
+                </Border>
+            </GroupBox>
+        </Grid>
+        <!--#endregion-->
+    </Grid>
+</Window>

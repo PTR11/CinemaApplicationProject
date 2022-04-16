@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using CinemaApplicationProject.Model;
 using CinemaApplicationProject.Model.Database;
 using CinemaApplicationProject.Model.Services;
+using Microsoft.AspNetCore.Identity;
+using CinemaApplicationProject.Model.DTOs;
 
 namespace CinemaApplicationProject.API.Controllers
 {
@@ -16,10 +18,13 @@ namespace CinemaApplicationProject.API.Controllers
     public class StatsAndPaysController : ControllerBase
     {
         private readonly IDatabaseService _service;
+        private static RoleManager<StatsAndPays> _roleManager;
 
-        public StatsAndPaysController(IDatabaseService service)
+        public StatsAndPaysController(IDatabaseService service, RoleManager<StatsAndPays> roleManager)
         {
             _service = service;
+            _roleManager = roleManager;
+            DatabaseManipulation.context = _service.GetContext();
         }
 
         // GET: api/StatsAndPays
@@ -46,27 +51,50 @@ namespace CinemaApplicationProject.API.Controllers
         // PUT: api/StatsAndPays/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public IActionResult PutStatsAndPays(int id, StatsAndPays statsAndPays)
+        public async Task<IActionResult> PutRole(int id, StatsDTO roles)
         {
-            if (id != statsAndPays.Id)
+            if (id != roles.Id)
             {
                 return BadRequest();
             }
+            var asd = (StatsAndPays)roles;
+            var role = _service.GetStatById(asd.Id);
 
-            DatabaseManipulation.UpdateElement(statsAndPays);
+            role.Name = asd.Name;
+            role.Salary = asd.Salary;
 
-            return NoContent();
+            var result = await _roleManager.UpdateAsync(role);
+
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
-        // POST: api/StatsAndPays
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public ActionResult<StatsAndPays> PostStatsAndPays(StatsAndPays statsAndPays)
+        public async Task<ActionResult<StatsDTO>> PostRole(StatsDTO roles)
         {
-            DatabaseManipulation.AddElement(statsAndPays);
+            StatsAndPays stat = (StatsAndPays)roles;
+            StatsAndPays find = _service.GetStatByName(stat.Name);
 
-            return CreatedAtAction("GetStatsAndPays", new { id = statsAndPays.Id }, statsAndPays);
+            if(find == null)
+            {
+                var entity = await _roleManager.CreateAsync(stat);
+                if (!entity.Succeeded)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError);
+                }
+            }
+
+            await _service.ConnectUserWithRole(roles.UserId, stat.Id);
+            return CreatedAtAction(nameof(GetStatsAndPays), new { id = stat.Id }, (StatsDTO)stat);
         }
+
+        
 
         // DELETE: api/StatsAndPays/5
         [HttpDelete("{id}")]

@@ -43,8 +43,7 @@ namespace CinemaApplicationProject.API
 
             services.AddIdentity<ApplicationUser, StatsAndPays>()
                 .AddEntityFrameworkStores<DatabaseContext>()
-                .AddDefaultTokenProviders()
-                .AddRoles<StatsAndPays>();
+                .AddDefaultTokenProviders();
 
             services.AddCors(options =>
             {
@@ -61,6 +60,9 @@ namespace CinemaApplicationProject.API
             {
                 // Jelszó komplexitására vonatkozó konfiguráció
                 options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireDigit = true;
 
                 // Hibás bejelentkezés esetén az (ideiglenes) kizárásra vonatkozó konfiguráció
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
@@ -69,10 +71,10 @@ namespace CinemaApplicationProject.API
 
                 // Felhasználókezelésre vonatkozó konfiguráció
             });
+            
             services.AddTransient<IDatabaseService, DatabaseService>();
             services.AddControllers();
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -96,7 +98,7 @@ namespace CinemaApplicationProject.API
                 endpoints.MapControllers();
             });
 
-            DatabaseInitializer.Initialize(serviceProvider);
+            DatabaseInitializer.Initialize(serviceProvider, Configuration.GetValue<string>("ImageStore"));
         }
     }
 }

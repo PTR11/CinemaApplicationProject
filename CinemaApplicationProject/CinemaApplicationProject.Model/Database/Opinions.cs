@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.Model.Database
 {
-    public class Opinions
+    public class Opinions : DatabaseBase
     {
-        [Key]
-        public int Id { get; set; }
 
         public int Ranking { get; set; }
 

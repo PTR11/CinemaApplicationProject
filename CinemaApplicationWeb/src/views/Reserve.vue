@@ -99,8 +99,8 @@ export default {
           ShowId: this.$route.params.id,
           places: []
         };
-        for (var x = 0; x < this.size1; x++) {
-          for (var j = 0; j < this.size2; j++) {
+        for (let x = 0; x < this.size1; x++) {
+          for (let j = 0; j < this.size2; j++) {
             if(this.sudokuMatrix[x][j] === 2 || this.sudokuMatrix[x][j] === 3 || this.sudokuMatrix[x][j] === 4 ){
               response.places.push({X: x, Y: j, TicketCategory: this.getCategory(this.sudokuMatrix[x][j])});
             }
@@ -142,6 +142,7 @@ export default {
           .then((result) => {
             this.show = result.data;
             this.show.date = this.show.date.split("T")[0] + " "+this.show.date.split("T")[1].split(".")[0];
+            console.log(result);
             this.size1 = result.data.room["heigth"];
             this.size2 = result.data.room["width"];
             this.initializeGame();

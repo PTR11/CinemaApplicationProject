@@ -43,6 +43,7 @@ export default {
       axios
           .post("http://localhost:7384/api/Shows/availableDates/")
           .then((result) => {
+            console.log(result.data);
             this.disabledDates.to = new Date(result.data[0]);
             this.disabledDates.from = new Date(result.data[1]);
           });

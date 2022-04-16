@@ -7,23 +7,19 @@ using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.Model.DTOs
 {
-    public class RoomDTO
+    public class GuestVDTO
     {
-
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        public String UserName { get; set; }
 
-        public int Width { get; set; }
+        public String Email { get; set; }
 
-        public int Heigth { get; set; }
-
-        public static explicit operator RoomDTO(Rooms m) => new RoomDTO
+        public static explicit operator GuestVDTO(Guests m) => new GuestVDTO
         {
             Id = m.Id,
-            Name = m.Name,
-            Width = m.Width,
-            Heigth = m.Heigth
+            UserName = m.UserName,
+            Email = m.Email,
         };
     }
 }

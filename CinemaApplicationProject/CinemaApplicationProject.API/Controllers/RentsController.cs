@@ -42,6 +42,19 @@ namespace CinemaApplicationProject.API.Controllers
             return _service.GetAllRentsByShowId(id).Select(m => (RentsGDTO)m).ToList();
         }
 
+        [HttpGet("sell/{id}")]
+        public ActionResult<IEnumerable<RentsDTO>> GetRentsForSellById(int id)
+        {
+            return _service.GetAllRentsByShowId(id).Select(m => (RentsDTO)m).ToList();
+        }
+
+        [HttpGet("sellUsers/{id}")]
+        public ActionResult<IEnumerable<GuestVDTO>> GetRentUsersForSellById(int id)
+        {
+
+            return _service.GetAllRentUserByShowId(id).Select(m => m != null? (GuestVDTO)m : new GuestVDTO()).ToList();
+        }
+
         //POST: api/Rents
         //To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [EnableCors("_myAllowSpecificOrigins")]
@@ -69,7 +82,7 @@ namespace CinemaApplicationProject.API.Controllers
                     ModelState.AddModelError("", "You need choose places");
                     return BadRequest(ModelState);
                 }
-                if(!await _service.SaveRentsAsync(rfg))
+                if(!await _service.SaveRents(rfg))
                 {
                     ModelState.AddModelError("", "Something went wrong with the process");
                     return BadRequest(ModelState);
@@ -83,73 +96,5 @@ namespace CinemaApplicationProject.API.Controllers
                 return Ok("Successfull reservation");
             }
         }
-
-        //// GET: api/Rents/5
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<Rents>> GetRents(int id)
-        //{
-        //    var rents = await _context.Rents.FindAsync(id);
-
-        //    if (rents == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return rents;
-        //}
-
-        //// PUT: api/Rents/5
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutRents(int id, Rents rents)
-        //{
-        //    if (id != rents.Id)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    _context.Entry(rents).State = EntityState.Modified;
-
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!RentsExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
-
-
-
-        //// DELETE: api/Rents/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteRents(int id)
-        //{
-        //    var rents = await _context.Rents.FindAsync(id);
-        //    if (rents == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _context.Rents.Remove(rents);
-        //    await _context.SaveChangesAsync();
-
-        //    return NoContent();
-        //}
-
-        //private bool RentsExists(int id)
-        //{
-        //    return _context.Rents.Any(e => e.Id == id);
-        //}
     }
 }

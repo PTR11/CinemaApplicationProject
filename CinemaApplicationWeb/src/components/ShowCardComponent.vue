@@ -1,21 +1,20 @@
 <template>
-  <b-card img-src="https://placekitten.com/200/200" center img-alt="Card image" img-left class="mb-3 bg-warning text-dark border-dark mh-10 show">
+  <b-card :img-src="element.image" center img-alt="Card image" img-left class="mb-3 bg-warning text-dark border-dark mh-10 show">
     <b-card-title >
       <router-link :to="'movie/'+element.id" class="text-dark text-decoration-none">
-        <div >{{ element.title }} <span v-if="element.length != nil">({{ element.length }} min)</span></div>
+        <div >{{ element.title }} <span v-if="element.length != 0">({{ element.length }} min)</span></div>
       </router-link>
     </b-card-title>
     <b-card-text>
       <b-card-text>
-        Előadások:
+        Shows:
         <div class="vertical-scroll">
           <v-chip-group
-              v-model="selection"
               active-class="orange accent-4 white--text"
               column
           >
 
-              <v-chip v-for="ti in element.shows" :key="ti">
+              <v-chip v-for="ti in element.shows" :key="ti.id">
                 <router-link :to="'reserve/'+ti.id" >
                   <span> {{ timeChange(ti.date) }} </span>
                 </router-link>

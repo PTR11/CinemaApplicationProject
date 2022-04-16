@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,18 +18,30 @@ namespace CinemaApplicationProject.Model
 		private static RoleManager<StatsAndPays> _roleManager;
 
 
-		public static void Initialize(IServiceProvider serviceProvider)
+		public static void Initialize(IServiceProvider serviceProvider, string imageFolder)
 		{
 			_context = serviceProvider.GetRequiredService<DatabaseContext>();
 			_userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 			_roleManager = serviceProvider.GetRequiredService<RoleManager<StatsAndPays>>();
 
 			// Adatbázis migrációk végrehajtása, amennyiben szükséges
-
 			_context.Database.EnsureDeleted();
 			_context.Database.EnsureCreated();
 			// Városok, épületek, apartmanok inicializálás
-			_context.Products.Add(new Products { Name = "Sajt", Price = 100 });
+			Products p = new Products { Name = "Sajt", Price = 100 };
+			Products t = new Products { Name = "Perec", Price = 100 };
+			Products f = new Products { Name = "kukac", Price = 100 };
+			_context.Products.Add(p);
+			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = p, Quantity = 12 });
+			_context.Products.Add(t);
+			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = t, Quantity = 12 });
+			_context.Products.Add(f);
+			_context.BuffetWarehouse.Add(new BuffetWarehouse { Product = f, Quantity = 12 });
+
+			//_context.ChangeTracker.LazyLoadingEnabled = false;
+
+			
+
 
 			List<Actors> actors = new List<Actors>
 			{
@@ -146,6 +159,7 @@ namespace CinemaApplicationProject.Model
 					Length = 124,
 					Description = "A Halálcsillag elpusztítása után Luke Skywalker, Han Solo, Leia Organa hercegnő és a Lázadó Szövetség menekülni kényszerülnek a Galaktikus Birodalom Darth Vader által vezetett erői elől. Luke elszakad barátaitól és egy félreeső bolygón Yoda jedi mestertől megtanulja használni az Erőt.",
 					Trailer = "",
+					Image = File.ReadAllBytes(Path.Combine(imageFolder,"birodalomvisszavag.jpg")),
 					Actors = actors.GetRange(0,3),
 					Categories = new List<Categories>
                     {
@@ -211,8 +225,22 @@ namespace CinemaApplicationProject.Model
 					{
 						categories[0],categories[1],categories[2]
 					}
+				},
+				new Movies
+				{
+					Title = "Lego Kaland2",
+					Length = 100,
+					Description = "Emmet átlagos fickó. A keze sárga, két ujja van, a feje tetején pedig bütyök tartja a sapkát. A Lego-világ átlagembere, aki egy építkezésen dolgozik, és semmi pénzért se késné le kedvenc napi tévésorozatát. Egy félreértés folytán azonban mindenki más azt hiszi: ő a Kiválasztott, a világ megmentésének kulcsfigurája. Különleges alakok egy kis csapatával kell nekivágnia a nagy feladatnak, ami meghökkentő kalandokon és váratlan fordulatokon keresztül eljuttathatja hőseinket... majd meglátjuk, hova. Annyi biztos: a kettős életet élő Lord Biznisz a vesztükre tör, Emmet pedig Vitruvius, a bölcs öreg, egy vad Lego-lány, Batman és még néhány furcsa fickó oldalán, gyorsan alakuló járgányok és könnyen átépíthető világok között harcol – de alig érti, mi zajlik körülötte.",
+					Trailer = "",
+					Actors = actors.GetRange(15,3),
+					Categories = new List<Categories>
+					{
+						categories[0],categories[1],categories[2]
+					}
 				}
 			};
+
+			
 
 			_context.Movies.AddRange(movies);
 
@@ -246,21 +274,21 @@ namespace CinemaApplicationProject.Model
 				{
 					Room = rooms[0],
 					Movie = movies[0],
-					Date = DateTime.Now.AddHours(3),
+					Date = DateTime.Now.AddHours(-3),
 					IsActiveShow = true
 				},
 				new Shows
 				{
 					Room = rooms[1],
 					Movie = movies[0],
-					Date = DateTime.Now.AddHours(1),
+					Date = DateTime.Now.AddDays(-7).AddHours(-1),
 					IsActiveShow = true
 				},
 				new Shows
 				{
 					Room = rooms[1],
 					Movie = movies[0],
-					Date = DateTime.Now.AddDays(2).AddHours(2).AddMinutes(15),
+					Date = DateTime.Now.AddDays(2).AddHours(-2).AddMinutes(15),
 					IsActiveShow = true
 				},
 				
@@ -289,6 +317,8 @@ namespace CinemaApplicationProject.Model
 
 			_context.AddRange(tickets);
 
+			
+
 			var guest = new Guests
 			{
 				UserName = "ptr1",
@@ -297,14 +327,25 @@ namespace CinemaApplicationProject.Model
 				Address = "anyadban",
 				CreditCardNumber = "123asd321"
 			};
+
+
 			
+
+			var adminRole = new StatsAndPays("administrator");
+			adminRole.Salary = 2500;
+			var ticketerRole = new StatsAndPays("ticket seller");
+			ticketerRole.Salary = 1250;
+			var buffetSellerRole = new StatsAndPays("buffet seller");
+			buffetSellerRole.Salary = 1600;
 
 			var adminUser = new Employees
 			{
 				UserName = "admin",
-				Name = "Péter",
+				Name = "Barnák Péter",
 				Email = "barnak.peter1@gmail.com",
-				Address = "faszomban"
+				Address = "Nyíregyháza, Honvéd utca 61",
+				Birthday = "2000/06/15",
+				
 			};
 
 			var adminUser2 = new Guests
@@ -314,14 +355,22 @@ namespace CinemaApplicationProject.Model
 				Email = "barnak.peter12@gmail.com",
 				Address = "faszomban",
 				CreditCardNumber = "KurvaAnyádat"
+
 			};
 			var adminPassword = "Almafa123";
-			var adminRole = new StatsAndPays("administrator");
-            _ = _userManager.CreateAsync(adminUser, adminPassword).Result;
+
+			
+
+			//adminUser.Stat = new List<StatsAndPays>();
+			//adminUser.Stat.Add(adminRole);
+			_ = _userManager.CreateAsync(adminUser, adminPassword).Result;
             _ = _userManager.CreateAsync(adminUser2, adminPassword).Result;
 			_ = _userManager.CreateAsync(guest, adminPassword).Result;
 			_ = _roleManager.CreateAsync(adminRole).Result;
-            _ = _userManager.AddToRoleAsync(adminUser, adminRole.Name).Result;
-        }
+			_ = _userManager.AddToRoleAsync(adminUser, adminRole.Name).Result;
+			_ = _roleManager.CreateAsync(ticketerRole).Result;
+			_ = _roleManager.CreateAsync(buffetSellerRole).Result;
+
+		}
 	}
 }
