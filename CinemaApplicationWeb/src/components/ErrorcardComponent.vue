@@ -1,5 +1,5 @@
 <template>
-  <b-card center img-left class="d-flex justify-content-center mb-3 bg-dark text-danger h-25 border-danger mh-10">
+  <b-card center img-left class="d-flex justify-content-center mb-3 bg-dark text-danger h-auto border-danger mh-10">
     <b-card-title>
       {{ errorMessage }}
     </b-card-title>

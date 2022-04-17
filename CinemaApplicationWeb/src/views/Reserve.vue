@@ -1,5 +1,8 @@
 <template>
   <div id="app-sudoku">
+    <div class="col-sm-6 mx-auto">
+      <ErrorCard :error-message="errorMessage" :errors-list="errors"  v-if="errorMessage.length > 0"/>
+    </div>
     <div
         class="col-sm-5 bg-warning center container justify-content-center mb-5 border border-dark text-dark p-2">
       <div>
@@ -20,7 +23,6 @@
       <div>
         <label class="mr-2 text-dark">Ticket type:</label>
         <select
-            name="cars"
             id="cars"
             v-model="ticketCategory"
             class="btn border border-dark text-dark p-2 pt-1"
@@ -64,9 +66,13 @@ import reservedPlace from "../assets/reservedPlace.png"
 import emptyPlace from "../assets/emptyPlace.png"
 import axios from "axios";
 import { mapState } from "vuex";
+import ErrorcardComponent from "@/components/ErrorcardComponent";
 
 export default {
   name: "Reserve",
+  components:{
+    ErrorCard:ErrorcardComponent
+  },
   data() {
     return {
       size1: 0,
@@ -75,7 +81,9 @@ export default {
       ticketCategory: "normal",
       num: 0,
       isLoading: true,
-      show: {}
+      show: {},
+      errors: [],
+      errorMessage: ""
     };
   },
   watch:{
@@ -106,15 +114,34 @@ export default {
             }
           }
         }
-        axios
-            .post("http://localhost:7384/api/Rents/", response, {withCredentials: true})
-            .then((result) => {
-              if(result.status === 302){
-                console.log("dadas")
-                this.$router.push({name: 'Login', path:"/login"})
-              }
-              console.log(result);
-            });
+        if(!this.user){
+          this.errorMessage = "Please login before send a rent request";
+          window.scrollTo(0,0);
+        }else{
+          axios
+              .post("http://localhost:7384/api/Rents/", response, {withCredentials: true})
+              .then((result) => {
+                if(result.status === 302){
+                  this.$router.push({name: 'Login', path:"/login"})
+                }
+                console.log(result);
+                if(result.status === 200){
+                  this.$router.push({name: 'Home', path:"/"})
+                  alert("The rent is successfull");
+                }
+              }).catch((err) => {
+            this.errors = [];
+            this.errorMessage = "";
+            if(err.response.data.errors){
+              this.errorMessage = "Something went wrong";
+              err.response.data.errors.forEach((error) =>{
+                this.errors.push(error);
+              })
+            }
+            window.scrollTo(0,0);
+          });
+        }
+
 
     },
     fetchRents(){
@@ -122,19 +149,14 @@ export default {
       axios
           .get("http://localhost:7384/api/Rents/"+this.$route.params.id)
           .then((result) => {
-            console.log("kakakakakakkakakakakakakak");
             rents = result.data;
-            console.log(result);
             if(rents.length !== 0){
               for(const element of rents){
-                console.log("anyaddat");
-                console.log(element);
                 this.sudokuMatrix[element.x][element.y] = 1;
                 this.checkItem(element.x,element.y);
               }
             }
-          });
-
+          })
     },
     fetchShow(){
       axios
@@ -142,7 +164,6 @@ export default {
           .then((result) => {
             this.show = result.data;
             this.show.date = this.show.date.split("T")[0] + " "+this.show.date.split("T")[1].split(".")[0];
-            console.log(result);
             this.size1 = result.data.room["heigth"];
             this.size2 = result.data.room["width"];
             this.initializeGame();

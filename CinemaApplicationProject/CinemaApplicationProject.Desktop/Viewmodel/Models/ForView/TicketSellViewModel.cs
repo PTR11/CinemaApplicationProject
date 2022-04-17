@@ -169,12 +169,9 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
         public void RemovePlace(int x, int y)
         {
             var rent = this.Rents.FirstOrDefault(m => m.X == x && m.Y == y);
-            if(rent == null)
-            {
-                var place = this.Places.FirstOrDefault(m => m.X == x && m.Y == y);
-                this.Places.Remove(place);
-                RemoveFromSummary(place);
-            } 
+            var place = this.Places.FirstOrDefault(m => m.X == x && m.Y == y);
+            this.Places.Remove(place);
+            RemoveFromSummary(place);
         }
 
         public void PlaceManagement(int number)

@@ -79,11 +79,15 @@ namespace CinemaApplicationProject.Desktop.Model.Services
             if (employee.Address.Length == 0) _validationString += "Missing Address\n";
             if (employee.Email.Length == 0) _validationString += "Missing Email\n";
             if (!employee.Email.Contains("@")) _validationString += "Missing '@' in Email\n";
-            if (employee.Birthday.Split(".").Length != 3) _validationString += "Wrong Birthday format (yyyy.mm.dd)\n";
-            if (!employee.Password.Any(char.IsDigit)) _validationString += "Wrong Password format (must contain at least one number)\n";
-            if (employee.Password.Length < 8) _validationString += "Wrong Password format (must be at least 8 characters)\n";
-            if (!employee.Password.Any(char.IsUpper)) _validationString += "Wrong Password format (must contain at least 1 upper characters)\n";
-            if (employee.Password.Length == 0) _validationString += "Missing Password\n";
+            if (employee.Birthday.Split("/").Length != 3) _validationString += "Wrong Birthday format (yyyy/mm/dd)\n";
+            if (employee.Password != null)
+            {
+                if (!employee.Password.Any(char.IsDigit)) _validationString += "Wrong Password format (must contain at least one number)\n";
+                if (employee.Password.Length < 8) _validationString += "Wrong Password format (must be at least 8 characters)\n";
+                if (!employee.Password.Any(char.IsUpper)) _validationString += "Wrong Password format (must contain at least 1 upper characters)\n";
+                if (employee.Password.Length == 0) _validationString += "Missing Password\n";
+            }
+            
             if (employee.Stats.Count == 0) _validationString += "Missing Roles\n";
 
             return ResultValidation();

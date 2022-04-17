@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Cors;
 using CinemaApplicationProject.Model.Services;
 using System.Linq;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CinemaApplicationProject.API.Controllers
 {
@@ -30,10 +31,19 @@ namespace CinemaApplicationProject.API.Controllers
             DatabaseManipulation.context = _service.GetContext();
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EmployeesDTO>>> GetEmployees()
         {
             var tmpList = await _service.GetEmployees();
+            return tmpList.Select(m => (EmployeesDTO)m).ToList();
+        }
+
+        [Authorize]
+        [HttpGet("{role}")]
+        public async Task<ActionResult<IEnumerable<EmployeesDTO>>> GetEmployeesByRole(String role)
+        {
+            var tmpList = await _service.GetEmployeesByRole(role);
             return tmpList.Select(m => (EmployeesDTO)m).ToList();
         }
 
@@ -62,7 +72,7 @@ namespace CinemaApplicationProject.API.Controllers
                     return Ok(tmp);
                     //return RedirectService.RedirectMethod("Successfully logged in", HttpStatusCode.Redirect, new Uri("http://localhost:8080/"));
                 }
-                ModelState.AddModelError("loginError", "Sikertelen bejelentkezés");
+                ModelState.AddModelError("loginError", "Unsuccesfull login");
             }
             return BadRequest(ModelState);
 
@@ -97,7 +107,8 @@ namespace CinemaApplicationProject.API.Controllers
                 {
                     errors += error.Description+"\n";
                 }
-                ModelState.AddModelError("", "Unsuccess registration ("+errors+")");
+                ModelState.AddModelError("regerror", "Unsuccess registration");
+                ModelState.AddModelError("errors", errors);
             }
             return BadRequest(ModelState);
         }

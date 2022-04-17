@@ -16,6 +16,7 @@ namespace CinemaApplicationProject.Model.Database
             Presence = new HashSet<EmployeePresence>();
             Stat = new HashSet<StatsAndPays>();
             Rent = new HashSet<Rents>();
+            BuffetSale = new HashSet<BuffetSale>();
         }
 
         public String Birthday { get; set; }
@@ -28,5 +29,6 @@ namespace CinemaApplicationProject.Model.Database
 
         public ICollection<Rents> Rent { get; set; }
 
+        public ICollection<BuffetSale> BuffetSale { get; set; }
     }
 }

@@ -74,17 +74,17 @@ namespace CinemaApplicationProject.API.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "You need to login the reserve places!");
+                    ModelState.AddModelError("errors", "You need to login the reserve places!");
                     return BadRequest(ModelState); 
                 }
                 if(rfg.Places.Count == 0)
                 {
-                    ModelState.AddModelError("", "You need choose places");
+                    ModelState.AddModelError("error", "You need choose places");
                     return BadRequest(ModelState);
                 }
                 if(!await _service.SaveRents(rfg))
                 {
-                    ModelState.AddModelError("", "Something went wrong with the process");
+                    ModelState.AddModelError("error", "Something went wrong with the process");
                     return BadRequest(ModelState);
                 }
                 Response.Cookies.Append("userId", user.Id.ToString(), new CookieOptions()

@@ -28,10 +28,10 @@ namespace CinemaApplicationProject.API.Controllers
 
         // GET: api/Opinions
         [HttpGet("{id}")]
-        public ActionResult<IEnumerable<Opinions>> GetOpinions(int id)
+        public ActionResult<IEnumerable<OpinionsDTO>> GetOpinions(int id)
         {
 
-            return _service.GetAllOpinionsByMovie(id);
+            return _service.GetAllOpinionsByMovie(id).Select(o => (OpinionsDTO)o).ToList();
         }
 
         [HttpPost]

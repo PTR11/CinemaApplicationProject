@@ -417,9 +417,15 @@ namespace CinemaApplicationProject.Model.Services
                     if (find != null)
                     {
                         find.Employee = context.Employees.FirstOrDefault(m => m.Id == rfg.EmployeeId);
-
+                        find.SoldDate = DateTime.Now;
                         context.Update(find);
                     }
+                }
+                context.SaveChanges();
+                var userPlaces = context.Rents.Where(r => r.GuestId == rfg.UserId && r.ShowId == rfg.ShowId && r.EmployeeId == null).ToList();
+                foreach (var notSelledPlaces in userPlaces)
+                {
+                    context.Remove(notSelledPlaces);
                 }
             }
             else
@@ -479,7 +485,8 @@ namespace CinemaApplicationProject.Model.Services
                             ShowId = rfg.ShowId,
                             X = tmp.X,
                             Y = tmp.Y,
-                            Ticket = context.Tickets.FirstOrDefault(m => m.Type == place.TicketCategory)
+                            Ticket = context.Tickets.FirstOrDefault(m => m.Type == place.TicketCategory),
+                            SoldDate = DateTime.Now
                         };
 
                         context.Rents.Add(rent);
@@ -647,7 +654,7 @@ namespace CinemaApplicationProject.Model.Services
 
         public async Task<List<Employees>> GetEmployees()
         {
-            var emps = context.Employees.Include(m => m.Presence).ToList();
+            var emps = context.Employees.Include(m => m.Presence).Include(m => m.Rent).Include(m => m.BuffetSale).ToList();
             foreach(var employee in emps)
             {
                 var rolesString = await guestManager.GetRolesAsync(employee);
@@ -655,6 +662,11 @@ namespace CinemaApplicationProject.Model.Services
                 employee.Stat = new List<StatsAndPays>(roles);
             }
             return emps;
+        }
+
+        public async Task<List<Employees>> GetEmployeesByRole(String role)
+        {
+            return GetEmployees().Result.Where(m => m.Stat.Select(r => r.Name).Contains(role)).ToList();
         }
 
         public async Task<Employees> GetEmployeeById(int id)
@@ -690,6 +702,8 @@ namespace CinemaApplicationProject.Model.Services
         }
 
         public Employees GetEmployeeByUserName(String userName) => context.Employees.FirstOrDefault(e => e.UserName.Equals(userName));
+
+
 
         #endregion
 

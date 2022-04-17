@@ -222,6 +222,8 @@ namespace CinemaApplicationProject.Model.Services
         #region Employee
         public Task<List<Employees>> GetEmployees();
 
+        public Task<List<Employees>> GetEmployeesByRole(String role);
+
         public Task<Employees> GetEmployeeById(int id);
 
         public Task<bool> ConnectUserWithRole(int userId, int roleId);

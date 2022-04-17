@@ -2,7 +2,7 @@
   <div class="overflow-auto" v-if="opinions.length > 0" >
       <div v-for="item in itemsForList" :key="item.id" class="card mb-2 border border-dark">
         <div class="card-body"  >
-          <h5 class="card-title">User: {{ item.anonymus ? "Anonymus" : item.guest.userName }}</h5>
+          <h5 class="card-title">User: {{ item.anonymus === true ? "Anonymus" : item.guestName }}</h5>
           <h6 class="card-subtitle mb-2">Rating: {{item.ranking}}</h6>
           <p class="card-text">Comment: {{item.description}}</p>
 

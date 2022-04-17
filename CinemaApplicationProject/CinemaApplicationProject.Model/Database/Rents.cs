@@ -22,6 +22,8 @@ namespace CinemaApplicationProject.Model.Database
 
         public int? GuestId { get; set; }
 
+        public DateTime SoldDate { get; set; }
+
         public virtual Employees Employee { get; set; }
 
         public virtual Guests Guest { get; set; }

@@ -67,7 +67,7 @@ export default {
           })
           .catch((err) => {
             console.log(err);
-            this.error = "Something went wrong with fetching movie details";
+            this.error = "Something went wrong with fetching movie details.";
           });
     },
     fetchOpinions(){
@@ -75,10 +75,12 @@ export default {
           .get("http://localhost:7384/api/Opinions/" + this.$route.params.id)
           .then((result) => {
             this.opinions.push(result.data);
+            console.log(this.opinions);
           })
           .catch((err) => {
             console.log(err);
-            this.error = "Something went wrong with fetching movie details";
+            this.error = "Something went wrong with fetching movie opinions.";
+            window.scrollTo(0,0);
           });
     }
   },

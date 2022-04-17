@@ -21,9 +21,15 @@ namespace CinemaApplicationProject.Model.DTOs
 
         public String Birthday { get; set; }
 
+        public int SoldTickets { get; set; }
+
+        public int SoldProducts { get; set; }
+
         public List<StatsDTO> Stats { get; set; }
 
         public List<PresenceDTO> Presence { get; set; }
+
+        public List<(String,int)> asd { get; set; }
 
         private static List<StatsDTO> ConvertStatsToDTO(ICollection<StatsAndPays> m) => new(m.ToList().Select(x => new StatsDTO
         {
@@ -55,6 +61,8 @@ namespace CinemaApplicationProject.Model.DTOs
             Email = m.Email,
             Address = m.Address,
             Birthday = m.Birthday,
+            SoldTickets = m.Rent.Where(m => m.SoldDate.Date == DateTime.Now.Date).Count(),
+            SoldProducts = m.BuffetSale.Where(m => m.Date.Date == DateTime.Now.Date).Sum(m => m.Quantity),
             Stats = ConvertStatsToDTO(m.Stat),
             Presence = ConvertPresenceToDTO(m.Presence),
         };

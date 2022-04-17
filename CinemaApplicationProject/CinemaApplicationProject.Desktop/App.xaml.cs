@@ -29,6 +29,8 @@ namespace CinemaApplicationProject.Desktop
         private RolesPickerWindow _rolesPickerWindow;
         private TicketUserWindow _ticketUserWindow;
         private ProductSellingWindow _pr;
+        private TicketSuperVisiorWindow _tsw;
+        private ProductSuperVisiorWindow _psw;
         public App()
         {
             Startup += App_Startup;
@@ -64,6 +66,15 @@ namespace CinemaApplicationProject.Desktop
             {
                 DataContext = _mainViewModel
             };
+            _tsw = new TicketSuperVisiorWindow
+            {
+                DataContext = _mainViewModel
+            };
+            _psw = new ProductSuperVisiorWindow
+            {
+                DataContext = _mainViewModel
+            };
+
             _ticketUserWindow = new TicketUserWindow
             {
                 DataContext = _mainViewModel
@@ -76,14 +87,17 @@ namespace CinemaApplicationProject.Desktop
         private async void DisplayerMethod(object sender, string e)
         {
             _rolesPickerWindow.Close();
-            await _mainViewModel.LoadInit();
+           
             switch (e)
             {
-                case "administrator": _view.Show(); break;
+                case "administrator": _view.Show();  break;
                 case "ticket seller": _ticketUserWindow.Show(); break;
                 case "buffet seller": _pr.Show(); break;
-                default: return;
+                case "ticket sw": _tsw.Show(); _mainViewModel.LoginType = e; break;
+                case "buffet sw": _psw.Show(); _mainViewModel.LoginType = e; break;
+                default: System.Windows.Application.Current.Shutdown(); break;
             }
+            await _mainViewModel.LoadInit();
         }
 
         private async Task AfterLogin(object sender, int e)
@@ -107,7 +121,9 @@ namespace CinemaApplicationProject.Desktop
                     case "administrator": _view.Show(); break;
                     case "ticket seller": _ticketUserWindow.Show(); break;
                     case "buffet seller": _pr.Show(); break;
-                    default: return;
+                    case "ticket sw": _tsw.Show(); _mainViewModel.LoginType = _mainViewModel.UserRolesList[0].Name; break;
+                    case "buffet sw": _psw.Show(); _mainViewModel.LoginType = _mainViewModel.UserRolesList[0].Name; break;
+                    default: System.Windows.Application.Current.Shutdown(); break;
                 }
 
             }
@@ -165,7 +181,14 @@ namespace CinemaApplicationProject.Desktop
         }
         private void ProductDetailsVisible(object sender, bool e)
         {
-            _view.ProductMenu.Visibility = e ? Visibility.Visible : Visibility.Hidden;
+            if (_mainViewModel.LoginType == null)
+            {
+                _view.ProductMenu.Visibility = e ? Visibility.Visible : Visibility.Hidden;
+            }
+            else
+            {
+                _psw.ProductMenu.Visibility = e ? Visibility.Visible : Visibility.Hidden;
+            }
         }
         private void UserDetailsVisible(object sender, bool e)
         {

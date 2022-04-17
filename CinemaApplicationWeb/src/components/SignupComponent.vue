@@ -1,5 +1,7 @@
 <template>
     <div class="card col-sm-5 m-2 mx-auto m-2 p-3 border-1 border-dark bg-warning text-dark">
+
+      <ErrorCard :error-message="errorMessage" :errors-list="errors" class="col-sm-6 mx-auto" v-if="errorMessage.length > 0"/>
             <h3 class="">Sign Up</h3>
 
             <div class="form-group">
@@ -50,11 +52,13 @@
 <script>
     import axios from "axios";
     import InputErrorComponent from "@/components/InputErrorComponent";
+    import ErrorcardComponent from "@/components/ErrorcardComponent";
     import headers from "@/headers";
     export default {
         name:"SignupComponent",
         components:{
-          InputError: InputErrorComponent
+          InputError: InputErrorComponent,
+          ErrorCard: ErrorcardComponent
         },
         data() {
             return {
@@ -73,7 +77,9 @@
                 Address: "",
                 Password: "",
                 CreditCardNumber: "",
-              }
+              },
+              errorMessage: "",
+              errors: []
             }
         },
         methods:{
@@ -86,6 +92,16 @@
                     this.programs = result.data;
                   }).catch(err => {
                     this.AddErrors(err.response.data.errors)
+                    if(err.response.data.regerror){
+                      console.log("asd")
+                      this.errorMessage = err.response.data.regerror[0];
+                      err.response.data.errors[0].split("\n").forEach((error) =>{
+                        if(error !== ""){
+                          this.errors.push(error);
+                        }
+                      });
+                    }
+                    window.scrollTo(0,0);
                   });
           },
           AddErrors(errors){

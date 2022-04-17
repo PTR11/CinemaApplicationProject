@@ -240,8 +240,6 @@ namespace CinemaApplicationProject.Model
 				}
 			};
 
-			
-
 			_context.Movies.AddRange(movies);
 
 			List<Rooms> rooms = new List<Rooms>
@@ -336,6 +334,8 @@ namespace CinemaApplicationProject.Model
 			var ticketerRole = new StatsAndPays("ticket seller");
 			ticketerRole.Salary = 1250;
 			var buffetSellerRole = new StatsAndPays("buffet seller");
+			var buffetSWRole = new StatsAndPays("buffet sw");
+			var ticketerSWRole = new StatsAndPays("ticket sw");
 			buffetSellerRole.Salary = 1600;
 
 			var adminUser = new Employees
@@ -370,6 +370,8 @@ namespace CinemaApplicationProject.Model
 			_ = _userManager.AddToRoleAsync(adminUser, adminRole.Name).Result;
 			_ = _roleManager.CreateAsync(ticketerRole).Result;
 			_ = _roleManager.CreateAsync(buffetSellerRole).Result;
+			_ = _roleManager.CreateAsync(ticketerSWRole).Result;
+			_ = _roleManager.CreateAsync(buffetSWRole).Result;
 
 		}
 	}

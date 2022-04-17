@@ -17,6 +17,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
         private String _email;
         public String _address;
         public String _birthday;
+        private int _soldTickets;
+        private int _soldProducts;
         public ObservableCollection<StatsViewModel> _stats;
         public ObservableCollection<PresenceViewModel> _presence;
         public EmployeeViewModel()
@@ -27,6 +29,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             _email = "";
             _address = "";
             _birthday = "";
+            _soldTickets = 0;
             _stats = new ObservableCollection<StatsViewModel>();
             _presence = new ObservableCollection<PresenceViewModel>();
             DeleteUser = new DelegateCommand(async _ => await Delete());
@@ -76,6 +79,18 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             get { return _birthday; }
             set { _birthday = value; OnPropertyChanged(); }
         }
+        
+        public int SoldTickets
+        {
+            get { return _soldTickets; }
+            set { _soldTickets = value; OnPropertyChanged(); }
+        }
+
+        public int SoldProducts
+        {
+            get { return _soldProducts; }
+            set { _soldProducts = value; OnPropertyChanged(); }
+        }
 
         public ObservableCollection<StatsViewModel> Stats
         {
@@ -115,6 +130,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             Birthday = dto.Birthday,
             Password = dto.Password,
             Email = dto.Email,
+            SoldTickets = dto.SoldTickets,
+            SoldProducts = dto.SoldProducts,
             Stats = new(dto.Stats.ToList().Select(x => (StatsViewModel)x)),
             Presence = new(dto.Presence.ToList().Select(x => (PresenceViewModel)x)),
         };

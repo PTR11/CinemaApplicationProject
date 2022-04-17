@@ -75,7 +75,7 @@
                 <MenuItem Header="_Logout" Height="20" FontSize="12"  />
             </Menu>
             <Grid>
-                <TabControl FontSize="20">
+                <TabControl FontSize="24">
                     <TabItem Header="Cinema">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -556,7 +556,7 @@
                                 </Grid>
                                 <Grid Grid.Row="2">
                                     <Button Height="35" Content="Last Week" Width="125" HorizontalAlignment="Left" Command="{Binding LastWeek}"/>
-                                    <Button Height="35" Content="Actual Week" Width="125" HorizontalAlignment="Center" Command="{Binding ActualWeek}"/>
+                                    <Button Height="35" Content="Actual Week" Width="145" HorizontalAlignment="Center" Command="{Binding ActualWeek}"/>
                                     <Button Height="35" Content="Next Week" Width="125" HorizontalAlignment="Right" Command="{Binding NextWeek}"/>
                                 </Grid>
                                 <Grid Grid.Row="3">
@@ -644,6 +644,8 @@
                                                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" FontSize="24" Width="Auto" Foreground="Black"/>
                                                         <DataGridTextColumn Header="Address" Binding="{Binding Address}" FontSize="24" Width="Auto" Foreground="Black"/>
                                                         <DataGridTextColumn Header="Email" Binding="{Binding Email}" FontSize="24" Width="Auto" Foreground="Black"/>
+                                                        <DataGridTextColumn Header="Sold tickets number" Binding="{Binding SoldTickets}" FontSize="24" Width="Auto" Foreground="Black"/>
+                                                        <DataGridTextColumn Header="Sold products number" Binding="{Binding SoldProducts}" FontSize="24" Width="Auto" Foreground="Black"/>
                                                         <DataGridTemplateColumn Width="90">
                                                             <DataGridTemplateColumn.CellTemplate>
                                                                 <DataTemplate>

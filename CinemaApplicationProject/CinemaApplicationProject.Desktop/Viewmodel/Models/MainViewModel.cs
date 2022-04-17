@@ -89,6 +89,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             }
         }
 
+        public String LoginType { get; set; }
+
         public Int32 GridH
         {
             get { return _gridH; }
@@ -619,28 +621,55 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         }
 
+        private (DateTime,DateTime) DateCalculation(int day)
+        {
+            DateTime date = DateTime.Now.AddDays(day);
+            DateTime firstDateOfTheWeek = date;
+            DateTime lastDateOfTheWeek = date;
+            switch (date.DayOfWeek)
+            {
+                case DayOfWeek.Monday:
+                    firstDateOfTheWeek = date; lastDateOfTheWeek = date.AddDays(6); break;
+                case DayOfWeek.Tuesday:
+                    firstDateOfTheWeek = date.AddDays(-1); lastDateOfTheWeek = date.AddDays(5); break;
+                case DayOfWeek.Wednesday:
+                    firstDateOfTheWeek = date.AddDays(-2); lastDateOfTheWeek = date.AddDays(4); break;
+                case DayOfWeek.Thursday:
+                    firstDateOfTheWeek = date.AddDays(-3); lastDateOfTheWeek = date.AddDays(3); break;
+                case DayOfWeek.Friday:
+                    firstDateOfTheWeek = date.AddDays(-4); lastDateOfTheWeek = date.AddDays(2); break;
+                case DayOfWeek.Saturday:
+                    firstDateOfTheWeek = date.AddDays(-5); lastDateOfTheWeek = date.AddDays(1); break;
+                case DayOfWeek.Sunday:
+                    firstDateOfTheWeek = date.AddDays(-6); lastDateOfTheWeek = date; break;
+            }
+            return (firstDateOfTheWeek, lastDateOfTheWeek);
+        }
+
         private void ChangeWeekToNext()
         {
-            DateTime mondayOfNextWeek = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek).AddDays(7);
-            DateTime lastDayOfWeek = mondayOfNextWeek.AddDays(6);
-            List<ShowViewModel> tmpShow = new List<ShowViewModel>(Shows.Where(m => mondayOfNextWeek.Ticks <= m.Date.Ticks && m.Date.Ticks <= lastDayOfWeek.Ticks).ToList());
+            DateTime firstDateOfTheWeek = DateCalculation(7).Item1;
+            DateTime lastDateOfTheWeek = DateCalculation(7).Item2;
+
+            List<ShowViewModel> tmpShow = new List<ShowViewModel>(Shows.Where(m => firstDateOfTheWeek.Ticks <= m.Date.Ticks && m.Date.Ticks <= lastDateOfTheWeek.Ticks).ToList());
             SeparateShowsByDay(tmpShow);
         }
 
         private void ChangeWeekToLast()
         {
-            DateTime mondayOfLastWeek = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek).AddDays(-7);
-            DateTime lastDayOfWeek = mondayOfLastWeek.AddDays(6);
-            List<ShowViewModel> tmpShow = new List<ShowViewModel>(Shows.Where(m => mondayOfLastWeek.Ticks <= m.Date.Ticks && m.Date.Ticks <= lastDayOfWeek.Ticks).ToList());
+            DateTime firstDateOfTheWeek = DateCalculation(-7).Item1;
+            DateTime lastDateOfTheWeek = DateCalculation(-7).Item2;
+            List<ShowViewModel> tmpShow = new List<ShowViewModel>(Shows.Where(m => firstDateOfTheWeek.Ticks <= m.Date.Ticks && m.Date.Ticks <= lastDateOfTheWeek.Ticks).ToList());
             SeparateShowsByDay(tmpShow);
 
         }
 
-        private bool IsOnThisWeek(DateTime date)    
+        private bool IsOnThisWeek(DateTime d)    
         {
-            DateTime startOfWeek = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek+1);
-            DateTime endOfWeek = startOfWeek.AddDays(6).Date;
-            return startOfWeek.Date.Ticks <= date.Date.Ticks && date.Date.Ticks <= endOfWeek.Date.Ticks;
+            DateTime firstDateOfTheWeek = DateCalculation(0).Item1;
+            DateTime lastDateOfTheWeek = DateCalculation(0).Item2;
+
+            return firstDateOfTheWeek.Date.Ticks <= d.Date.Ticks && d.Date.Ticks <= lastDateOfTheWeek.Date.Ticks;
         }
 
         private void SeparateShowsByDay(List<ShowViewModel> tmpShows)
@@ -1031,8 +1060,17 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             List<EmployeeViewModel> tmpEmployees = new List<EmployeeViewModel>();
             try
             {
-                tmpEmployees = new List<EmployeeViewModel>((await _service.LoadingAsync<EmployeesDTO>("api/Users"))
+                if (LoginType != null)
+                {
+                    tmpEmployees = new List<EmployeeViewModel>((await _service.LoadingAsync<EmployeesDTO>("api/Users"))
+                   .Select(movie => (EmployeeViewModel)movie));
+                }
+                else
+                {
+                    tmpEmployees = new List<EmployeeViewModel>((await _service.LoadingAsync<EmployeesDTO>("api/Users"+LoginType))
                     .Select(movie => (EmployeeViewModel)movie));
+                }
+                
             }
             catch (Exception ex) when (ex is NetworkException || ex is HttpRequestException)
             {
