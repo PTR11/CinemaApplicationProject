@@ -71,8 +71,7 @@
     <Grid>
         <DockPanel>
             <Menu DockPanel.Dock="Top" Height="20">
-                <MenuItem Header="_Refresh lists" Height="20" FontSize="12"  />
-                <MenuItem Header="_Logout" Height="20" FontSize="12"  />
+                <MenuItem Header="_Refresh lists" Height="20" FontSize="12" Click="MenuItem_Click"  />
             </Menu>
             <Grid>
                 <TabControl FontSize="24">

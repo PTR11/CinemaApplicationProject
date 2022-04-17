@@ -115,8 +115,10 @@ namespace CinemaApplicationProject.Desktop.View.Admin
             this.Close();
         }
 
-        
-
-        
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var dataContext = (MainViewModel)this.DataContext;
+            dataContext.LoadInit();
+        }
     }
 }
