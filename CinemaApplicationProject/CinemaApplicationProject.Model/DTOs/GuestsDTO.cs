@@ -41,7 +41,7 @@ namespace CinemaApplicationProject.Model.DTOs
         };
     }
 
-    public class LoginGuestDTO
+    public class LoginGuestDTO : RespondDTO
     {
         [Required(ErrorMessage = "User Name is required")]
         public String UserName { get; set; }

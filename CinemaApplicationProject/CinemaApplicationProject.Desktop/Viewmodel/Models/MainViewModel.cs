@@ -1506,10 +1506,9 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             }
             return 0;
         }
+
+
+
         #endregion
-
-
-
-
     }
 }

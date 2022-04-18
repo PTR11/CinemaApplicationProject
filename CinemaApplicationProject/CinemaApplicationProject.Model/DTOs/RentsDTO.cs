@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.Model.DTOs
 {
-    public class RentsDTO
+    public class RentsDTO : RespondDTO
     {
         public int Id { get; set; }
         public int X { get; set; }

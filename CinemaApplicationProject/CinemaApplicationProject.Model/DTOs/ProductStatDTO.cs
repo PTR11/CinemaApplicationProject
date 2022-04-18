@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.Model.DTOs
 {
-    public class ProductSeller
+    public class ProductSeller : RespondDTO
     {
         public int EmployeeId { get; set; }
 

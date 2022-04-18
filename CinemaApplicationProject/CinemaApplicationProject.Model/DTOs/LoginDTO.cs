@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.Model.DTOs
 {
-    public class LoginDTO
+    public class LoginDTO : RespondDTO
     {
         public String UserName { get; set; }
 

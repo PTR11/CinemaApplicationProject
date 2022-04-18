@@ -46,8 +46,5 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Base
             if (MessageApplication != null)
                 MessageApplication(this, new MessageEventArgs(message));
         }
-
-
-        
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CinemaApplicationProject.Model.DTOs
 {
-    public class GuestVDTO
+    public class GuestVDTO : RespondDTO
     {
         public int Id { get; set; }
 
