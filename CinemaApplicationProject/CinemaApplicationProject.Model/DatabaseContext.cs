@@ -52,8 +52,6 @@ namespace CinemaApplicationProject.Model
 		public virtual DbSet<Rents> Rents { get; set; }
 		public virtual DbSet<Rooms> Rooms { get; set; }
 		public virtual DbSet<Shows> Shows { get; set; }
-		public virtual DbSet<ProductStatistics> ProductStatistics { get; set; }
-		public virtual DbSet<MoviesStatistics> MoviesStatistics { get; set; }
 		public virtual DbSet<Tickets> Tickets { get; set; }
 		public virtual DbSet<StatsAndPays> StatsAndPays { get; set; }
 
