@@ -31,16 +31,10 @@ namespace CinemaApplicationProject.API.Controllers
             return _service.GetActors().Select(m => (ActorsDTO)m).ToList();
         }
 
-        [HttpGet("movie/{id}")]
-        public ActionResult<IEnumerable<ActorsDTO>> GetActorsByMovieId(int id)
-        {
-            return _service.GetActorsByMovie(id).Select(m => (ActorsDTO)m).ToList();
-        }
-
 
         // GET: api/Actors/5
         [HttpGet("{id}")]
-        public ActionResult<Actors> GetActor(int id)
+        public ActionResult<ActorsDTO> GetActor(int id)
         {
             var actors = _service.GetActorById(id);
 
@@ -49,21 +43,7 @@ namespace CinemaApplicationProject.API.Controllers
                 return NotFound();
             }
 
-            return actors;
-        }
-
-        // PUT: api/Actors/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public IActionResult PutActors(int id, ActorsDTO actors)
-        {
-            if (id != actors.Id)
-            {
-                return BadRequest();
-            }
-
-            DatabaseManipulation.UpdateElementAsync((Actors)actors);
-            return NoContent();
+            return (ActorsDTO)actors;
         }
 
         // POST: api/Actors

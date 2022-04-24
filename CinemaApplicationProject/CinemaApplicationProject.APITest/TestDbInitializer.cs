@@ -1,31 +1,23 @@
-﻿using CinemaApplicationProject.Model.Database;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using CinemaApplicationProject.Model;
+using CinemaApplicationProject.Model.Database;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CinemaApplicationProject.Model
+namespace CinemaApplicationProject.APITest
 {
-    public static class DatabaseInitializer
+    public class TestDbInitializer
     {
-		private static DatabaseContext _context;
-		private static UserManager<ApplicationUser> _userManager;
-		private static RoleManager<StatsAndPays> _roleManager;
-
-
-		public static void Initialize(IServiceProvider serviceProvider, string imageFolder)
+		public static void Initialize(DatabaseContext _context)
 		{
-			_context = serviceProvider.GetRequiredService<DatabaseContext>();
-			_userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-			_roleManager = serviceProvider.GetRequiredService<RoleManager<StatsAndPays>>();
+			_context.Database.EnsureCreated();
+			//_userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+			//_roleManager = serviceProvider.GetRequiredService<RoleManager<StatsAndPays>>();
 
 			// Adatbázis migrációk végrehajtása, amennyiben szükséges
-			_context.Database.Migrate();
+			//_context.Database.Migrate();
 			// Városok, épületek, apartmanok inicializálás
 			Products p = new Products { Name = "Sajt", Price = 100 };
 			Products t = new Products { Name = "Perec", Price = 100 };
@@ -39,15 +31,15 @@ namespace CinemaApplicationProject.Model
 
 			//_context.ChangeTracker.LazyLoadingEnabled = false;
 
-			
+
 
 
 			List<Actors> actors = new List<Actors>
 			{
 				new Actors
-                {
+				{
 					Name = "Mark Hamill"
-                },
+				},
 				new Actors
 				{
 					Name = "Harrison Ford"
@@ -158,12 +150,11 @@ namespace CinemaApplicationProject.Model
 					Length = 124,
 					Description = "A Halálcsillag elpusztítása után Luke Skywalker, Han Solo, Leia Organa hercegnő és a Lázadó Szövetség menekülni kényszerülnek a Galaktikus Birodalom Darth Vader által vezetett erői elől. Luke elszakad barátaitól és egy félreeső bolygón Yoda jedi mestertől megtanulja használni az Erőt.",
 					Trailer = "",
-					Image = File.ReadAllBytes(Path.Combine(imageFolder,"birodalomvisszavag.jpg")),
 					Actors = actors.GetRange(0,3),
 					Categories = new List<Categories>
-                    {
+					{
 						categories[1],categories[2],categories[7]
-                    }
+					}
 				},
 				new Movies
 				{
@@ -288,7 +279,7 @@ namespace CinemaApplicationProject.Model
 					Date = DateTime.Now.AddDays(2).AddHours(-2).AddMinutes(15),
 					IsActiveShow = true
 				},
-				
+
 			};
 
 			_context.Shows.AddRange(shows);
@@ -314,7 +305,7 @@ namespace CinemaApplicationProject.Model
 
 			_context.AddRange(tickets);
 
-			
+
 
 			var guest = new Guests
 			{
@@ -326,7 +317,7 @@ namespace CinemaApplicationProject.Model
 			};
 
 
-			
+
 
 			var adminRole = new StatsAndPays("administrator");
 			adminRole.Salary = 2500;
@@ -344,7 +335,7 @@ namespace CinemaApplicationProject.Model
 				Email = "barnak.peter1@gmail.com",
 				Address = "Nyíregyháza, Honvéd utca 61",
 				Birthday = "2000/06/15",
-				
+
 			};
 
 			var adminUser2 = new Guests
@@ -358,19 +349,19 @@ namespace CinemaApplicationProject.Model
 			};
 			var adminPassword = "Almafa123";
 
-			
+
 
 			//adminUser.Stat = new List<StatsAndPays>();
 			//adminUser.Stat.Add(adminRole);
-			_ = _userManager.CreateAsync(adminUser, adminPassword).Result;
-            _ = _userManager.CreateAsync(adminUser2, adminPassword).Result;
-			_ = _userManager.CreateAsync(guest, adminPassword).Result;
-			_ = _roleManager.CreateAsync(adminRole).Result;
-			_ = _userManager.AddToRoleAsync(adminUser, adminRole.Name).Result;
-			_ = _roleManager.CreateAsync(ticketerRole).Result;
-			_ = _roleManager.CreateAsync(buffetSellerRole).Result;
-			_ = _roleManager.CreateAsync(ticketerSWRole).Result;
-			_ = _roleManager.CreateAsync(buffetSWRole).Result;
+			//_ = _userManager.CreateAsync(adminUser, adminPassword).Result;
+			//_ = _userManager.CreateAsync(adminUser2, adminPassword).Result;
+			//_ = _userManager.CreateAsync(guest, adminPassword).Result;
+			//_ = _roleManager.CreateAsync(adminRole).Result;
+			//_ = _userManager.AddToRoleAsync(adminUser, adminRole.Name).Result;
+			//_ = _roleManager.CreateAsync(ticketerRole).Result;
+			//_ = _roleManager.CreateAsync(buffetSellerRole).Result;
+			//_ = _roleManager.CreateAsync(ticketerSWRole).Result;
+			//_ = _roleManager.CreateAsync(buffetSWRole).Result;
 
 		}
 	}
