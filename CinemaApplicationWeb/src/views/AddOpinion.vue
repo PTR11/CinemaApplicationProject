@@ -1,5 +1,6 @@
 <template>
   <div v-if="user">
+    <ErrorCard :error-message="error"  v-if="error.length > 0" class="col-sm-6 mx-auto"/>
     <div class="card col-sm-5 m-2 mx-auto m-2 p-3 border-1 border-dark bg-warning text-dark" >
 
         <h3 class="">Opinion</h3>
@@ -44,7 +45,8 @@ export default {
     return {
       rating: 0,
       description: "",
-      anonymus: false
+      anonymus: false,
+      error: "",
     };
   },
   computed:
@@ -67,7 +69,9 @@ export default {
             if(result.status === 200){
               this.$router.push({name: 'Movie', path:"/"+this.$route.params.id})
             }
-          }).catch(() => {});
+          }).catch(() => {
+            this.error = "You have to add comment message";
+      });
     }
   },
 };

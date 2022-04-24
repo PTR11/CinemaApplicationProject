@@ -612,8 +612,8 @@
       <FileName>Viewmodel\Models\MainViewModel.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="AddNewMovie" />
       <Property Name="Validation" />
+      <Property Name="AddNewMovie" />
     </ShowAsAssociation>
   </Class>
   <Class Name="CinemaApplicationProject.Desktop.App">
