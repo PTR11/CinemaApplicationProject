@@ -29,14 +29,14 @@ namespace CinemaApplicationProject.API.Controllers
 
         // GET: api/StatsAndPays
         [HttpGet]
-        public ActionResult<IEnumerable<StatsAndPays>> GetRoles()
+        public ActionResult<IEnumerable<StatsDTO>> GetRoles()
         {
-            return _service.GetStats();
+            return _service.GetStats().Select(m => (StatsDTO)m).ToList();
         }
 
         // GET: api/StatsAndPays/5
         [HttpGet("{id}")]
-        public ActionResult<StatsAndPays> GetStatsAndPays(int id)
+        public ActionResult<StatsDTO> GetRolesById(int id)
         {
             var statsAndPays = _service.GetStatById(id);
 
@@ -45,7 +45,7 @@ namespace CinemaApplicationProject.API.Controllers
                 return NotFound();
             }
 
-            return statsAndPays;
+            return (StatsDTO)statsAndPays;
         }
 
         // PUT: api/StatsAndPays/5
@@ -78,20 +78,19 @@ namespace CinemaApplicationProject.API.Controllers
         [HttpPost]
         public async Task<ActionResult<StatsDTO>> PostRole(StatsDTO roles)
         {
-            StatsAndPays stat = (StatsAndPays)roles;
-            StatsAndPays find = _service.GetStatByName(stat.Name);
+            StatsAndPays find = _service.GetStatByName(roles.Name);
 
             if(find == null)
             {
-                var entity = await _roleManager.CreateAsync(stat);
+                var entity = await _roleManager.CreateAsync((StatsAndPays)roles);
                 if (!entity.Succeeded)
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError);
                 }
             }
 
-            await _service.ConnectUserWithRole(roles.UserId, stat.Id);
-            return CreatedAtAction(nameof(GetStatsAndPays), new { id = stat.Id }, (StatsDTO)stat);
+            await _service.ConnectUserWithRole(roles.UserId, roles.Id);
+            return CreatedAtAction(nameof(GetRolesById), new { id = roles.Id }, (StatsDTO)roles);
         }
 
         
@@ -108,7 +107,7 @@ namespace CinemaApplicationProject.API.Controllers
 
             DatabaseManipulation.DeleteElement(statsAndPays);
 
-            return NoContent();
+            return Ok();
         }
     }
 }

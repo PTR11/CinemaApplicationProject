@@ -420,7 +420,7 @@ namespace CinemaApplicationProject.Model.Services
             return list;
         }
 
-        public Rooms GetRoomById(int id) => context.Rooms.Where(m => m.Id == id).Single();
+        public Rooms GetRoomById(int id) => context.Rooms.FirstOrDefault(r => r.Id == id);
 
         #endregion
 
@@ -520,6 +520,7 @@ namespace CinemaApplicationProject.Model.Services
             if (movieId != 0)
             {
 
+                var asd = context.Movies.Include(m => m.Categories).FirstOrDefault(m => m.Id == movieId).Categories.ToList();
                 var hasConnection = context.Movies.Include(m => m.Categories).FirstOrDefault(m => m.Id == movieId).Categories.FirstOrDefault(m => m.Id == catId);
                 if (hasConnection != null)
                 {

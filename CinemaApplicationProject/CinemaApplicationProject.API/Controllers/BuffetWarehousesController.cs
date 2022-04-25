@@ -33,7 +33,16 @@ namespace CinemaApplicationProject.API.Controllers
         [HttpGet("{id}")]
         public ActionResult<ProductDTO> GetBuffetWarehouseById(int id)
         {
-            return (ProductDTO)_service.GetProductInWareHouse(id);
+
+            var item = _service.GetProductInWareHouse(id);
+
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            return (ProductDTO)item;
+           
         }
 
         [HttpGet("statistics")]

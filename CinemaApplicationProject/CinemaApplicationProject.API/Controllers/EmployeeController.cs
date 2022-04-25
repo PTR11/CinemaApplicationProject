@@ -46,6 +46,7 @@ namespace CinemaApplicationProject.API.Controllers
             }
             return Unauthorized("Login failed");
         }
+
         [HttpPost("Logout/{id}")]
         public async Task<IActionResult> Logout(int id)
         {

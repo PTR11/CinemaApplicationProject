@@ -49,7 +49,7 @@ namespace CinemaApplicationProject.API.Controllers
         // POST: api/Actors
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public ActionResult<Actors> PostActors(ActorsDTO actors)
+        public ActionResult<ActorsDTO> PostActors(ActorsDTO actors)
         {
             
             Actors actor = (Actors)actors;
@@ -89,7 +89,7 @@ namespace CinemaApplicationProject.API.Controllers
             _service.DeleteActorFromMovie(movieId, id);
             
 
-            return NoContent();
+            return Ok();
         }
     }
 }

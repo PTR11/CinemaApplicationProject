@@ -32,9 +32,6 @@ namespace CinemaApplicationProject.API.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<ShowsDTO>> GetShows()
         {
-            //var respone = new HttpResponseMessage();
-            //respone.Headers.Location = new Uri("http://google.com");
-            //return respone;
             return _service.GetAllShows().Select(m => (ShowsDTO)m).ToList();
         }
 
@@ -73,19 +70,7 @@ namespace CinemaApplicationProject.API.Controllers
             return _service.GetTodaysShows().Select(m => (ShowsDTO)m).ToList();
         }
 
-        // GET: api/Shows/5
-        [HttpGet("movie/{id}")]
-        public ActionResult<IEnumerable<Shows>> GetShowsByMovieId(int id)
-        {
-            var shows = _service.GetAllShowsByMovieId(id);
-
-            if (shows == null)
-            {
-                return NotFound();
-            }
-
-            return shows;
-        }
+        
 
         // PUT: api/Shows/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -96,7 +81,11 @@ namespace CinemaApplicationProject.API.Controllers
             {
                 return BadRequest();
             }
-            if (DatabaseManipulation.UpdateElementAsync((Shows)shows))
+            var tmp = _service.GetShowById(shows.Id);
+            tmp.MovieId = shows.MovieId;
+            tmp.RoomId = shows.RoomId;
+            tmp.Date = shows.Date;
+            if (DatabaseManipulation.UpdateElementAsync(tmp))
             {
                 return Ok();
             }
@@ -136,7 +125,7 @@ namespace CinemaApplicationProject.API.Controllers
             }
             DatabaseManipulation.DeleteElement(shows);
 
-            return NoContent();
+            return Ok();
         }
     }
 }

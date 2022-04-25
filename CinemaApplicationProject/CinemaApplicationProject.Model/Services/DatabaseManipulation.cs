@@ -55,34 +55,9 @@ namespace CinemaApplicationProject.Model.Services
         {
             try
             {
-                context.Remove(element);
-                context.Add(element);
-                context.Entry(element).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                context.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                return false;
-            }
-            catch (DbUpdateException)
-            {
-                return false;
-            }
-            return true;
-
-        }
-
-        public static bool UpdateElementAsync(Movies element)
-        {
-            try
-            {
-                var actors = element.Actors;
-                var cats = element.Categories;
                 context.Update(element);
                 context.Entry(element).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                context.SaveChanges();
-                context.Movies.FirstOrDefault(m => m.Id == element.Id).Actors = actors;
-                context.Movies.FirstOrDefault(m => m.Id == element.Id).Categories = cats;
+                
                 context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)

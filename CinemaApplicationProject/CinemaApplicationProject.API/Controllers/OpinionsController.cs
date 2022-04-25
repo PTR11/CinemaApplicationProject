@@ -35,7 +35,7 @@ namespace CinemaApplicationProject.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Opinions>> PostOpinions(OpinionsDTO rfg)
+        public async Task<ActionResult<OpinionsDTO>> PostOpinions(OpinionsDTO rfg)
         {
             if (!ModelState.IsValid)
             {

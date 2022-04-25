@@ -67,14 +67,14 @@ namespace CinemaApplicationProject.API.Controllers
         [EnableCors("_myAllowSpecificOrigins")]
         public ActionResult<MoviesDTO> GetMovie(int id)
         {
-            var movie = (MoviesDTO)_service.GetMovieById(id);
+            var movie = _service.GetMovieById(id);
 
             if (movie == null)
             {
                 return NotFound();
             }
 
-            return movie;
+            return (MoviesDTO)movie;
         }
 
         [EnableCors("_myAllowSpecificOrigins")]
@@ -100,11 +100,12 @@ namespace CinemaApplicationProject.API.Controllers
             {
                 return BadRequest();
             }
-            
-            var tmp = (Movies)movies;
-            tmp.Actors.Clear();
-            tmp.Categories.Clear();
-            //Függvényhívás
+            var tmp = _service.GetMovieById(movies.Id);
+            tmp.Title = movies.Title;
+            tmp.Description = movies.Description;
+            tmp.Image = movies.Image;
+            tmp.Length = movies.Length;
+            tmp.Director = movies.Director;
             if (DatabaseManipulation.UpdateElementAsync(tmp)) 
             {
                 return Ok();
@@ -140,7 +141,7 @@ namespace CinemaApplicationProject.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
-            foreach(var actor in movies.Actors)
+            foreach(var actor in tmp.Actors)
             {
                 if(actor.Id == 0)
                 {
@@ -154,7 +155,7 @@ namespace CinemaApplicationProject.API.Controllers
                 _service.ConnectMovieWithActor(movie.Id, actor.Id);
             }
 
-            foreach (var category in movies.Categories)
+            foreach (var category in tmp.Categories)
             {
                 if (category.Id == 0)
                 {
@@ -185,7 +186,7 @@ namespace CinemaApplicationProject.API.Controllers
 
             DatabaseManipulation.DeleteElement(movies);
 
-            return NoContent();
+            return Ok();
         }
     }
 }

@@ -1,3 +1,6 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using CinemaApplicationProject.API.Controllers;
 using CinemaApplicationProject.Model;
 using CinemaApplicationProject.Model.Database;
@@ -17,13 +20,13 @@ using Xunit;
 namespace CinemaApplicationProject.APITest
 {
     [Collection("Sequential")]
-    public class ActorsControllerTest : IDisposable
+    public class CategoryControllerTest : IDisposable
     {
         private readonly DatabaseContext _context;
         private readonly DatabaseService _service;
-        private readonly ActorsController _controller;
+        private readonly CategoriesController _controller;
 
-        public ActorsControllerTest()
+        public CategoryControllerTest()
         {
             var options = new DbContextOptionsBuilder<DatabaseContext>()
                 .UseInMemoryDatabase("TestDb")
@@ -33,14 +36,14 @@ namespace CinemaApplicationProject.APITest
             TestDbInitializer.Initialize(_context);
 
             var userManager = new UserManager<ApplicationUser>(
-                new UserStore<ApplicationUser,StatsAndPays,DatabaseContext,int>(_context), null,
+                new UserStore<ApplicationUser, StatsAndPays, DatabaseContext, int>(_context), null,
                 new PasswordHasher<ApplicationUser>(), null, null, null, null, null, null);
 
             var user = new ApplicationUser { UserName = "testName", Id = 1 };
             userManager.CreateAsync(user, "testPassword").Wait();
 
-            _service = new DatabaseService(_context,userManager);
-            _controller = new ActorsController(_service);
+            _service = new DatabaseService(_context, userManager);
+            _controller = new CategoriesController(_service);
 
             var claimsIdentity = new ClaimsIdentity(new List<Claim>
             {
@@ -51,9 +54,9 @@ namespace CinemaApplicationProject.APITest
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
             _controller.ControllerContext = new ControllerContext
             {
-               HttpContext = new DefaultHttpContext
-               {
-                   User = claimsPrincipal
+                HttpContext = new DefaultHttpContext
+                {
+                    User = claimsPrincipal
                 }
             };
         }
@@ -65,15 +68,15 @@ namespace CinemaApplicationProject.APITest
         }
 
         [Fact]
-        public void GetActorsTest()
+        public void GetCategoriesTest()
         {
-            var result = _controller.GetActors();
+            var result = _controller.GetCategories();
 
 
-            var content = Assert.IsAssignableFrom<IEnumerable<ActorsDTO>>(result.Value);
+            var content = Assert.IsAssignableFrom<IEnumerable<CategoriesDTO>>(result.Value);
             //Assert.Empty(_controller.GetActors().Value);
 
-            Assert.Equal(18, content.Count());
+            Assert.Equal(8, content.Count());
         }
 
 
@@ -81,64 +84,62 @@ namespace CinemaApplicationProject.APITest
         [InlineData(1)]
         [InlineData(2)]
         [InlineData(3)]
-        public void GetActorByIdTest(Int32 id)
+        public void GetCategoryByIdTest(Int32 id)
         {
             // Act
-            var result = _controller.GetActor(id);
+            var result = _controller.GetCategoryById(id);
 
             // Assert
-            var content = Assert.IsAssignableFrom<ActorsDTO>(result.Value);
+            var content = Assert.IsAssignableFrom<CategoriesDTO>(result.Value);
             Assert.Equal(id, content.Id);
         }
 
         [Fact]
-        public void GetInvalidActorTest()
+        public void GetInvalidCategoryTest()
         {
             // Arrange
-            var id = 19;
+            var id = 29;
 
             // Act
-            var result = _controller.GetActor(id);
+            var result = _controller.GetCategoryById(id);
 
             // Assert
             Assert.IsAssignableFrom<NotFoundResult>(result.Result);
         }
 
         [Fact]
-        public void ConnectActorToMovies()
+        public void ConnectCategoryToMovies()
         {
-            var movieCount = _context.Movies.FirstOrDefault(m => m.Id == 1).Actors.Count;
-            ActorsDTO tmp = new ActorsDTO()
+            var movieCount = _context.Movies.FirstOrDefault(m => m.Id == 1).Categories.Count;
+            CategoriesDTO tmp = new CategoriesDTO()
             {
                 Id = 0,
                 MovieId = 1,
-                Name = "Tmp User"
+                Category = "Tmp cat"
             };
 
-            var count = _context.Actors.Count();
+            var count = _context.Categories.Count();
 
             // Act
-            var result = _controller.PostActors(tmp);
+            var result = _controller.PostCategory(tmp);
 
             // Assert
             var objectResult = Assert.IsAssignableFrom<CreatedAtActionResult>(result.Result);
-            var content = Assert.IsAssignableFrom<ActorsDTO>(objectResult.Value);
-            Assert.Equal(count + 1, _context.Actors.Count());
-            Assert.Equal(movieCount + 1, _context.Movies.FirstOrDefault(m => m.Id == 1).Actors.Count);
+            var content = Assert.IsAssignableFrom<CategoriesDTO>(objectResult.Value);
+            Assert.Equal(count + 1, _context.Categories.Count());
+            Assert.Equal(movieCount + 1, _context.Movies.FirstOrDefault(m => m.Id == 1).Categories.Count);
         }
 
         [Fact]
-        public void DeleteActor()
+        public void DeleteCategory()
         {
-            var aCount =  _context.Actors.FirstOrDefault(a => a.Id == 1).Movies.Count;
-            var mCount = _context.Movies.FirstOrDefault(m => m.Id == 1).Actors.Count;
-            var result = _controller.DeleteActors(1, 1);
+            var cCount = _context.Categories.FirstOrDefault(a => a.Id == 2).Movies.Count;
+            var mCount = _context.Movies.FirstOrDefault(m => m.Id == 1).Categories.Count;
+            var result = _controller.DeleteCategory(1, 2);
 
             var objectResult = Assert.IsAssignableFrom<OkResult>(result);
-            Assert.Equal(aCount - 1, _context.Actors.FirstOrDefault(a => a.Id == 1).Movies.Count);
-            Assert.Equal(mCount - 1, _context.Movies.FirstOrDefault(m => m.Id == 1).Actors.Count);
+            Assert.Equal(cCount - 1, _context.Categories.FirstOrDefault(a => a.Id == 2).Movies.Count);
+            Assert.Equal(mCount - 1, _context.Movies.FirstOrDefault(m => m.Id == 1).Categories.Count);
         }
-
-
     }
 }

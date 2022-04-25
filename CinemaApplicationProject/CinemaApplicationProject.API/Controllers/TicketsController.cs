@@ -35,7 +35,14 @@ namespace CinemaApplicationProject.API.Controllers
         [HttpGet("{id}")]
         public ActionResult<TicketsDTO> GetTicketById(int id)
         {
-            return (TicketsDTO)_service.GetTicketById(id);
+            var ticket = _service.GetTicketById(id);
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            return (TicketsDTO)ticket;
         }
 
         //PUT: api/Tickets/5
@@ -47,7 +54,10 @@ namespace CinemaApplicationProject.API.Controllers
             {
                 return BadRequest();
             }
-            if (DatabaseManipulation.UpdateElementAsync((Tickets)tickets))
+            var ticket = _service.GetTicketById(tickets.Id);
+            ticket.Price = tickets.Price;
+            ticket.Type = tickets.Type;
+            if (DatabaseManipulation.UpdateElementAsync(ticket))
             {
                 return Ok();
             }
@@ -85,12 +95,7 @@ namespace CinemaApplicationProject.API.Controllers
                 return BadRequest();
             }
 
-            return NoContent();
+            return Ok();
         }
-
-        //private bool TicketsExists(int id)
-        //{
-        //    return _context.Tickets.Any(e => e.Id == id);
-        //}
     }
 }

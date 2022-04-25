@@ -2,9 +2,10 @@
 using CinemaApplicationProject.Model.Database;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CinemaApplicationProject.APITest
 {
@@ -350,18 +351,18 @@ namespace CinemaApplicationProject.APITest
 			var adminPassword = "Almafa123";
 
 
-
+			var roleManager = new RoleManager<StatsAndPays>(new RoleStore<StatsAndPays, DatabaseContext, int>(_context), null, null, null, null);
 			//adminUser.Stat = new List<StatsAndPays>();
 			//adminUser.Stat.Add(adminRole);
 			//_ = _userManager.CreateAsync(adminUser, adminPassword).Result;
 			//_ = _userManager.CreateAsync(adminUser2, adminPassword).Result;
 			//_ = _userManager.CreateAsync(guest, adminPassword).Result;
-			//_ = _roleManager.CreateAsync(adminRole).Result;
+			_ = roleManager.CreateAsync(adminRole).Result;
 			//_ = _userManager.AddToRoleAsync(adminUser, adminRole.Name).Result;
-			//_ = _roleManager.CreateAsync(ticketerRole).Result;
-			//_ = _roleManager.CreateAsync(buffetSellerRole).Result;
-			//_ = _roleManager.CreateAsync(ticketerSWRole).Result;
-			//_ = _roleManager.CreateAsync(buffetSWRole).Result;
+			_ = roleManager.CreateAsync(ticketerRole).Result;
+			_ = roleManager.CreateAsync(buffetSellerRole).Result;
+			_ = roleManager.CreateAsync(ticketerSWRole).Result;
+			_ =roleManager.CreateAsync(buffetSWRole).Result;
 
 		}
 	}

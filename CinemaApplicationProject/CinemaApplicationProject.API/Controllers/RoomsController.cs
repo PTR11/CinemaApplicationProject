@@ -34,7 +34,7 @@ namespace CinemaApplicationProject.API.Controllers
 
         // GET: api/Rooms/5
         [HttpGet("{id}")]
-        public ActionResult<Rooms> GetRooms(int id)
+        public ActionResult<RoomsDTO> GetRoom(int id)
         {
             var rooms = _service.GetRoomById(id);
 
@@ -43,7 +43,7 @@ namespace CinemaApplicationProject.API.Controllers
                 return NotFound();
             }
 
-            return rooms;
+            return (RoomsDTO)rooms;
         }
 
         // PUT: api/Rooms/5
@@ -103,7 +103,7 @@ namespace CinemaApplicationProject.API.Controllers
                 return BadRequest();
             }
 
-            return NoContent();
+            return Ok();
         }
     }
 }

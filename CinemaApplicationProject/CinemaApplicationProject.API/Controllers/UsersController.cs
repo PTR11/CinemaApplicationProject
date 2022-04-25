@@ -30,6 +30,12 @@ namespace CinemaApplicationProject.API.Controllers
             _service = service;
             DatabaseManipulation.context = _service.GetContext();
         }
+        public UsersController(UserManager<ApplicationUser> userManager, IDatabaseService service)
+        {
+            _userManager = userManager;
+            _service = service;
+            DatabaseManipulation.context = _service.GetContext();
+        }
 
         [Authorize]
         [HttpGet]
@@ -192,7 +198,7 @@ namespace CinemaApplicationProject.API.Controllers
             }
             DatabaseManipulation.DeleteElement(employee);
 
-            return NoContent();
+            return Ok();
         }
         
     }

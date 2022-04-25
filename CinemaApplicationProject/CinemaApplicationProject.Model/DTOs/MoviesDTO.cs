@@ -75,8 +75,8 @@ namespace CinemaApplicationProject.Model.DTOs
             Director = m.Director,
             Description = m.Description,
             Trailer = m.Trailer,
-            Actors = ConvertActorsDTOToClass(m.Actors),
-            Categories = ConvertCategoriesDTOToClass(m.Categories),
+            Actors = m.Actors!= null ? ConvertActorsDTOToClass(m.Actors) : new List<Actors>(),
+            Categories = m.Categories != null? ConvertCategoriesDTOToClass(m.Categories): new List<Categories>(),
         };
 
     }

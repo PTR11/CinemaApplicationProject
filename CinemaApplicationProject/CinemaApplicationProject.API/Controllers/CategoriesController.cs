@@ -31,11 +31,18 @@ namespace CinemaApplicationProject.API.Controllers
         [HttpGet]
         public ActionResult<CategoriesDTO> GetCategoryById(int id)
         {
-           return (CategoriesDTO)_service.GetCategoryById(id);
+            var cat = _service.GetCategoryById(id);
+
+            if (cat == null)
+            {
+                return NotFound();
+            }
+
+            return (CategoriesDTO)cat;
         }
 
         [HttpPost]
-        public ActionResult<CategoriesDTO> PostActors(CategoriesDTO cat)
+        public ActionResult<CategoriesDTO> PostCategory(CategoriesDTO cat)
         {
 
             Categories category = (Categories)cat;
@@ -53,6 +60,7 @@ namespace CinemaApplicationProject.API.Controllers
             _service.ConnectMovieWithCategory(cat.MovieId, category.Id);
             return CreatedAtAction(nameof(GetCategoryById), new { id = category.Id }, (CategoriesDTO)category);
         }
+        
         [HttpDelete("{movieId}/{id}")]
         public IActionResult DeleteCategory(int movieId, int id)
         {
@@ -71,7 +79,7 @@ namespace CinemaApplicationProject.API.Controllers
             _service.DeleteCategoryFromMovie(movieId, id);
 
 
-            return NoContent();
+            return Ok();
         }
 
 
