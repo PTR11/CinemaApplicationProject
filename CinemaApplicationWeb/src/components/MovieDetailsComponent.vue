@@ -1,37 +1,48 @@
 <template>
   <div>
-    <ErrorCard :error-message="error" class="col-sm-6 mx-auto" v-if="error.length > 0"/>
-    <b-card :img-src="movie.image" img-alt="Card image" img-top class="col-sm-6 p-2 mx-auto m-1 bg-warning text-dark border border-dark">
-      <b-card-title style="font-size: 32px">
-        {{movie.title}}
+    <div v-if="loading" class="text-center">
+      <b-spinner style="width: 3rem; height: 3rem;" variant="warning" label="Text Centered"></b-spinner>
+    </div>
+    <div v-else>
+      <ErrorCard :error-message="error" class="col-sm-6 mx-auto" v-if="error.length > 0"/>
+      <b-card v-else :img-src="movie.image" img-height="500" img-width="300"  img-alt="Card image" img-top class="col-sm-6 p-2 mx-auto m-1 bg-warning text-dark border border-dark">
+        <b-card-title style="font-size: 32px">
+          {{movie.title}}
+          <br>
+          ({{movie.length}} perc)
+        </b-card-title>
         <br>
-        ({{movie.length}} perc)
-      </b-card-title>
-      <b-card-sub-title>
+        <b-card-text style="font-size: 20px">
+          Director: {{movie.director}}
+        </b-card-text>
+        <br>
+        <b-card-text style="font-size: 20px">
+          Actors:
+          <ul>
+            <li v-for="actor in movie.actors" :key="actor.name">
+              {{actor.name}}
+            </li>
+          </ul>
+        </b-card-text>
+        <br>
+        <b-card-text style="font-size: 20px">
+          Leírás: <br>
+          {{movie.description}}
+        </b-card-text>
+        <br>
+        <b-embed
+            v-if="movie.trailer"
+            type="iframe"
+            aspect="16by9"
+            :src="movie.trailer"
+            allowfullscreen
+        ></b-embed>
 
-      </b-card-sub-title>
-      <br>
-      <b-card-text style="font-size: 20px">
-        Director: {{movie.director}}
-      </b-card-text>
-      <br>
-      <b-card-text style="font-size: 20px">
-        Actors:
-        <ul>
-          <li v-for="actor in movie.actors" :key="actor.name">
-            {{actor.name}}
-          </li>
-        </ul>
-      </b-card-text>
-      <br>
-      <b-card-text style="font-size: 20px">
-        Leírás: <br>
-        {{movie.description}}
-      </b-card-text>
+        <router-link :to="'/addOpinion/'+movie.id"  tag="button" class="btn btn-dark mt-5 mb-2">Add Opinion</router-link>
+        <Opinions :opinions="opinions[0]"/>
+      </b-card>
+    </div>
 
-      <router-link :to="'/addOpinion/'+movie.id"  tag="button" class="btn btn-dark mt-5 mb-2">Add Opinion</router-link>
-      <Opinions :opinions="opinions[0]"/>
-    </b-card>
   </div>
 
 </template>
@@ -50,6 +61,7 @@ export default {
       error: "",
       movie: {},
       opinions:[],
+      loading: true
     };
   },
   created: function () {
@@ -59,26 +71,30 @@ export default {
   methods: {
     fetchMovies() {
       axios
-          .get("http://localhost:7384/api/Movies/" + this.$route.params.id)
+          .get(process.env.VUE_APP_API_ADDRESS+"/api/Movies/" + this.$route.params.id)
           .then((result) => {
             this.movie = result.data;
+            if(result.data === undefined){
+              this.error = "Something went wront with fetching";
+            }
+            console.log(this.movie)
             var asd = "data:image/jpg;base64,"+this.movie.image;
             this.movie.image = asd;
+            this.loading = false;
           })
           .catch((err) => {
             console.log(err);
             this.error = "Something went wrong with fetching movie details.";
+            this.loading = false;
           });
     },
     fetchOpinions(){
       axios
-          .get("http://localhost:7384/api/Opinions/" + this.$route.params.id)
+          .get(process.env.VUE_APP_API_ADDRESS+"/api/Opinions/" + this.$route.params.id)
           .then((result) => {
             this.opinions.push(result.data);
-            console.log(this.opinions);
           })
-          .catch((err) => {
-            console.log(err);
+          .catch(() => {
             this.error = "Something went wrong with fetching movie opinions.";
             window.scrollTo(0,0);
           });

@@ -1,19 +1,26 @@
 <template>
-
-  <div class="mx-auto col-sm-7">
-    <Datepicker/>
-    <Card
-        v-for="program in programs"
-        :key="program.title"
-        :element="program"
-        :site="'Main'"
-    />
+  <div>
+    <div v-if="loading" class="text-center">
+      <b-spinner style="width: 3rem; height: 3rem;" variant="warning" label="Text Centered"></b-spinner>
+    </div>
+    <div v-else class="mx-auto col-sm-7">
+      <Datepicker/>
+      <Errorcard v-if="error.length != 0" :error-message="error" class="mx-auto d-flex p-2"></Errorcard>
+      <Card
+          v-for="program in programs"
+          :key="program.title"
+          :element="program"
+          :site="'Main'"
+      />
+    </div>
   </div>
+
 </template>
 
 <script>
 import ShowCardComponent from "@/components/ShowCardComponent";
 import DatePickerComponent from "@/components/DatePickerComponent";
+import ErrorcardComponent from "@/components/ErrorcardComponent";
 import axios from "axios";
 import {mapState} from 'vuex';
 
@@ -23,10 +30,13 @@ export default {
   components: {
     Datepicker: DatePickerComponent,
     Card: ShowCardComponent,
+    Errorcard: ErrorcardComponent
   },
   data() {
     return {
-      programs: []
+      programs: [],
+      error: "",
+      loading: true
     };
   },
   computed:
@@ -35,7 +45,6 @@ export default {
       }),
   watch:{
     filterDate(){
-      console.log("Kurva anyádat")
       this.fetchShows()
     }
   },
@@ -44,21 +53,25 @@ export default {
   },
   methods: {
     fetchShows() {
+      this.programs = [];
+      this.error = "";
       axios
-          .get("http://localhost:7384/api/Shows/"+this.filterDate.toDateString())
+          .get(process.env.VUE_APP_API_ADDRESS+"/api/Shows/"+this.filterDate.toDateString())
           .then((result) => {
-
-            //window.location.href = result.data.headers[0].value[0]
-            this.programs = result.data;
-            this.programs.forEach((m) => {
-              var asd = "data:image/jpg;base64,"+m.image;
-              m.image = asd;
-
-
-
-            })
-            console.log(this.programs);
-          });
+            if(result.data.length == 0){
+              this.error = "No shows available on the chosen date";
+            }else{
+              this.programs = result.data;
+              this.programs.forEach((m) => {
+                var asd = "data:image/jpg;base64,"+m.image;
+                m.image = asd;
+              })
+            }
+            this.loading = false;
+          }).catch(() => {
+        this.error = "Something went wrong in our side"
+        this.loading = false;
+      });
     }
   }
 

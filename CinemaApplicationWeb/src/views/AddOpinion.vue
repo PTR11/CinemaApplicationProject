@@ -64,7 +64,7 @@ export default {
       };
 
       axios
-          .post("http://localhost:7384/api/Opinions/", response, {withCredentials: true})
+          .post(process.env.VUE_APP_API_ADDRESS+"/api/Opinions/", response, {withCredentials: true})
           .then((result) => {
             if(result.status === 200){
               this.$router.push({name: 'Movie', path:"/"+this.$route.params.id})

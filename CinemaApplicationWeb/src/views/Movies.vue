@@ -1,13 +1,20 @@
 <template>
-  <div class="col-sm-7 mx-auto">
-    <Category />
-    <Card v-for="movie in movies" :element="movie" :key="movie.title"/>
+  <div v-if="loading" class="text-center">
+    <b-spinner style="width: 3rem; height: 3rem;"  variant="warning" label="Text Centered"></b-spinner>
+  </div>
+  <div v-else class="col-sm-7 mx-auto">
+    <ErrorCard v-if="!error.length == 0" :error-message="error" />
+    <div v-else>
+      <Category />
+      <Card v-for="movie in movies" :element="movie" :key="movie.title"/>
+    </div>
+
   </div>
 </template>
 
 <script>
 
-
+import ErrorcardComponent from "@/components/ErrorcardComponent";
 import CardComponent from "@/components/CardComponent";
 import CategoryAndSearchComponent from "@/components/CategoryAndSearchComponent";
 import axios from "axios";
@@ -18,9 +25,10 @@ export default {
   data() {
     return {
       cat: "",
-      loading: false,
+      loading: true,
       selection: 1,
       movies: [],
+      error:""
     };
   },
   computed:
@@ -30,6 +38,7 @@ export default {
     }),
   watch:{
     selectedCategory(newValue){
+      console
       if(newValue.normalize() === ""){
         this.fetchMovies();
       }else{
@@ -47,35 +56,50 @@ export default {
   },
   components: {
     Category: CategoryAndSearchComponent,
-    Card: CardComponent
+    Card: CardComponent,
+    ErrorCard : ErrorcardComponent
   },
   created() {
     this.fetchMovies();
   },
   methods:{
     fetchMoviesByTitlePart() {
+      this.loading = true;
       axios
-          .get("http://localhost:7384/api/Movies/title/"+this.searchText)
+          .get(process.env.VUE_APP_API_ADDRESS+"/api/Movies/title/"+this.searchText)
           .then((result) => {
             this.movies = result.data;
+            this.loading = false;
             this.setMoviesImage();
-          });
+          }).catch(() => {
+        this.error = "Something went wrong in our side"
+        this.loading = false;
+      });
 
     },
     fetchMoviesByCategory() {
+      this.loading = true;
       axios
-          .get("http://localhost:7384/api/Movies/category/"+this.selectedCategory)
+          .get(process.env.VUE_APP_API_ADDRESS+"/api/Movies/category/"+this.selectedCategory)
           .then((result) => {
             this.movies = result.data;
+            this.loading = false;
             this.setMoviesImage();
-          });
+          }).catch(() => {
+        this.error = "Something went wrong in our side"
+        this.loading = false;
+      });
     },
     fetchMovies() {
       axios
-          .get("http://localhost:7384/api/Movies/")
+          .get(process.env.VUE_APP_API_ADDRESS+"/api/Movies/")
           .then((result) => {
             this.movies = result.data;
             this.setMoviesImage();
+            this.loading = false;
+          }).catch(() => {
+            this.error = "Something went wrong in our side"
+            this.loading = false;
           });
     },
     setMoviesImage(){

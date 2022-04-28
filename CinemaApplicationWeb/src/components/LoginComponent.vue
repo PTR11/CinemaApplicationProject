@@ -16,10 +16,6 @@
       </div>
 
       <button @click="loginUser" class="btn btn-dark btn-lg border border-1 border-dark btn-block border-rounded">Sign In</button>
-
-      <p class="forgot-password text-right mt-2 mb-4">
-        <router-link to="/forgot-password">Forgot password ?</router-link>
-      </p>
     </div>
   </div>
 
@@ -53,7 +49,7 @@
           loginUser(){
 
             axios
-                .post("http://localhost:7384/api/Users/login/", this.loggedInUser, {withCredentials: true})
+                .post(process.env.VUE_APP_API_ADDRESS+"/api/Users/login/", this.loggedInUser, {withCredentials: true})
                 .then((result) => {
                     if(result.status === 200){
                       this.$router.push({name: 'Home', path:"/"})

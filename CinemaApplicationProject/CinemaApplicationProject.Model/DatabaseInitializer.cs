@@ -25,7 +25,12 @@ namespace CinemaApplicationProject.Model
 			_roleManager = serviceProvider.GetRequiredService<RoleManager<StatsAndPays>>();
 
 			// Adatbázis migrációk végrehajtása, amennyiben szükséges
+			
 			_context.Database.Migrate();
+			if (_context.Actors.Any())
+			{
+				return;
+			}
 			// Városok, épületek, apartmanok inicializálás
 			Products p = new Products { Name = "Sajt", Price = 100 };
 			Products t = new Products { Name = "Perec", Price = 100 };
@@ -157,13 +162,15 @@ namespace CinemaApplicationProject.Model
 					Title = "Star Wars - A birodalom visszavág",
 					Length = 124,
 					Description = "A Halálcsillag elpusztítása után Luke Skywalker, Han Solo, Leia Organa hercegnő és a Lázadó Szövetség menekülni kényszerülnek a Galaktikus Birodalom Darth Vader által vezetett erői elől. Luke elszakad barátaitól és egy félreeső bolygón Yoda jedi mestertől megtanulja használni az Erőt.",
-					Trailer = "",
-					Image = File.ReadAllBytes(Path.Combine(imageFolder,"birodalomvisszavag.jpg")),
+					Trailer = "https://www.youtube.com/embed/zpOULjyy-n8?rel=0",
+					//Image = File.ReadAllBytes(Path.Combine(imageFolder,"birodalomvisszavag.jpg")),
 					Actors = actors.GetRange(0,3),
 					Categories = new List<Categories>
                     {
 						categories[1],categories[2],categories[7]
-                    }
+                    },
+					Director = "George Lucas"
+
 				},
 				new Movies
 				{
@@ -171,11 +178,13 @@ namespace CinemaApplicationProject.Model
 					Length = 194,
 					Description = "1912-ben indul útjára a világ legnagyobb, legelegánsabb, legbiztonságosabbnak vélt óceánjárója, a Titanic. A csodálatos hajón sokféle ember utazik, köztük Jack (Leonardo DiCaprio) és Rose (Kate Winslet), akik két teljesen különböző világból érkeztek, de mégis összehozza őket a sors. Amikor a vesztébe száguldó hajó jéghegynek ütközik, már nem csak szerelmükért, hanem az életben maradásukért is meg kell küzdeniük.",
 					Trailer = "",
+					//Image = File.ReadAllBytes(Path.Combine(imageFolder,"titanic.jpg")),
 					Actors = actors.GetRange(3,3),
 					Categories = new List<Categories>
 					{
 						categories[5],categories[6]
-					}
+					},
+					Director = "James Cameron"
 				},
 				new Movies
 				{
@@ -183,11 +192,13 @@ namespace CinemaApplicationProject.Model
 					Length = 124,
 					Description = "Javában dúl a második világháború 1941-ben. A lelkes és mindenre elszánt ifjú, Steve Rogers is jelentkezik a hadseregbe, ám a gyenge fizikuma miatt kiszuperálják a sorozáson. Ezért örömmel jelentkezik a titkos katonai kísérleti programba, az Újjászületés nevet viselő projektbe, melynek keretében szuperkatonát csinálnak belőle. Az izomkolosszussá fejlődött Amerika kapitány feladata megállítani a nácik titkos tudománmyos részlegét, a Hydrát, melyet a világuralmi törekvéseket dédelgető, rettegett Vörös Koponya vezet.",
 					Trailer = "",
+					//Image = File.ReadAllBytes(Path.Combine(imageFolder,"captain.jpeg")),
 					Actors = actors.GetRange(6,3),
 					Categories = new List<Categories>
 					{
 						categories[1],categories[2],categories[3]
-					}
+					},
+					Director = "Joe Johnston"
 				},
 				new Movies
 				{

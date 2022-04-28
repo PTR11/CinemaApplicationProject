@@ -50,10 +50,10 @@ namespace CinemaApplicationProject.API
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   builder =>
                                   {
-                                      builder.WithOrigins("http://localhost:8080", "http://localhost:7384");
+                                      builder.WithOrigins("http://localhost:8080", "http://localhost:7384", "http://cinemaapplicationprogramapi.azurewebsites.net/", "http://localhost:3000");
+                                      builder.AllowCredentials();
                                       builder.AllowAnyMethod();
                                       builder.AllowAnyHeader();
-                                      builder.AllowAnyOrigin();
                                   });
             });
             services.Configure<IdentityOptions>(options =>
@@ -88,6 +88,8 @@ namespace CinemaApplicationProject.API
             app.UseRouting();
 
             app.UseCors(MyAllowSpecificOrigins);
+
+            
 
             app.UseAuthentication();
 

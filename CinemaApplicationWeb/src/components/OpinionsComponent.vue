@@ -5,7 +5,6 @@
           <h5 class="card-title">User: {{ item.anonymus === true ? "Anonymus" : item.guestName }}</h5>
           <h6 class="card-subtitle mb-2">Rating: {{item.ranking}}</h6>
           <p class="card-text">Comment: {{item.description}}</p>
-
         </div>
     </div>
     <b-pagination

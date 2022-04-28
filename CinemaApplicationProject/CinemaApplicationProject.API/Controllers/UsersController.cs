@@ -30,12 +30,12 @@ namespace CinemaApplicationProject.API.Controllers
             _service = service;
             DatabaseManipulation.context = _service.GetContext();
         }
-        public UsersController(UserManager<ApplicationUser> userManager, IDatabaseService service)
-        {
-            _userManager = userManager;
-            _service = service;
-            DatabaseManipulation.context = _service.GetContext();
-        }
+        //public UsersController(UserManager<ApplicationUser> userManager, IDatabaseService service)
+        //{
+        //    _userManager = userManager;
+        //    _service = service;
+        //    DatabaseManipulation.context = _service.GetContext();
+        //}
 
         [Authorize]
         [HttpGet]
@@ -85,6 +85,14 @@ namespace CinemaApplicationProject.API.Controllers
             //return RedirectService.RedirectMethod("Something went wrong", HttpStatusCode.BadRequest);
 
 
+        }
+
+        [EnableCors("_myAllowSpecificOrigins")]
+        [HttpGet("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return Ok();
         }
 
 
