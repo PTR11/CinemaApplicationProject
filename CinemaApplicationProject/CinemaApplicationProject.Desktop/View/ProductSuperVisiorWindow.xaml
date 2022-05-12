@@ -42,7 +42,7 @@
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Header="UserName" Binding="{Binding UserName}" FontSize="24" Width="Auto" Foreground="Black"/>
                                             <DataGridTextColumn Header="Name" Binding="{Binding Name}" FontSize="24" Width="Auto" Foreground="Black"/>
-                                            <DataGridTextColumn Header="Sold Tickets" Binding="{Binding SoldProducts}" FontSize="24" Width="Auto" Foreground="Black"/>
+                                            <DataGridTextColumn Header="Sold Products" Binding="{Binding SoldProducts}" FontSize="24" Width="Auto" Foreground="Black"/>
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </Border>

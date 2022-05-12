@@ -104,9 +104,8 @@
                                                 <ControlTemplate TargetType="Button">
                                                     <Border BorderBrush="Black" BorderThickness="2">
                                                         <Grid Margin="0">
-
                                                             <Image Width="200" Height="200" Source="{Binding ImageInBytes}"/>
-                                                            <TextBlock Foreground="Black" TextWrapping="Wrap" Text="{Binding Text}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                                                            <TextBlock Foreground="Black" FontSize="24" FontWeight="Bold" TextWrapping="Wrap" Text="{Binding Text}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                                                         </Grid>
                                                     </Border>
                                                 </ControlTemplate>

@@ -41,12 +41,11 @@ export default {
   },
   methods:{
     changeDate(){
-      console.log("change")
       this.$store.dispatch("setFilterDate",this.date);
     },
     fetchDates(){
       axios
-          .post( process.env.VUE_APP_API_ADDRESS+"/api/Shows/availableDates/")
+          .get( process.env.VUE_APP_API_ADDRESS+"/api/Shows/availableDates/")
           .then((result) => {
             console.log("date:",result.data);
             if(result.data.length == 0){

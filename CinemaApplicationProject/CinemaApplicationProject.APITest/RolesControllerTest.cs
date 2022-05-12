@@ -37,11 +37,8 @@ namespace CinemaApplicationProject.APITest
                 new UserStore<ApplicationUser, StatsAndPays, DatabaseContext, int>(_context), null,
                 new PasswordHasher<ApplicationUser>(), null, null, null, null, null, null);
 
-            var user = new ApplicationUser { UserName = "testName", Id = 1 };
-            userManager.CreateAsync(user, "testPassword").Wait();
 
-            var emp = new Employees { Name = "sajt", Id = 2, Birthday = "ma" };
-            userManager.CreateAsync(emp, "testPassword").Wait();
+            
 
             _service = new DatabaseService(_context, userManager);
             var roleManager = new RoleManager<StatsAndPays>(new RoleStore<StatsAndPays, DatabaseContext, int>(_context),null,null,null,null);
@@ -99,7 +96,7 @@ namespace CinemaApplicationProject.APITest
         public void DeleteRoleTest()
         {
             var mCount = _context.StatsAndPays.Count();
-            var result = _controller.DeleteStatsAndPays(1);
+            var result = _controller.DeleteRole(1);
 
             var objectResult = Assert.IsAssignableFrom<OkResult>(result);
             Assert.Equal(mCount - 1, _context.StatsAndPays.Count());
@@ -129,7 +126,7 @@ namespace CinemaApplicationProject.APITest
             {
                 Id = 6,
                 Name = "sajt",
-                UserId = 2,
+                UserId = 1,
             };
 
             var count = _context.StatsAndPays.Count();

@@ -34,7 +34,7 @@ namespace CinemaApplicationProject.Model.Migrations
 
                     b.HasIndex("MoviesId");
 
-                    b.ToTable("ActorsMovies");
+                    b.ToTable("ActorsMovies", (string)null);
                 });
 
             modelBuilder.Entity("CategoriesMovies", b =>
@@ -49,7 +49,7 @@ namespace CinemaApplicationProject.Model.Migrations
 
                     b.HasIndex("MoviesId");
 
-                    b.ToTable("CategoriesMovies");
+                    b.ToTable("CategoriesMovies", (string)null);
                 });
 
             modelBuilder.Entity("CinemaApplicationProject.Model.Database.Actors", b =>
@@ -65,7 +65,7 @@ namespace CinemaApplicationProject.Model.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Actors");
+                    b.ToTable("Actors", (string)null);
                 });
 
             modelBuilder.Entity("CinemaApplicationProject.Model.Database.ApplicationUser", b =>
@@ -168,7 +168,7 @@ namespace CinemaApplicationProject.Model.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("BuffetSales");
+                    b.ToTable("BuffetSales", (string)null);
                 });
 
             modelBuilder.Entity("CinemaApplicationProject.Model.Database.BuffetWarehouse", b =>
@@ -189,7 +189,7 @@ namespace CinemaApplicationProject.Model.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("BuffetWarehouse");
+                    b.ToTable("BuffetWarehouse", (string)null);
                 });
 
             modelBuilder.Entity("CinemaApplicationProject.Model.Database.Categories", b =>
@@ -209,7 +209,7 @@ namespace CinemaApplicationProject.Model.Migrations
                         .IsUnique()
                         .HasFilter("[Category] IS NOT NULL");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("CinemaApplicationProject.Model.Database.EmployeePresence", b =>
@@ -236,7 +236,7 @@ namespace CinemaApplicationProject.Model.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("EmployeePresence");
+                    b.ToTable("EmployeePresence", (string)null);
                 });
 
             modelBuilder.Entity("CinemaApplicationProject.Model.Database.Movies", b =>
@@ -267,7 +267,7 @@ namespace CinemaApplicationProject.Model.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Movies");
+                    b.ToTable("Movies", (string)null);
                 });
 
             modelBuilder.Entity("CinemaApplicationProject.Model.Database.Opinions", b =>
@@ -302,7 +302,7 @@ namespace CinemaApplicationProject.Model.Migrations
 
                     b.HasIndex("MovieId");
 
-                    b.ToTable("Opinions");
+                    b.ToTable("Opinions", (string)null);
                 });
 
             modelBuilder.Entity("CinemaApplicationProject.Model.Database.Products", b =>
@@ -324,7 +324,7 @@ namespace CinemaApplicationProject.Model.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("CinemaApplicationProject.Model.Database.Rents", b =>
@@ -371,7 +371,7 @@ namespace CinemaApplicationProject.Model.Migrations
 
                     b.HasIndex("TicketId");
 
-                    b.ToTable("Rents");
+                    b.ToTable("Rents", (string)null);
                 });
 
             modelBuilder.Entity("CinemaApplicationProject.Model.Database.Rooms", b =>
@@ -393,7 +393,7 @@ namespace CinemaApplicationProject.Model.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Rooms");
+                    b.ToTable("Rooms", (string)null);
                 });
 
             modelBuilder.Entity("CinemaApplicationProject.Model.Database.Shows", b =>
@@ -422,7 +422,7 @@ namespace CinemaApplicationProject.Model.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("Shows");
+                    b.ToTable("Shows", (string)null);
                 });
 
             modelBuilder.Entity("CinemaApplicationProject.Model.Database.StatsAndPays", b =>
@@ -479,7 +479,7 @@ namespace CinemaApplicationProject.Model.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tickets");
+                    b.ToTable("Tickets", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

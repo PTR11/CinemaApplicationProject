@@ -223,7 +223,7 @@ namespace CinemaApplicationProject.Model.Services
 
         public List<MoviesDTO> GetStatisticsForMovies()
         {
-            var listOfMovies = context.Movies.Include(m => m.Opinions).ToList();
+            var listOfMovies = context.Movies.Include(m => m.Opinions).ThenInclude(m => m.Guest).ToList();
             List<MoviesDTO> result = new List<MoviesDTO>(listOfMovies.Select(m => (MoviesDTO)m).ToList());
             foreach(var movie in result)
             {
@@ -292,7 +292,7 @@ namespace CinemaApplicationProject.Model.Services
 
         public List<Rents> GetAllRentsByShowId(int id) => context.Rents.Where(m => m.ShowId == id).Include(m => m.Guest).ToList();
 
-        public List<Guests> GetAllRentUserByShowId(int id) => context.Rents.Where(m => m.ShowId == id).Include(m => m.Guest).Select(m => m.Guest).Distinct().ToList();
+        public List<Guests> GetAllRentUserByShowId(int id) => context.Rents.Where(m => m.ShowId == id && m.Employee == null).Include(m => m.Guest).Select(m => m.Guest).Distinct().ToList();
         public Boolean IfReservedPlace(int showid, int x, int y) => context.Rents.Where(m => m.ShowId == showid).Where(m => m.X == x && m.Y == y).Any();
 
         public async Task<bool> SaveRents(RentFromGuestDTO rfg)

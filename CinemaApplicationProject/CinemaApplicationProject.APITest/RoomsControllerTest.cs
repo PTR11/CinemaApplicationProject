@@ -36,8 +36,7 @@ namespace CinemaApplicationProject.APITest
                 new UserStore<ApplicationUser, StatsAndPays, DatabaseContext, int>(_context), null,
                 new PasswordHasher<ApplicationUser>(), null, null, null, null, null, null);
 
-            var user = new ApplicationUser { UserName = "testName", Id = 1 };
-            userManager.CreateAsync(user, "testPassword").Wait();
+            
 
             _service = new DatabaseService(_context, userManager);
             _controller = new RoomsController(_service);
@@ -108,7 +107,7 @@ namespace CinemaApplicationProject.APITest
         public void DeleteRoom()
         {
             var Count = _context.Rooms.Count();
-            var result = _controller.DeleteRooms(1);
+            var result = _controller.DeleteRoom(1);
 
             var objectResult = Assert.IsAssignableFrom<OkResult>(result);
             Assert.Equal(Count - 1, _context.Rooms.Count());
@@ -126,7 +125,7 @@ namespace CinemaApplicationProject.APITest
             };
 
 
-            var result = _controller.PutRooms(1, room);
+            var result = _controller.PutRoom(1, room);
             Assert.IsAssignableFrom<OkResult>(result);
             Assert.Equal("perec", _context.Rooms.FirstOrDefault(b => b.Id == 1).Name);
             Assert.Equal(1, _context.Rooms.FirstOrDefault(b => b.Id == 1).Width);
@@ -145,7 +144,7 @@ namespace CinemaApplicationProject.APITest
 
             var count = _context.Rooms.Count();
 
-            var result = _controller.PostRooms(room);
+            var result = _controller.PostRoom(room);
 
             var objectResult = Assert.IsAssignableFrom<CreatedAtActionResult>(result.Result);
             Assert.IsAssignableFrom<RoomsDTO>(objectResult.Value);

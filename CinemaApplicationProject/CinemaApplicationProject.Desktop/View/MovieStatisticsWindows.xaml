@@ -33,7 +33,7 @@
                         <Border CornerRadius="0" BorderThickness="3,0,3,3" BorderBrush="Black">
                             <DataGrid ItemsSource="{Binding MoviesStat}"
                                                 VerticalContentAlignment="Stretch"  IsReadOnly="True"
-                                                AutoGenerateColumns="False" HeadersVisibility="None"
+                                                AutoGenerateColumns="False" HeadersVisibility="All"
                                                 Foreground="{x:Null}" SelectedItem="{Binding SelectedMovie}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="SelectionChanged">
@@ -49,9 +49,9 @@
                                 </i:Interaction.Triggers>
 
                                 <DataGrid.Columns >
-                                    <DataGridTextColumn Binding="{Binding Title}" FontSize="24" Width="*" Foreground="Black"/>
-                                    <DataGridTextColumn Binding="{Binding Average}" FontSize="24" Width="*" Foreground="Black"/>
-                                    <DataGridTextColumn Binding="{Binding TicketsCount }" FontSize="24" Width="*" Foreground="Black"/> 
+                                    <DataGridTextColumn Binding="{Binding Title}" Header="Title" FontSize="24" Width="*" Foreground="Black"/>
+                                    <DataGridTextColumn Binding="{Binding Average}" Header="Average" FontSize="24" Width="*" Foreground="Black"/>
+                                    <DataGridTextColumn Binding="{Binding TicketsCount }" Header="Tickets Count" FontSize="24" Width="*" Foreground="Black"/> 
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Border>

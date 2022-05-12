@@ -435,7 +435,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             UpdateTicket = new DelegateCommand(_ => !(SelectedTicket is null), async _ => 
                 await UpdateSelectedItem(_addTicket, AddCreatedTicket, Validation.Validate(SelectedTicket), SetupTicketUpdate, "api/Tickets", null));
             UpdateUser = new DelegateCommand(_ => !(SelectedUser is null), async _ => 
-                await UpdateSelectedItem(_addUser, AddCreatedUser, Validation.Validate(SelectedUser), SetupUserUpdate, "api/Users", LoadUsers, LoadRoles));
+                await UpdateSelectedItem(_addUser, AddCreatedUser, Validation.Validate(SelectedUser), SetupUserUpdate, "api/Employee", LoadUsers, LoadRoles));
             UpdateRole = new DelegateCommand(_ => !(SelectedRole is null), async _ => 
                 await UpdateSelectedItem(_addRole, AddCreatedTicket, Validation.Validate(SelectedRole), SetupRoleUpdate, "api/StatsAndPays", LoadRoles));
             UpdateProduct = new DelegateCommand(_ => !(SelectedProduct is null), async _ => 
@@ -1060,14 +1060,14 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             List<EmployeeViewModel> tmpEmployees = new List<EmployeeViewModel>();
             try
             {
-                if (LoginType != null)
+                if (LoginType == null)
                 {
-                    tmpEmployees = new List<EmployeeViewModel>((await _service.LoadingAsync<EmployeesDTO>("api/Users"))
+                    tmpEmployees = new List<EmployeeViewModel>((await _service.LoadingAsync<EmployeesDTO>("api/Employee"))
                    .Select(movie => (EmployeeViewModel)movie));
                 }
                 else
                 {
-                    tmpEmployees = new List<EmployeeViewModel>((await _service.LoadingAsync<EmployeesDTO>("api/Users"+LoginType))
+                    tmpEmployees = new List<EmployeeViewModel>((await _service.LoadingAsync<EmployeesDTO>("api/Employee/" + LoginType))
                     .Select(movie => (EmployeeViewModel)movie));
                 }
                 
@@ -1358,7 +1358,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             if (Validation.IsValid())
             {
                 var userDTO = (EmployeesDTO)SelectedUser;
-                SelectedUser.Id = await AddEntity("api/Users/", userDTO);
+                SelectedUser.Id = await AddEntity("api/Employee/", userDTO);
                 _addUser = false;
                 SelectedUser = new EmployeeViewModel();
                 await LoadUsers();

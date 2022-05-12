@@ -25,19 +25,6 @@ namespace CinemaApplicationProject.API.Controllers
             DatabaseManipulation.context = _service.GetContext();
         }
 
-        [HttpGet("only/{id}")]
-        [EnableCors("_myAllowSpecificOrigins")]
-        public ActionResult<MoviesDTO> GetMovieById(int id)
-        {
-            var movie = (MoviesDTO)_service.GetMovieById(id);
-
-            if (movie == null)
-            {
-                return NotFound();
-            }
-
-            return movie;
-        }
 
         // GET: api/Movies
         [EnableCors("_myAllowSpecificOrigins")]
@@ -94,18 +81,18 @@ namespace CinemaApplicationProject.API.Controllers
         // PUT: api/Movies/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMovies(int id, MoviesDTO movies)
+        public async Task<IActionResult> PutMovie(int id, MoviesDTO movie)
         {
-            if (id != movies.Id)
+            if (id != movie.Id)
             {
                 return BadRequest();
             }
-            var tmp = _service.GetMovieById(movies.Id);
-            tmp.Title = movies.Title;
-            tmp.Description = movies.Description;
-            tmp.Image = movies.Image;
-            tmp.Length = movies.Length;
-            tmp.Director = movies.Director;
+            var tmp = _service.GetMovieById(movie.Id);
+            tmp.Title = movie.Title;
+            tmp.Description = movie.Description;
+            tmp.Image = movie.Image;
+            tmp.Length = movie.Length;
+            tmp.Director = movie.Director;
             if (DatabaseManipulation.UpdateElementAsync(tmp)) 
             {
                 return Ok();
@@ -119,7 +106,7 @@ namespace CinemaApplicationProject.API.Controllers
         // POST: api/Movies
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public ActionResult<MoviesDTO> PostMovies(MoviesDTO movies)
+        public ActionResult<MoviesDTO> PostMovie(MoviesDTO movies)
         {
             var tmp = new MoviesDTO
             {
@@ -171,12 +158,12 @@ namespace CinemaApplicationProject.API.Controllers
 
             
             
-            return CreatedAtAction(nameof(GetMovieById), new { id = movie.Id }, (MoviesDTO)movie);
+            return CreatedAtAction(nameof(GetMovie), new { id = movie.Id }, (MoviesDTO)movie);
         }
 
         // DELETE: api/Movies/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteMovies(int id)
+        public IActionResult DeleteMovie(int id)
         {
             var movies = _service.GetMovieById(id);
             if (movies == null)

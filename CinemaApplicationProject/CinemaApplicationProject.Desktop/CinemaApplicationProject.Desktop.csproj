@@ -45,7 +45,7 @@
 	  <ProjectReference Include="..\CinemaApplicationProject.Model\CinemaApplicationProject.Model.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Resource Include="View\Pages\doksi.jpg" />
+	  <Folder Include="View\Pages\" />
 	</ItemGroup>
 
 </Project>

@@ -32,14 +32,14 @@ namespace CinemaApplicationProject.Model.Database
             Rents = new HashSet<Rents>();
         }
 
-        public ICollection<Actors> Actors { get; set; }
+        public virtual ICollection<Actors> Actors { get; set; }
 
-        public ICollection<Shows> Shows { get; set; }
+        public virtual ICollection<Shows> Shows { get; set; }
 
-        public ICollection<Categories> Categories { get; set; }
+        public virtual ICollection<Categories> Categories { get; set; }
 
-        public ICollection<Opinions> Opinions { get; set; }
-        public ICollection<Rents> Rents { get; set; }
+        public virtual ICollection<Opinions> Opinions { get; set; }
+        public virtual ICollection<Rents> Rents { get; set; }
 
         public override bool Equals(Object obj)
         {

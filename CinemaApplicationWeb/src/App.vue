@@ -32,16 +32,6 @@ export default {
       this.txt = `it changed to ${newHeight} from ${oldHeight}`;
     },
   },
-  mounted() {
-    this.$nextTick(() => {
-      window.addEventListener("resize", this.onResize);
-    });
-  },
-
-  beforeDestroy() {
-    window.removeEventListener("resize", this.onResize);
-  },
-
   methods: {
     onResize() {
       this.windowHeight = window.innerHeight;

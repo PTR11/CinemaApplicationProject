@@ -49,18 +49,18 @@ namespace CinemaApplicationProject.API.Controllers
         // PUT: api/Rooms/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public IActionResult PutRooms(int id, RoomsDTO rooms)
+        public IActionResult PutRoom(int id, RoomsDTO room)
         {
-            var room = _service.GetRoomById(id);
-            room.Name = rooms.Name;
-            room.Width = rooms.Width;
-            room.Heigth = rooms.Heigth;
+            var tmp = _service.GetRoomById(id);
+            tmp.Name = room.Name;
+            tmp.Width = room.Width;
+            tmp.Heigth = room.Heigth;
 
-            if (id != room.Id)
+            if (id != tmp.Id)
             {
                 return BadRequest();
             }
-            if (DatabaseManipulation.UpdateElementAsync(room))
+            if (DatabaseManipulation.UpdateElementAsync(tmp))
             {
                 return Ok();
             }
@@ -73,7 +73,7 @@ namespace CinemaApplicationProject.API.Controllers
         // POST: api/Rooms
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public ActionResult<RoomsDTO> PostRooms(RoomsDTO rooms)
+        public ActionResult<RoomsDTO> PostRoom(RoomsDTO rooms)
         {
             var room = DatabaseManipulation.AddElement((Rooms)rooms);
 
@@ -89,7 +89,7 @@ namespace CinemaApplicationProject.API.Controllers
 
         // DELETE: api/Rooms/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteRooms(int id)
+        public IActionResult DeleteRoom(int id)
         {
             var rooms = _service.GetRoomById(id);
             if (rooms == null)

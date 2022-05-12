@@ -28,9 +28,9 @@ namespace CinemaApplicationProject.Model.Database
 
         public virtual Guests Guest { get; set; }
 
-        public Tickets Ticket { get; set; }
+        public virtual Tickets Ticket { get; set; }
 
-        public Shows Show { get; set; }
+        public virtual Shows Show { get; set; }
 
 
     }

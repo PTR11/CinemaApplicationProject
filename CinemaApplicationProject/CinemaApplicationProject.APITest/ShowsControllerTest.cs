@@ -37,8 +37,7 @@ namespace CinemaApplicationProject.APITest
                 new UserStore<ApplicationUser, StatsAndPays, DatabaseContext, int>(_context), null,
                 new PasswordHasher<ApplicationUser>(), null, null, null, null, null, null);
 
-            var user = new ApplicationUser { UserName = "testName", Id = 1 };
-            userManager.CreateAsync(user, "testPassword").Wait();
+            
 
             _service = new DatabaseService(_context, userManager);
             _controller = new ShowsController(_service);
@@ -139,7 +138,7 @@ namespace CinemaApplicationProject.APITest
             };
 
 
-            var result = _controller.PutShows(3, show);
+            var result = _controller.PutShow(3, show);
             Assert.IsAssignableFrom<OkResult>(result);
             Assert.Equal(5, _context.Shows.FirstOrDefault(b => b.Id == 3).MovieId);
             Assert.Equal(3, _context.Shows.FirstOrDefault(b => b.Id == 3).RoomId);
@@ -149,7 +148,7 @@ namespace CinemaApplicationProject.APITest
         public void DeleteShowTest()
         {
             var mCount = _context.Shows.Count();
-            var result = _controller.DeleteShows(1);
+            var result = _controller.DeleteShow(1);
 
             var objectResult = Assert.IsAssignableFrom<OkResult>(result);
             Assert.Equal(mCount - 1, _context.Shows.Count());
@@ -168,7 +167,7 @@ namespace CinemaApplicationProject.APITest
 
             var count = _context.Shows.Count();
 
-            var result = _controller.PostShows(movie);
+            var result = _controller.PostShow(movie);
 
             var objectResult = Assert.IsAssignableFrom<CreatedAtActionResult>(result.Result);
             Assert.IsAssignableFrom<ShowsDTO>(objectResult.Value);

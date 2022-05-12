@@ -64,6 +64,7 @@ namespace CinemaApplicationProject.API
                 options.Password.RequireUppercase = true;
                 options.Password.RequireDigit = true;
 
+
                 // Hibás bejelentkezés esetén az (ideiglenes) kizárásra vonatkozó konfiguráció
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
                 options.Lockout.MaxFailedAccessAttempts = 10;
@@ -73,6 +74,7 @@ namespace CinemaApplicationProject.API
             });
             
             services.AddTransient<IDatabaseService, DatabaseService>();
+            
             services.AddControllers();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
         }
@@ -88,8 +90,6 @@ namespace CinemaApplicationProject.API
             app.UseRouting();
 
             app.UseCors(MyAllowSpecificOrigins);
-
-            
 
             app.UseAuthentication();
 

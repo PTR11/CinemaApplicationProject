@@ -332,8 +332,8 @@ namespace CinemaApplicationProject.Model
 				UserName = "ptr1",
 				Name = "Sanyi",
 				Email = "s.p@asd.com",
-				Address = "anyadban",
-				CreditCardNumber = "123asd321"
+				Address = "itthon",
+				CreditCardNumber = "12311123321"
 			};
 
 
@@ -361,10 +361,10 @@ namespace CinemaApplicationProject.Model
 			var adminUser2 = new Guests
 			{
 				UserName = "admin2",
-				Name = "Barn",
-				Email = "barnak.peter12@gmail.com",
-				Address = "faszomban",
-				CreditCardNumber = "KurvaAnyádat"
+				Name = "Kis István",
+				Email = "kisi@gmail.com",
+				Address = "Budapest, Nagytétényi út 123",
+				CreditCardNumber = "1223456612"
 
 			};
 			var adminPassword = "Almafa123";

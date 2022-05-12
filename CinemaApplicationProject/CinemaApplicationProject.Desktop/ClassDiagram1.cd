@@ -1,20 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="CinemaApplicationProject.Desktop.Model.Errors.NetworkException">
-    <Position X="13.5" Y="20.25" Width="2.25" />
-    <InheritanceLine Type="System.Exception" FixedToPoint="true">
-      <Path>
-        <Point X="14.5" Y="19.312" />
-        <Point X="14.5" Y="20.25" />
-      </Path>
-    </InheritanceLine>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Model\Errors\NetworkException.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="CinemaApplicationProject.Desktop.Model.Services.MainApiService">
-    <Position X="27.5" Y="17.75" Width="2" />
+  <Class Name="CinemaApplicationProject.Desktop.Model.Services.MainApiService" Collapsed="true">
+    <Position X="26" Y="18.75" Width="2" />
     <Members>
       <Method Name="CreateRent" Hidden="true" />
       <Method Name="LoadingAsync" Hidden="true" />
@@ -28,14 +15,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="CinemaApplicationProject.Desktop.Model.Services.ValidationService">
-    <Position X="26" Y="26.75" Width="1.75" />
+    <Position X="17.5" Y="20" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAACAEAAACAAAAAAAgAAoAAIABAAIQAAAEAAAAAAgA=</HashCode>
       <FileName>Model\Services\ValidationService.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="CinemaApplicationProject.Desktop.View.Admin.AdminMainWindow" BaseTypeListCollapsed="true">
-    <Position X="36.5" Y="19.75" Width="2.5" />
+    <Position X="45.25" Y="16.25" Width="2.5" />
     <TypeIdentifier>
       <HashCode>IAAAAAAAAAAAAAAgABCAAgEAAAAAEAAAAgIABAAAAAA=</HashCode>
       <FileName>View\AdminMainWindow.xaml.cs</FileName>
@@ -43,7 +30,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="CinemaApplicationProject.Desktop.View.BuffetUserWindow" BaseTypeListCollapsed="true">
-    <Position X="44.5" Y="22.75" Width="2.5" />
+    <Position X="53.25" Y="19.25" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>View\BuffetUserWindow.xaml.cs</FileName>
@@ -51,7 +38,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="CinemaApplicationProject.Desktop.View.LoginWindow" BaseTypeListCollapsed="true">
-    <Position X="44.5" Y="21.25" Width="2.5" />
+    <Position X="53.25" Y="17.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>View\LoginWindow.xaml.cs</FileName>
@@ -59,7 +46,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="CinemaApplicationProject.Desktop.View.MovieStatisticsWindows" BaseTypeListCollapsed="true">
-    <Position X="42.25" Y="23.5" Width="2" />
+    <Position X="51" Y="20" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>View\MovieStatisticsWindows.xaml.cs</FileName>
@@ -67,7 +54,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="CinemaApplicationProject.Desktop.View.ProductSellingWindow" BaseTypeListCollapsed="true">
-    <Position X="39.25" Y="19.75" Width="2.75" />
+    <Position X="48" Y="16.25" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>View\ProductSellingWindow.xaml.cs</FileName>
@@ -75,7 +62,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="CinemaApplicationProject.Desktop.View.ProductStatisticsWindows" BaseTypeListCollapsed="true">
-    <Position X="39.25" Y="23.5" Width="2.75" />
+    <Position X="48" Y="20" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>View\ProductStatisticsWindows.xaml.cs</FileName>
@@ -83,7 +70,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="CinemaApplicationProject.Desktop.View.ProductSuperVisiorWindow" BaseTypeListCollapsed="true">
-    <Position X="36.5" Y="23.5" Width="2.5" />
+    <Position X="45.25" Y="20" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
       <FileName>View\ProductSuperVisiorWindow.xaml.cs</FileName>
@@ -91,7 +78,7 @@
     <Lollipop Orientation="Left" Position="0.491" Collapsed="true" />
   </Class>
   <Class Name="CinemaApplicationProject.Desktop.View.RolesPickerWindow" BaseTypeListCollapsed="true">
-    <Position X="44.5" Y="19.75" Width="2.5" />
+    <Position X="53.25" Y="16.25" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>View\RolesPickerWindow.xaml.cs</FileName>
@@ -99,7 +86,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="CinemaApplicationProject.Desktop.View.TicketSellingWindow" BaseTypeListCollapsed="true">
-    <Position X="42.25" Y="19.75" Width="2" />
+    <Position X="51" Y="16.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>View\TicketSellingWindow.xaml.cs</FileName>
@@ -107,7 +94,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="CinemaApplicationProject.Desktop.View.TicketSuperVisiorWindow" BaseTypeListCollapsed="true">
-    <Position X="39.25" Y="21.5" Width="2.75" />
+    <Position X="48" Y="18" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAgAAAAAAAAA=</HashCode>
       <FileName>View\TicketSuperVisiorWindow.xaml.cs</FileName>
@@ -115,7 +102,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="CinemaApplicationProject.Desktop.View.TicketUserWindow" BaseTypeListCollapsed="true">
-    <Position X="42.25" Y="21.5" Width="2" />
+    <Position X="51" Y="18" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAABAAAAEAAAAAAAAAAgAAAAAAAAA=</HashCode>
       <FileName>View\TicketUserWindow.xaml.cs</FileName>
@@ -123,7 +110,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Base.DelegateCommand" BaseTypeListCollapsed="true">
-    <Position X="23.75" Y="27.75" Width="2" />
+    <Position X="17.25" Y="16.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAEACAAQAAECAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Viewmodel\Base\DelegateCommand.cs</FileName>
@@ -141,25 +128,8 @@
     </ShowAsAssociation>
     <Lollipop Orientation="Right" Position="0.386" />
   </Class>
-  <Class Name="CinemaApplicationProject.Desktop.Viewmodel.EventArguments.MessageEventArgs" Collapsed="true">
-    <Position X="27.25" Y="21.5" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
-      <FileName>Viewmodel\EventArguments\MessageEventArgs.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.ActorViewModel">
-    <Position X="16.5" Y="19" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AAAAIAQAABAAACAADAAAAAQAAQAoAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Viewmodel\Models\ForView\ActorViewModel.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.CategoryViewModel">
-    <Position X="27.25" Y="23.5" Width="1.75" />
+    <Position X="27.25" Y="22.5" Width="1.75" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
@@ -168,32 +138,22 @@
       <FileName>Viewmodel\Models\ForView\CategoryViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.EmployeeViewModel">
-    <Position X="19" Y="12" Width="1.5" />
+  <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.Field">
+    <Position X="27.25" Y="13.5" Width="1.5" />
+    <Members>
+      <Property Name="Image" Hidden="true" />
+      <Property Name="OnClick" Hidden="true" />
+      <Property Name="X" Hidden="true" />
+    </Members>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
-    <InheritanceLine Type="CinemaApplicationProject.Desktop.Viewmodel.Base.ViewModelBase" ManuallyRouted="true">
-      <Path>
-        <Point X="24.25" Y="17.75" />
-        <Point X="24.25" Y="17.289" />
-        <Point X="19.75" Y="17.289" />
-        <Point X="19.75" Y="16.828" />
-      </Path>
-    </InheritanceLine>
-    <TypeIdentifier>
-      <HashCode>ABQAIAQAATAAACAEAAAACEQAQgEIAAADASIAIEABAAE=</HashCode>
-      <FileName>Viewmodel\Models\ForView\EmployeeViewModel.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.Field">
-    <Position X="18.25" Y="23.75" Width="1.5" />
     <InheritanceLine Type="CinemaApplicationProject.Desktop.Viewmodel.Base.ViewModelBase" ManuallyRouted="true" FixedToPoint="true">
       <Path>
-        <Point X="24.25" Y="21.17" />
-        <Point X="24.25" Y="23.141" />
-        <Point X="19.062" Y="23.141" />
-        <Point X="19.062" Y="23.75" />
+        <Point X="24.25" Y="17.75" />
+        <Point X="24.25" Y="17.309" />
+        <Point X="28.062" Y="17.309" />
+        <Point X="28.062" Y="16.405" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
@@ -201,111 +161,47 @@
       <FileName>Viewmodel\Models\ForView\Field.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.LoginRolesViewModel">
-    <Position X="25.25" Y="14.75" Width="1.5" />
+  <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.OpinionsViewModel">
+    <Position X="29.75" Y="23" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
-    <InheritanceLine Type="CinemaApplicationProject.Desktop.Viewmodel.Base.ViewModelBase" FixedFromPoint="true">
+    <InheritanceLine Type="CinemaApplicationProject.Desktop.Viewmodel.Base.ViewModelBase" ManuallyRouted="true">
       <Path>
-        <Point X="24.812" Y="17.75" />
-        <Point X="24.812" Y="17.289" />
-        <Point X="26" Y="17.289" />
-        <Point X="26" Y="16.886" />
+        <Point X="24.25" Y="21.17" />
+        <Point X="24.25" Y="21.545" />
+        <Point X="29" Y="21.545" />
+        <Point X="29" Y="21.941" />
+        <Point X="30.5" Y="21.941" />
+        <Point X="30.5" Y="23" />
       </Path>
     </InheritanceLine>
-    <TypeIdentifier>
-      <HashCode>AAAAIAAAAAAAAAAAAAAABAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Viewmodel\Models\ForView\LoginRolesViewModel.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.MovieViewModel">
-    <Position X="29.25" Y="12.75" Width="1.5" />
-    <Members>
-      <Property Name="Average" Hidden="true" />
-      <Property Name="Categories" Hidden="true" />
-      <Property Name="DeleteMovie" Hidden="true" />
-      <Property Name="Description" Hidden="true" />
-      <Property Name="ImageForeground" Hidden="true" />
-      <Property Name="Length" Hidden="true" />
-      <Property Name="SelectedActor" Hidden="true" />
-      <Property Name="SelectedCategory" Hidden="true" />
-      <Property Name="TicketsCount" Hidden="true" />
-      <Property Name="Trailer" Hidden="true" />
-    </Members>
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>CCkABBQAQYAgyGAEAAIaAEBAAAEEUBQABgACKAAAAAA=</HashCode>
-      <FileName>Viewmodel\Models\ForView\MovieViewModel.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.OpinionsViewModel">
-    <Position X="29.25" Y="23.5" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
     <TypeIdentifier>
       <HashCode>AEAAAAAEEAAAgAAAAAAAAAAAAAAAAAAAAQIAABAAAAA=</HashCode>
       <FileName>Viewmodel\Models\ForView\OpinionsViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.PresenceViewModel">
-    <Position X="19" Y="17.75" Width="2.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AAABAAAAAAAAAAAEgAAAAAICAAAAAAAAAAAQIAAAAAA=</HashCode>
-      <FileName>Viewmodel\Models\ForView\PresenceViewModel.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.ProductsCounterViewModel">
-    <Position X="23" Y="24" Width="2.25" />
+    <Position X="23" Y="22" Width="2.25" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
-    <InheritanceLine Type="CinemaApplicationProject.Desktop.Viewmodel.Base.ViewModelBase" FixedToPoint="true">
-      <Path>
-        <Point X="24.25" Y="21.17" />
-        <Point X="24.25" Y="24" />
-      </Path>
-    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>AgAAAAAAAQAAAAQAAAAAAAQAAAAAAAAAAQCAAAAAAAA=</HashCode>
       <FileName>Viewmodel\Models\ForView\ProductsCounterViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.ProductSellViewModel">
-    <Position X="21.5" Y="12.75" Width="1.5" />
+  <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.ProductSellerViewModel">
+    <Position X="24.75" Y="13.75" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
-    <InheritanceLine Type="CinemaApplicationProject.Desktop.Viewmodel.Base.ViewModelBase" ManuallyRouted="true">
+    <InheritanceLine Type="CinemaApplicationProject.Desktop.Viewmodel.Base.ViewModelBase" ManuallyRouted="true" FixedFromPoint="true">
       <Path>
         <Point X="24.25" Y="17.75" />
-        <Point X="24.25" Y="17.25" />
-        <Point X="22.25" Y="17.25" />
-        <Point X="22.25" Y="16.617" />
-      </Path>
-    </InheritanceLine>
-    <TypeIdentifier>
-      <HashCode>BgIIEAgBAQABAECAAAAAAAAEAAAAAAIgAgAAAAAAgAA=</HashCode>
-      <FileName>Viewmodel\Models\ForView\ProductSellViewModel.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.ProductSellerViewModel">
-    <Position X="16.5" Y="23.75" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <InheritanceLine Type="CinemaApplicationProject.Desktop.Viewmodel.Base.ViewModelBase" ManuallyRouted="true">
-      <Path>
-        <Point X="24.25" Y="21.17" />
-        <Point X="24.25" Y="23.173" />
-        <Point X="17.25" Y="23.173" />
-        <Point X="17.25" Y="23.75" />
+        <Point X="24.25" Y="17.334" />
+        <Point X="25.5" Y="17.334" />
+        <Point X="25.5" Y="15.886" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
@@ -314,7 +210,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.ProductStatViewModel">
-    <Position X="25.5" Y="23.5" Width="1.5" />
+    <Position X="25.5" Y="21.75" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
@@ -323,28 +219,8 @@
       <FileName>Viewmodel\Models\ForView\ProductStatViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.ProductViewModel">
-    <Position X="31.25" Y="12.75" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AgEAIAAAAQAgACABAAAAAAwAAAEAQBAAAgQAgAAAAAA=</HashCode>
-      <FileName>Viewmodel\Models\ForView\ProductViewModel.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.RentViewModel">
-    <Position X="35" Y="12.75" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>QBAAAAAIgAQAAAAAgAAAAAAAAAAAABAAIAAAAAICYAA=</HashCode>
-      <FileName>Viewmodel\Models\ForView\RentViewModel.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.RoomViewModel">
-    <Position X="34" Y="23.5" Width="1.5" />
+    <Position X="29.25" Y="17.5" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
@@ -353,35 +229,17 @@
       <FileName>Viewmodel\Models\ForView\RoomViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.ShowViewModel">
-    <Position X="14.75" Y="12.25" Width="1.5" />
+  <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.ShowWeekViewModel">
+    <Position X="22.75" Y="13.75" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <InheritanceLine Type="CinemaApplicationProject.Desktop.Viewmodel.Base.ViewModelBase" ManuallyRouted="true" FixedFromPoint="true">
       <Path>
         <Point X="24.25" Y="17.75" />
-        <Point X="24.25" Y="17.25" />
-        <Point X="15.5" Y="17.25" />
-        <Point X="15.5" Y="16.886" />
-      </Path>
-    </InheritanceLine>
-    <TypeIdentifier>
-      <HashCode>AAAAACQaAAAAACAABCAAAgAAIQEgIBABAAAgBRAEEAA=</HashCode>
-      <FileName>Viewmodel\Models\ForView\ShowViewModel.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.ShowWeekViewModel">
-    <Position X="14.75" Y="23.75" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <InheritanceLine Type="CinemaApplicationProject.Desktop.Viewmodel.Base.ViewModelBase" ManuallyRouted="true">
-      <Path>
-        <Point X="24.25" Y="21.17" />
-        <Point X="24.25" Y="23.189" />
-        <Point X="15.5" Y="23.189" />
-        <Point X="15.5" Y="23.75" />
+        <Point X="24.25" Y="17.29" />
+        <Point X="23.5" Y="17.29" />
+        <Point X="23.5" Y="16.396" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
@@ -389,53 +247,8 @@
       <FileName>Viewmodel\Models\ForView\ShowWeekViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.StatsViewModel">
-    <Position X="23.5" Y="13.5" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>QAAAICQAAAgAACAAAAAAAAQAAAEAAAAAAAAAAAQAAAA=</HashCode>
-      <FileName>Viewmodel\Models\ForView\StatsViewModel.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.TicketsCounterViewModel">
-    <Position X="27.25" Y="15" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAQAAAAAAAQAAAAAAAAAAQCAAAAAAAA=</HashCode>
-      <FileName>Viewmodel\Models\ForView\TicketsCounterViewModel.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.TicketSellViewModel">
-    <Position X="33.25" Y="12.75" Width="1.5" />
-    <Members>
-      <Method Name="AddToSummary" Hidden="true" />
-      <Property Name="DateFilter" Hidden="true" />
-      <Property Name="Main" Hidden="true" />
-      <Property Name="Places" Hidden="true" />
-      <Method Name="RemoveFromSummary" Hidden="true" />
-      <Property Name="Rents" Hidden="true" />
-      <Property Name="Rooms" Hidden="true" />
-      <Property Name="SelectedTicket" Hidden="true" />
-      <Property Name="SelectedUser" Hidden="true" />
-      <Property Name="Show" Hidden="true" />
-      <Method Name="ShowRent" Hidden="true" />
-      <Property Name="Tickets" Hidden="true" />
-      <Property Name="TicketsCounter" Hidden="true" />
-    </Members>
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>BgQABiAAgQAMBAAAwgFAACAGCBAEAoIFRsACBAYAoAA=</HashCode>
-      <FileName>Viewmodel\Models\ForView\TicketSellViewModel.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.TicketsUsersViewModel">
-    <Position X="31.25" Y="23.5" Width="2" />
+    <Position X="29.75" Y="14.5" Width="2" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
@@ -445,29 +258,25 @@
     </TypeIdentifier>
   </Class>
   <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.ForView.TicketViewModel">
-    <Position X="13" Y="23.25" Width="1.5" />
+    <Position X="19.5" Y="13" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="CinemaApplicationProject.Desktop.Viewmodel.Base.ViewModelBase" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="24.25" Y="17.75" />
+        <Point X="24.25" Y="17.354" />
+        <Point X="20.417" Y="17.354" />
+        <Point X="20.417" Y="16.29" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>AgAIAAQgAQAAACQAAAAAAAAAAAEAAAAAAQAAAAAIAAA=</HashCode>
       <FileName>Viewmodel\Models\ForView\TicketViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.LoginViewModel">
-    <Position X="17" Y="14" Width="1.5" />
-    <InheritanceLine Type="CinemaApplicationProject.Desktop.Viewmodel.Base.ViewModelBase" ManuallyRouted="true" FixedFromPoint="true">
-      <Path>
-        <Point X="24.25" Y="17.75" />
-        <Point X="24.25" Y="17.25" />
-        <Point X="17.75" Y="17.25" />
-        <Point X="17.75" Y="16.713" />
-      </Path>
-    </InheritanceLine>
-    <TypeIdentifier>
-      <HashCode>AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAQAAAACAAAI=</HashCode>
-      <FileName>Viewmodel\Models\LoginViewModel.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="CinemaApplicationProject.Desktop.Viewmodel.Models.MainViewModel">
-    <Position X="20.25" Y="23.75" Width="2.25" />
+    <Position X="20.5" Y="18.5" Width="2.25" />
     <Members>
       <Property Name="ActorsList" Hidden="true" />
       <Property Name="ActualWeek" Hidden="true" />
@@ -599,14 +408,21 @@
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
-    <InheritanceLine Type="CinemaApplicationProject.Desktop.Viewmodel.Base.ViewModelBase" ManuallyRouted="true" FixedToPoint="true">
+    <InheritanceLine Type="CinemaApplicationProject.Desktop.Viewmodel.Base.ViewModelBase" ManuallyRouted="true" FixedFromPoint="true">
       <Path>
-        <Point X="24.25" Y="21.17" />
-        <Point X="24.25" Y="23.138" />
-        <Point X="21.438" Y="23.138" />
-        <Point X="21.438" Y="23.75" />
+        <Point X="24.25" Y="17.75" />
+        <Point X="24.25" Y="17.307" />
+        <Point X="21.625" Y="17.307" />
+        <Point X="21.625" Y="18.5" />
       </Path>
     </InheritanceLine>
+    <AssociationLine Name="AddNewMovie" Type="CinemaApplicationProject.Desktop.Viewmodel.Base.DelegateCommand" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="20.5" Y="19.386" />
+        <Point X="18.625" Y="19.386" />
+        <Point X="18.625" Y="18.834" />
+      </Path>
+    </AssociationLine>
     <TypeIdentifier>
       <HashCode>GR9ZHnajvHVznBoUmfM9eNvrWwAM45iOzodz5IbxlxQ=</HashCode>
       <FileName>Viewmodel\Models\MainViewModel.cs</FileName>
@@ -615,37 +431,6 @@
       <Property Name="Validation" />
       <Property Name="AddNewMovie" />
     </ShowAsAssociation>
-  </Class>
-  <Class Name="CinemaApplicationProject.Desktop.App">
-    <Position X="30" Y="18.25" Width="4" />
-    <Members>
-      <Field Name="_loginViewModel" Hidden="true" />
-      <Field Name="_pr" Hidden="true" />
-      <Field Name="_psw" Hidden="true" />
-      <Field Name="_ticketUserWindow" Hidden="true" />
-      <Field Name="_tsw" Hidden="true" />
-      <Field Name="_view" Hidden="true" />
-      <Method Name="App" Hidden="true" />
-      <Method Name="DisplayerMethod" Hidden="true" />
-      <Method Name="ImageChangerForMovie" Hidden="true" />
-      <Method Name="MovieDetailsVisible" Hidden="true" />
-      <Method Name="RoleDetailsVisible" Hidden="true" />
-      <Method Name="ShowDetailsVisible" Hidden="true" />
-      <Method Name="UserDetailsVisible" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>CAEBIAAgAGAAQEAAAAAAQQAAEAAEAAAAAOAAJIBARAA=</HashCode>
-      <FileName>App.xaml.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="System.EventArgs" Collapsed="true">
-    <Position X="27.5" Y="20.25" Width="1.5" />
-    <TypeIdentifier />
-  </Class>
-  <Class Name="System.Exception" Collapsed="true">
-    <Position X="13.75" Y="18.75" Width="1.5" />
-    <TypeIdentifier />
-    <Lollipop Position="0.2" />
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

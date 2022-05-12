@@ -37,8 +37,7 @@ namespace CinemaApplicationProject.APITest
                 new UserStore<ApplicationUser, StatsAndPays, DatabaseContext, int>(_context), null,
                 new PasswordHasher<ApplicationUser>(), null, null, null, null, null, null);
 
-            var user = new ApplicationUser { UserName = "testName", Id = 1 };
-            userManager.CreateAsync(user, "testPassword").Wait();
+           
 
             _service = new DatabaseService(_context, userManager);
             _controller = new TicketsController(_service);
@@ -102,14 +101,14 @@ namespace CinemaApplicationProject.APITest
             };
 
 
-            var result = _controller.PutTickets(1, movie);
+            var result = _controller.PutTicket(1, movie);
             Assert.IsAssignableFrom<OkResult>(result);
             Assert.Equal("perec", _context.Tickets.FirstOrDefault(b => b.Id == 1).Type);
             Assert.Equal(1, _context.Tickets.FirstOrDefault(b => b.Id == 1).Price);
         }
 
         [Fact]
-        public void PostMoviesItemTest()
+        public void PostTicketTest()
         {
             TicketsDTO ticket = new TicketsDTO()
             {
@@ -120,7 +119,7 @@ namespace CinemaApplicationProject.APITest
 
             var count = _context.Tickets.Count();
 
-            var result = _controller.PostTickets(ticket);
+            var result = _controller.PostTicket(ticket);
 
             var objectResult = Assert.IsAssignableFrom<CreatedAtActionResult>(result.Result);
             Assert.IsAssignableFrom<TicketsDTO>(objectResult.Value);
@@ -128,7 +127,7 @@ namespace CinemaApplicationProject.APITest
         }
 
         [Fact]
-        public void DeleteMovie()
+        public void DeleteTicketTest()
         {
             var mCount = _context.Tickets.Count();
             var result = _controller.DeleteTickets(1);

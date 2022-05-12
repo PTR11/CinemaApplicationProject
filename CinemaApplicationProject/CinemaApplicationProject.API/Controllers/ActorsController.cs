@@ -49,30 +49,30 @@ namespace CinemaApplicationProject.API.Controllers
         // POST: api/Actors
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public ActionResult<ActorsDTO> PostActors(ActorsDTO actors)
+        public ActionResult<ActorsDTO> PostActor(ActorsDTO actors)
         {
             
-            Actors actor = (Actors)actors;
+            Actors act = (Actors)actors;
 
             Actors find = _service.GetActorsByName(actors.Name);
             if(find == null)
             {
-                var entity = DatabaseManipulation.AddElement(actor);
+                var entity = DatabaseManipulation.AddElement(act);
                 if (entity == null)
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError);
                 }
-                actor = entity;
+                act = entity;
             }
-            _service.ConnectMovieWithActor(actors.MovieId, actor.Id);
-            return CreatedAtAction(nameof(GetActor), new { id = actor.Id }, (ActorsDTO)actor);
+            _service.ConnectMovieWithActor(actors.MovieId, act.Id);
+            return CreatedAtAction(nameof(GetActor), new { id = act.Id }, (ActorsDTO)act);
         }
 
 
 
         // DELETE: api/Actors/5
         [HttpDelete("{movieId}/{id}")]
-        public IActionResult DeleteActors(int movieId,int id)
+        public IActionResult DeleteActor(int movieId,int id)
         {
             var actors = _service.GetActorById(id);
             if (actors == null)

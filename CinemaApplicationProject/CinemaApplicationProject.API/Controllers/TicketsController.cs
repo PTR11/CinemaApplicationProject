@@ -48,16 +48,16 @@ namespace CinemaApplicationProject.API.Controllers
         //PUT: api/Tickets/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public IActionResult PutTickets(int id, TicketsDTO tickets)
+        public IActionResult PutTicket(int id, TicketsDTO ticket)
         {
-            if (id != tickets.Id)
+            if (id != ticket.Id)
             {
                 return BadRequest();
             }
-            var ticket = _service.GetTicketById(tickets.Id);
-            ticket.Price = tickets.Price;
-            ticket.Type = tickets.Type;
-            if (DatabaseManipulation.UpdateElementAsync(ticket))
+            var tmp = _service.GetTicketById(ticket.Id);
+            tmp.Price = ticket.Price;
+            tmp.Type = ticket.Type;
+            if (DatabaseManipulation.UpdateElementAsync(tmp))
             {
                 return Ok();
             }
@@ -70,17 +70,17 @@ namespace CinemaApplicationProject.API.Controllers
         // POST: api/Tickets
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public ActionResult<Tickets> PostTickets(TicketsDTO tickets)
+        public ActionResult<Tickets> PostTicket(TicketsDTO ticket)
         {
-            var ticket = DatabaseManipulation.AddElement((Tickets)tickets);
+            var tmp = DatabaseManipulation.AddElement((Tickets)ticket);
 
-            if (ticket == null)
+            if (tmp == null)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
             else
             {
-                return CreatedAtAction(nameof(GetTicketById), new { id = ticket.Id }, (TicketsDTO)ticket);
+                return CreatedAtAction(nameof(GetTicketById), new { id = tmp.Id }, (TicketsDTO)tmp);
             }
         }
 

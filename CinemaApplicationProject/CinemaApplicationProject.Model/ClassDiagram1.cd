@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram MajorVersion="1" MinorVersion="1">
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
   <Class Name="CinemaApplicationProject.Model.Database.Actors" Collapsed="true">
     <Position X="17" Y="4" Width="1.5" />
     <TypeIdentifier>
@@ -77,13 +77,6 @@
       <FileName>Database\Movies.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="CinemaApplicationProject.Model.Database.MoviesStatistics" Collapsed="true">
-    <Position X="25.5" Y="4" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAEAAAAAAAAAAAAQAAAAABACAAAAIAAAA=</HashCode>
-      <FileName>Database\MoviesStatistics.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="CinemaApplicationProject.Model.Database.Opinions" Collapsed="true">
     <Position X="19" Y="8" Width="1.5" />
     <TypeIdentifier>
@@ -96,13 +89,6 @@
     <TypeIdentifier>
       <HashCode>AAAAAAAAAQAAAAAAAAAAAAQAAAAAABAAAAAAAAAAAAA=</HashCode>
       <FileName>Database\Products.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="CinemaApplicationProject.Model.Database.ProductStatistics" Collapsed="true">
-    <Position X="25.25" Y="6" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>EAACAAAAAAAAAAAAAAAAAAAAAAEAAAABAAAAAAAAAAA=</HashCode>
-      <FileName>Database\ProductStatistics.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="CinemaApplicationProject.Model.Database.Rents" Collapsed="true">
@@ -150,7 +136,7 @@
   </Class>
   <Class Name="CinemaApplicationProject.Model.DTOs.ActorsDTO">
     <Position X="59.25" Y="2.5" Width="1.5" />
-    <InheritanceLine Type="CinemaApplicationProject.Model.DTOs.RespondDTO" ManuallyRouted="true" FixedToPoint="true">
+    <InheritanceLine Type="CinemaApplicationProject.Model.DTOs.RespondDTO" ManuallyRouted="true">
       <Path>
         <Point X="61.25" Y="6.25" />
         <Point X="61.25" Y="3.938" />
@@ -162,30 +148,21 @@
       <FileName>DTOs\ActorsDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="CinemaApplicationProject.Model.DTOs.CategoriesDTO">
+  <Class Name="CinemaApplicationProject.Model.DTOs.CategoriesDTO" Collapsed="true">
     <Position X="59.25" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAQAAAAACABAAAAAACAA=</HashCode>
       <FileName>DTOs\CategoriesDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="CinemaApplicationProject.Model.DTOs.EmployeesDTO">
+  <Class Name="CinemaApplicationProject.Model.DTOs.EmployeesDTO" Collapsed="true">
     <Position X="53.25" Y="8.5" Width="1.5" />
-    <Members>
-      <Property Name="asd" Hidden="true" />
-      <Property Name="Email" Hidden="true" />
-      <Property Name="Password" Hidden="true" />
-      <Property Name="Presence" Hidden="true" />
-      <Property Name="SoldProducts" Hidden="true" />
-      <Property Name="SoldTickets" Hidden="true" />
-      <Property Name="Stats" Hidden="true" />
-    </Members>
     <TypeIdentifier>
       <HashCode>ABAAAAgAASAAAAAAAAAAAAQAAgAIAAoDAUAAIEAAAAA=</HashCode>
       <FileName>DTOs\EmployeesDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="CinemaApplicationProject.Model.DTOs.GuestsDTO">
+  <Class Name="CinemaApplicationProject.Model.DTOs.GuestsDTO" Collapsed="true">
     <Position X="67.75" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>gAAAAAAAACAAACAAAAAAAAQAAAAAAAACAQAAAAAAAAA=</HashCode>
@@ -199,36 +176,22 @@
       <FileName>DTOs\GuestsDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="CinemaApplicationProject.Model.DTOs.GuestVDTO">
+  <Class Name="CinemaApplicationProject.Model.DTOs.GuestVDTO" Collapsed="true">
     <Position X="51.25" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAAAAACAAACAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
       <FileName>DTOs\GuestVDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="CinemaApplicationProject.Model.DTOs.LoginDTO">
+  <Class Name="CinemaApplicationProject.Model.DTOs.LoginDTO" Collapsed="true">
     <Position X="66.25" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAQAAAAAAAAA=</HashCode>
       <FileName>DTOs\LoginDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="CinemaApplicationProject.Model.DTOs.MoviesDTO">
+  <Class Name="CinemaApplicationProject.Model.DTOs.MoviesDTO" Collapsed="true">
     <Position X="61.75" Y="8.5" Width="1.5" />
-    <Members>
-      <Method Name="ConvertCategoriesDTOToClass" Hidden="true" />
-      <Method Name="ConvertCategoriesToDTO" Hidden="true" />
-      <Method Name="ConvertOpinionsToDTO" Hidden="true" />
-      <Method Name="ConvertShowsToDTO" Hidden="true" />
-      <Method Name="explicit operator Movies" Hidden="true" />
-      <Method Name="explicit operator MoviesDTO" Hidden="true" />
-      <Property Name="Image" Hidden="true" />
-      <Property Name="Length" Hidden="true" />
-      <Property Name="Opinions" Hidden="true" />
-      <Property Name="Shows" Hidden="true" />
-      <Property Name="TicketsCount" Hidden="true" />
-      <Property Name="Trailer" Hidden="true" />
-    </Members>
     <TypeIdentifier>
       <HashCode>ADkAABAAAQAggEAAAAICAARgAAAAFBBAAAAAAAEAAAA=</HashCode>
       <FileName>DTOs\MoviesDTO.cs</FileName>
@@ -236,7 +199,7 @@
   </Class>
   <Class Name="CinemaApplicationProject.Model.DTOs.OpinionsDTO">
     <Position X="61.75" Y="2.5" Width="1.5" />
-    <InheritanceLine Type="CinemaApplicationProject.Model.DTOs.RespondDTO" ManuallyRouted="true" FixedToPoint="true">
+    <InheritanceLine Type="CinemaApplicationProject.Model.DTOs.RespondDTO" ManuallyRouted="true">
       <Path>
         <Point X="61.25" Y="6.25" />
         <Point X="61.25" Y="3.938" />
@@ -278,21 +241,21 @@
       <FileName>DTOs\ProductDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="CinemaApplicationProject.Model.DTOs.ProductsForSell">
+  <Class Name="CinemaApplicationProject.Model.DTOs.ProductsForSell" Collapsed="true">
     <Position X="57.25" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>EAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DTOs\ProductSellingDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="CinemaApplicationProject.Model.DTOs.ProductSellingDTO">
+  <Class Name="CinemaApplicationProject.Model.DTOs.ProductSellingDTO" Collapsed="true">
     <Position X="63.75" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAQ=</HashCode>
       <FileName>DTOs\ProductSellingDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="CinemaApplicationProject.Model.DTOs.ProductSeller">
+  <Class Name="CinemaApplicationProject.Model.DTOs.ProductSeller" Collapsed="true">
     <Position X="55.25" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>EAAIAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAACAAA=</HashCode>
@@ -359,7 +322,7 @@
       <FileName>DTOs\RentsDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="CinemaApplicationProject.Model.DTOs.RentsGDTO">
+  <Class Name="CinemaApplicationProject.Model.DTOs.RentsGDTO" Collapsed="true">
     <Position X="65.75" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYAA=</HashCode>
@@ -388,7 +351,7 @@
       <FileName>DTOs\RoomsDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="CinemaApplicationProject.Model.DTOs.ShowsDTO">
+  <Class Name="CinemaApplicationProject.Model.DTOs.ShowsDTO" Collapsed="true">
     <Position X="69.75" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAACAAAAEAAAABAAAAAAIQAAAAABAAAABAAAAAA=</HashCode>
@@ -410,7 +373,7 @@
       <FileName>DTOs\StatsDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="CinemaApplicationProject.Model.DTOs.TicketsDTO">
+  <Class Name="CinemaApplicationProject.Model.DTOs.TicketsDTO" Collapsed="true">
     <Position X="55.25" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAQQAAAAAAAAAAAAAAAAAAAAAAQAAAAAIAAA=</HashCode>
@@ -418,14 +381,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="CinemaApplicationProject.Model.Services.DatabaseManipulation">
-    <Position X="48.5" Y="4.75" Width="2.25" />
+    <Position X="46" Y="2.5" Width="3.5" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAAABAAAAAAIAAAAAAAAAAAAAAACAAAAAAAA=</HashCode>
       <FileName>Services\DatabaseManipulation.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="CinemaApplicationProject.Model.Services.DatabaseService" BaseTypeListCollapsed="true">
-    <Position X="48.25" Y="8.25" Width="2.5" />
+    <Position X="41.5" Y="6.25" Width="2.5" />
     <Members>
       <Method Name="ConnectMovieWithActor" Hidden="true" />
       <Method Name="ConnectMovieWithCategory" Hidden="true" />
@@ -476,28 +439,34 @@
       <HashCode>BBASBMAAADAYoAiggBBANQowQWBEQCCiUCMAAAZBAQA=</HashCode>
       <FileName>Services\DatabaseService.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.215" Collapsed="true" />
+    <Lollipop Position="0.27" Collapsed="true" />
   </Class>
   <Class Name="CinemaApplicationProject.Model.DatabaseContext">
-    <Position X="72" Y="3.5" Width="1.5" />
+    <Position X="45" Y="6.75" Width="4.25" />
+    <InheritanceLine Type="Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityDbContext&lt;TUser, TRole, TKey&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="45.75" Y="5.441" />
+        <Point X="45.75" Y="6.75" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAwAAAAAAAQEkAAQAAIAAACCGAEEEQAAAAEAAAAAAAw=</HashCode>
+      <HashCode>AAwAAAAAAAQEkAAQAAIAAACCGAEAEAAAAAEAAAAAAAw=</HashCode>
       <FileName>DatabaseContext.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="CinemaApplicationProject.Model.DatabaseInitializer">
-    <Position X="48.5" Y="2" Width="2" />
+    <Position X="40.5" Y="2.5" Width="4.75" />
     <TypeIdentifier>
       <HashCode>AAAABAAAAAAABQAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DatabaseInitializer.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityDbContext&lt;TUser, TRole, TKey&gt;" Collapsed="true">
-    <Position X="72" Y="1.25" Width="1.5" />
+    <Position X="45" Y="4.75" Width="1.5" />
     <TypeIdentifier />
   </Class>
   <Interface Name="CinemaApplicationProject.Model.Services.IDatabaseService" Collapsed="true">
-    <Position X="49" Y="7.25" Width="1.5" />
+    <Position X="41.5" Y="5.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>BBAQBMAAADAYoAiggBBANQowQWBEQCCiUCMAAAIBAQA=</HashCode>
       <FileName>Services\IDatabaseService.cs</FileName>

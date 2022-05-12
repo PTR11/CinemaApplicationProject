@@ -36,8 +36,7 @@ namespace CinemaApplicationProject.APITest
                 new UserStore<ApplicationUser, StatsAndPays, DatabaseContext, int>(_context), null,
                 new PasswordHasher<ApplicationUser>(), null, null, null, null, null, null);
 
-            var user = new ApplicationUser { UserName = "testName", Id = 1 };
-            userManager.CreateAsync(user, "testPassword").Wait();
+            
 
             _service = new DatabaseService(_context, userManager);
             _controller = new MoviesController(_service);
@@ -153,7 +152,7 @@ namespace CinemaApplicationProject.APITest
         public void DeleteMovie()
         {
             var mCount = _context.Movies.Count();
-            var result = _controller.DeleteMovies(1);
+            var result = _controller.DeleteMovie(1);
 
             var objectResult = Assert.IsAssignableFrom<OkResult>(result);
             Assert.Equal(mCount - 1, _context.Movies.Count());
@@ -170,7 +169,7 @@ namespace CinemaApplicationProject.APITest
             };
 
 
-            var result = _controller.PutMovies(3, movie);
+            var result = _controller.PutMovie(3, movie);
             Assert.IsAssignableFrom<OkResult>(result.Result);
             Assert.Equal("perec", _context.Movies.FirstOrDefault(b => b.Id == 3).Title);
             Assert.Equal(1, _context.Movies.FirstOrDefault(b => b.Id == 3).Length);
@@ -190,7 +189,7 @@ namespace CinemaApplicationProject.APITest
 
             var count = _context.Movies.Count();
 
-            var result = _controller.PostMovies(movie);
+            var result = _controller.PostMovie(movie);
 
             var objectResult = Assert.IsAssignableFrom<CreatedAtActionResult>(result.Result);
             Assert.IsAssignableFrom<MoviesDTO>(objectResult.Value);

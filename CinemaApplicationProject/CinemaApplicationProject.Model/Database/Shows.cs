@@ -19,11 +19,11 @@ namespace CinemaApplicationProject.Model.Database
         [DataType(DataType.DateTime)]
         public DateTime Date { get; set; }
 
-        public Rooms Room { get; set; }
+        public virtual Rooms Room { get; set; }
 
-        public Movies Movie { get; set; }
+        public virtual Movies Movie { get; set; }
 
-        public ICollection<Rents> Rents { get; set; }
+        public virtual ICollection<Rents> Rents { get; set; }
 
     }
 }

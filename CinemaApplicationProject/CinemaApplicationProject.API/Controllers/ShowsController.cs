@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using CinemaApplicationProject.Model;
-using CinemaApplicationProject.Model.Database;
+﻿using CinemaApplicationProject.Model.Database;
+using CinemaApplicationProject.Model.DTOs;
 using CinemaApplicationProject.Model.Services;
 using Microsoft.AspNetCore.Cors;
-using CinemaApplicationProject.Model.DTOs;
-using System.Net.Http;
-using System.Net;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CinemaApplicationProject.API.Controllers
 {
@@ -56,7 +51,7 @@ namespace CinemaApplicationProject.API.Controllers
 
         // GET: api/Shows
         [EnableCors("_myAllowSpecificOrigins")]
-        [HttpPost("availableDates")]
+        [HttpGet("availableDates")]
         public ActionResult<IEnumerable<DateTime>> GetAvailableDates()
         {
             return _service.GetAvailableDates();
@@ -75,7 +70,7 @@ namespace CinemaApplicationProject.API.Controllers
         // PUT: api/Shows/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public IActionResult PutShows(int id, ShowsDTO shows)
+        public IActionResult PutShow(int id, ShowsDTO shows)
         {
             if (id != shows.Id)
             {
@@ -98,7 +93,7 @@ namespace CinemaApplicationProject.API.Controllers
         // POST: api/Shows
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public ActionResult<Shows> PostShows(ShowsDTO shows)
+        public ActionResult<Shows> PostShow(ShowsDTO shows)
         {
             var s = (Shows)shows;
             s.IsActiveShow =  true;
@@ -116,7 +111,7 @@ namespace CinemaApplicationProject.API.Controllers
 
         // DELETE: api/Shows/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteShows(int id)
+        public IActionResult DeleteShow(int id)
         {
             var shows = _service.GetShowById(id);
             if (shows == null)

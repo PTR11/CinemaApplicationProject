@@ -31,7 +31,7 @@ namespace CinemaApplicationProject.API.Controllers
             return _service.GetWarehouse().Select(m => (ProductDTO)m).ToList();
         }
         [HttpGet("{id}")]
-        public ActionResult<ProductDTO> GetBuffetWarehouseById(int id)
+        public ActionResult<ProductDTO> GetProductById(int id)
         {
 
             var item = _service.GetProductInWareHouse(id);
@@ -92,7 +92,7 @@ namespace CinemaApplicationProject.API.Controllers
                 }
                 else
                 {
-                    return CreatedAtAction(nameof(GetBuffetWarehouseById), new { id = tmpB.Id }, (ProductDTO)tmpB);
+                    return CreatedAtAction(nameof(GetProductById), new { id = tmpB.Id }, (ProductDTO)tmpB);
                 }
             }
             return StatusCode(StatusCodes.Status500InternalServerError);
@@ -101,14 +101,22 @@ namespace CinemaApplicationProject.API.Controllers
         // POST: api/BuffetWarehouses
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("sell")]
-        public ActionResult<ProductSellingDTO> PostProductList(ProductSellingDTO product)
+        public ActionResult<ProductSellingDTO> SellProduct(ProductSellingDTO products)
         {
-            var p = _service.SellProducts(product);
-            if (p)
+            try
             {
-                return Ok();
+                var p = _service.SellProducts(products);
+                if (p)
+                {
+                    return Ok();
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            
         }
 
 

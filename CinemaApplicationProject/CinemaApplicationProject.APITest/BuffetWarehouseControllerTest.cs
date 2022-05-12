@@ -37,8 +37,7 @@ namespace CinemaApplicationProject.APITest
                 new UserStore<ApplicationUser, StatsAndPays, DatabaseContext, int>(_context), null,
                 new PasswordHasher<ApplicationUser>(), null, null, null, null, null, null);
 
-            var user = new ApplicationUser { UserName = "testName", Id = 1 };
-            userManager.CreateAsync(user, "testPassword").Wait();
+           
 
             _service = new DatabaseService(_context, userManager);
             _controller = new BuffetWarehousesController(_service);
@@ -83,7 +82,7 @@ namespace CinemaApplicationProject.APITest
         public void GetWarehouseByIdTest(Int32 id)
         {
             // Act
-            var result = _controller.GetBuffetWarehouseById(id);
+            var result = _controller.GetProductById(id);
 
             // Assert
             var content = Assert.IsAssignableFrom<ProductDTO>(result.Value);
@@ -97,7 +96,7 @@ namespace CinemaApplicationProject.APITest
             var id = 4;
 
             // Act
-            var result = _controller.GetBuffetWarehouseById(id);
+            var result = _controller.GetProductById(id);
 
             // Assert
             Assert.IsAssignableFrom<NotFoundResult>(result.Result);

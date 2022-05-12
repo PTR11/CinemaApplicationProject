@@ -35,7 +35,7 @@ namespace CinemaApplicationProject.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<OpinionsDTO>> PostOpinions(OpinionsDTO rfg)
+        public async Task<ActionResult<OpinionsDTO>> PostOpinion(OpinionsDTO opinion)
         {
             if (!ModelState.IsValid)
             {
@@ -54,7 +54,7 @@ namespace CinemaApplicationProject.API.Controllers
                     return BadRequest(ModelState);
                 }
                 
-                if (!await _service.SaveOpinionAsync(rfg))
+                if (!await _service.SaveOpinionAsync(opinion))
                 {
                     ModelState.AddModelError("", "Something went wrong with the process");
                     return BadRequest(ModelState);

@@ -39,8 +39,6 @@ namespace CinemaApplicationProject.APITest
                 new UserStore<ApplicationUser, StatsAndPays, DatabaseContext, int>(_context), null,
                 new PasswordHasher<ApplicationUser>(), null, null, null, null, null, null);
 
-            var user = new ApplicationUser { UserName = "testName", Id = 1 };
-            userManager.CreateAsync(user, "testPassword").Wait();
 
             _service = new DatabaseService(_context, userManager);
             _controller = new RentsController(_service, userManager);
@@ -93,7 +91,7 @@ namespace CinemaApplicationProject.APITest
 
             // Assert
             var content = Assert.IsAssignableFrom<List<GuestVDTO>>(result.Value);
-            Assert.Equal(0, content.Count());
+            Assert.Equal(0, content.Count);
 
 
         }

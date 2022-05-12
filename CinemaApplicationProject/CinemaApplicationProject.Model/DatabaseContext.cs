@@ -33,11 +33,9 @@ namespace CinemaApplicationProject.Model
 					.WithMany(r => r.UserRole)
 					.HasForeignKey(ur => ur.UserId);
 			});
-
-
-
-
 		}
+
+		
 
 		public virtual DbSet<Actors> Actors { get; set; }
 		public virtual DbSet<BuffetSale> BuffetSales { get; set; }

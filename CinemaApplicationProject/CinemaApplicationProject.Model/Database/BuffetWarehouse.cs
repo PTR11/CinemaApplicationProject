@@ -14,7 +14,7 @@ namespace CinemaApplicationProject.Model.Database
 
         public int Quantity { get; set; }
 
-        public Products Product { get; set; }
+        public virtual Products Product { get; set; }
 
     }
 }

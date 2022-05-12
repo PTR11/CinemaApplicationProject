@@ -97,7 +97,7 @@ namespace CinemaApplicationProject.API.Controllers
 
         // DELETE: api/StatsAndPays/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteStatsAndPays(int id)
+        public IActionResult DeleteRole(int id)
         {
             var statsAndPays = _service.GetStatById(id);
             if (statsAndPays == null)
