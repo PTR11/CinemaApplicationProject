@@ -20,7 +20,6 @@
               <b-avatar variant="light" class="mr-2" ></b-avatar>
               <span>{{user.userName}}</span>
             </template>
-            <b-dropdown-item to="/login">Rents</b-dropdown-item>
             <b-dropdown-item @click="clickItem">Log out</b-dropdown-item>
           </b-nav-item-dropdown>
           <b-nav-item-dropdown right v-else >
@@ -28,8 +27,8 @@
             <template #button-content>
               <em >User</em>
             </template>
-            <b-dropdown-item to="/login">Log In</b-dropdown-item>
-            <b-dropdown-item to="/sign">Sign In</b-dropdown-item>
+            <b-dropdown-item to="/login">Login</b-dropdown-item>
+            <b-dropdown-item to="/sign">Sign Up</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
@@ -39,6 +38,7 @@
 
 <script>
 import { mapState } from "vuex";
+import axios from "axios";
 
 export default {
   name: "NavbarComponent",
@@ -54,7 +54,16 @@ export default {
   },
   methods:{
     clickItem(){
-      alert("Log out");
+      axios
+          .get(process.env.VUE_APP_API_ADDRESS+"/api/Users/logout/",{withCredentials: true})
+          .then((result) => {
+            if(result.status === 200){
+              this.$router.push({name: 'Home', path:"/"})
+              this.$store.dispatch("setUser",result.data);
+            }
+          }).catch(() =>{
+
+      });
     }
   }
 }

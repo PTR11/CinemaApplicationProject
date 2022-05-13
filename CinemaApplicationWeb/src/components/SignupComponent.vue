@@ -86,10 +86,11 @@
             signupUser(){
               this.clearErrors();
               axios
-                  .post("http://localhost:7384/api/Users/register/", this.user, {headers: headers})
+                  .post(process.env.VUE_APP_API_ADDRESS+"/api/Users/register/", this.user, {headers: headers})
                   .then((result) => {
                     console.log(result)
                     this.programs = result.data;
+                    this.$router.push({name: 'Home', path:"/"})
                   }).catch(err => {
                     this.AddErrors(err.response.data.errors)
                     if(err.response.data.regerror){

@@ -21,7 +21,7 @@ namespace CinemaApplicationProject.Model.Database
             Shows = new HashSet<Shows>();
         }
 
-        public ICollection<Shows> Shows { get; set; }
+        public virtual ICollection<Shows> Shows { get; set; }
 
 
 

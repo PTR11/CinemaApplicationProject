@@ -10,14 +10,11 @@ namespace CinemaApplicationProject.Model.Services
 {
     public interface IDatabaseService
     {
-
         public DatabaseContext GetContext();
 
         #region Actors
 
         public List<Actors> GetActors();
-
-        public List<Actors> GetActorsWithMovies();
 
         public Actors GetActorById(int id);
 
@@ -31,30 +28,10 @@ namespace CinemaApplicationProject.Model.Services
 
         #endregion
 
-        #region BuffetSales
-
-        public List<BuffetSale> GetBuffetSales();
-
-        public List<BuffetSale> GetBuffetSaleByProductId(int id);
-
-        public int GetAverageSaleOfProductOnAWeek(int id);
-
-        public List<BuffetSale> GetBuffetSalesByEmployeeId(int id);
-
-        public List<BuffetSale> GetBuffetSalesOfADay();
-
-        public List<BuffetSale> GetBuffetSalesOfADayByEmployeeId(int id);
-
-        public int GetIncomeOnLastWeek();
-
-        #endregion
-
         #region BuffetWarehouse
+
         public List<BuffetWarehouse> GetWarehouse();
 
-        public int GetQuantityofProductById(int id);
-
-        public int GetPriceOfQuantityOfProductById(int id);
         public BuffetWarehouse GetProductInWareHouse(int id);
 
         public bool SellProducts(ProductSellingDTO dto);
@@ -65,13 +42,7 @@ namespace CinemaApplicationProject.Model.Services
 
         #region EmployeePresence
 
-        public EmployeePresence GetEmployeePresenceById(int id);
-
         public bool AddEmployeeToEmployeePresence(Employees employee, string type);
-
-        //public List<Employees> GetEmployeesFromPresenceByDate(DateTime date);
-
-        //public List<Employees> GetEmployeesFromPresenceByDateAndStat(DateTime date, StatsAndPays stat);
 
         #endregion
 
@@ -87,61 +58,27 @@ namespace CinemaApplicationProject.Model.Services
 
         public List<Movies> GetMoviesByCategory(String category);
 
-        public Task UpdateMovieActors(List<Actors> actors, int movieId);
-
         public List<MoviesDTO> GetStatisticsForMovies();
 
         #endregion
 
-        #region MoviesStatistics
-        public MoviesStatistics GetBestMovieOnWeek();
-
-        public List<MoviesStatistics> GetLastWeekStatisticsOfMovies();
-
-        public int GetViewrsNumberLastWeek();
-
-        public List<MoviesStatistics> GetAllViewrsWithMovieLastWeek();
-
-        #endregion
-
         #region Opinions
-        public List<Opinions> GetAllOpinions();
 
         public List<Opinions> GetAllOpinionsByMovie(int id);
-
-        public List<Opinions> GetAllOpinionsByUser(String username = null);
-
-        public Dictionary<Movies, float> GetAvarageRatingOfMovies();
 
         public Task<Boolean> SaveOpinionAsync(OpinionsDTO rfg);
 
         #endregion
 
         #region Products
-        public List<Products> GetAllProducts();
 
         public Products GetProductByName(String name);
 
         public BuffetWarehouse GetProductById(int id);
 
-        public int GetProductPrice(String name = null);
-
-        #endregion
-
-        #region ProductsStatistics
-        public List<ProductStatistics> GetAllSellsOnLastWeek();
-
-        public Products GetTheMostSelledItemLastWeek();
-
-
         #endregion
 
         #region Rents
-        public List<Rents> GetAllRents();
-
-        public List<Rents> GetAllSelledRents();
-
-        public List<Rents> GetAllRentsByGuestId(int id);
 
         public List<Rents> GetAllRentsByShowId(int id);
         public List<Guests> GetAllRentUserByShowId(int id);
@@ -166,11 +103,7 @@ namespace CinemaApplicationProject.Model.Services
 
         public Shows GetShowById(int id);
 
-        public List<Shows> GetAllShowsOnNextWeek();
-
         public List<Shows> GetAllShowsByMovieId(int id);
-
-        public List<Shows> GetAllShowsByRoomId(int id);
 
         public List<DateTime> GetAvailableDates();
 
@@ -185,14 +118,11 @@ namespace CinemaApplicationProject.Model.Services
 
         public Task<List<string>> GetStatsById(int id);
 
-        public int GetSalaryOfStatById(int id);
-
         public StatsAndPays GetStatByName(String name);
 
         #endregion
 
         #region Tickets
-        public int GetPriceOfTicketById(int id);
 
         public List<Tickets> GetTickets();
 

@@ -11,6 +11,7 @@ using CinemaApplicationProject.Model.Services;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Principal;
 
 namespace CinemaApplicationProject.API.Controllers
 {
@@ -30,22 +31,14 @@ namespace CinemaApplicationProject.API.Controllers
             _service = service;
             DatabaseManipulation.context = _service.GetContext();
         }
-
-        [Authorize]
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<EmployeesDTO>>> GetEmployees()
+        /*public UsersController(UserManager<ApplicationUser> userManager, IDatabaseService service)
         {
-            var tmpList = await _service.GetEmployees();
-            return tmpList.Select(m => (EmployeesDTO)m).ToList();
-        }
+            _userManager = userManager;
+            _service = service;
+            DatabaseManipulation.context = _service.GetContext();
+        }*/
 
-        [Authorize]
-        [HttpGet("{role}")]
-        public async Task<ActionResult<IEnumerable<EmployeesDTO>>> GetEmployeesByRole(String role)
-        {
-            var tmpList = await _service.GetEmployeesByRole(role);
-            return tmpList.Select(m => (EmployeesDTO)m).ToList();
-        }
+        
 
 
         [EnableCors("_myAllowSpecificOrigins")]
@@ -68,6 +61,9 @@ namespace CinemaApplicationProject.API.Controllers
                         //Expires = HttpContext.Current.Session.Timout,
                         SameSite = SameSiteMode.Lax
                     });
+                    var identity = new System.Security.Principal.GenericIdentity(user.UserName);
+                    var principal = new GenericPrincipal(identity, new string[0]);
+                    HttpContext.User = principal;
 
                     return Ok(tmp);
                     //return RedirectService.RedirectMethod("Successfully logged in", HttpStatusCode.Redirect, new Uri("http://localhost:8080/"));
@@ -79,6 +75,14 @@ namespace CinemaApplicationProject.API.Controllers
             //return RedirectService.RedirectMethod("Something went wrong", HttpStatusCode.BadRequest);
 
 
+        }
+
+        [EnableCors("_myAllowSpecificOrigins")]
+        [HttpGet("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return Ok();
         }
 
 
@@ -111,88 +115,6 @@ namespace CinemaApplicationProject.API.Controllers
                 ModelState.AddModelError("errors", errors);
             }
             return BadRequest(ModelState);
-        }
-
-
-        [HttpPost]
-        public async Task<ActionResult<EmployeesDTO>> PostUser(EmployeesDTO newUser)
-        {
-            var user = (Employees)newUser;
-            var stats = newUser.Stats;
-
-            var result = await _userManager.CreateAsync(user, newUser.Password);
-            if (result.Succeeded)
-            {
-                foreach(var stat in stats)
-                {
-                    if (!await _service.ConnectUserWithRole(user.Id, stat.Id))
-                    {
-                        return BadRequest("Something went wrong");
-                    }
-                }
-                return (EmployeesDTO)await _service.GetEmployeeById(user.Id);
-            }
-            ModelState.AddModelError("", "Sikertelen regisztráció");
-            return BadRequest();
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, EmployeesDTO employees)
-        {
-            if (id != employees.Id)
-            {
-                return BadRequest();
-            }
-            if(employees.Stats == null)
-            {
-                employees.Stats = new List<StatsDTO>();
-            }
-            var asd = (Employees)employees;
-            var user = await _service.GetEmployeeById(asd.Id);
-
-            user.Name = asd.Name;
-            user.UserName = asd.UserName;
-            user.Email = asd.Email;
-            user.Address = asd.Address;
-            user.Birthday = asd.Birthday;
-
-            var result = await _userManager.UpdateAsync(user);
-            if (employees.Password != null)
-            {
-                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var pwResult = await _userManager.ResetPasswordAsync(user, token, employees.Password);
-                if (!pwResult.Succeeded)
-                {
-                    StatusCode(StatusCodes.Status500InternalServerError);
-                }
-            }
-
-            if (result.Succeeded)
-            {
-                return Ok();
-            }
-            else
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUserAsync(int id)
-        {
-            var employee = await _service.GetEmployeeById(id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            if(user.Id == id)
-            {
-                return BadRequest();
-            }
-            DatabaseManipulation.DeleteElement(employee);
-
-            return NoContent();
         }
         
     }

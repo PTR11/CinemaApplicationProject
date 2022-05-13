@@ -50,10 +50,10 @@ namespace CinemaApplicationProject.API
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   builder =>
                                   {
-                                      builder.WithOrigins("http://localhost:8080", "http://localhost:7384");
+                                      builder.WithOrigins("http://localhost:8080", "http://localhost:7384", "http://cinemaapplicationprogramapi.azurewebsites.net/", "http://localhost:3000");
+                                      builder.AllowCredentials();
                                       builder.AllowAnyMethod();
                                       builder.AllowAnyHeader();
-                                      builder.AllowAnyOrigin();
                                   });
             });
             services.Configure<IdentityOptions>(options =>
@@ -64,6 +64,7 @@ namespace CinemaApplicationProject.API
                 options.Password.RequireUppercase = true;
                 options.Password.RequireDigit = true;
 
+
                 // Hibás bejelentkezés esetén az (ideiglenes) kizárásra vonatkozó konfiguráció
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
                 options.Lockout.MaxFailedAccessAttempts = 10;
@@ -73,6 +74,7 @@ namespace CinemaApplicationProject.API
             });
             
             services.AddTransient<IDatabaseService, DatabaseService>();
+            
             services.AddControllers();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
         }

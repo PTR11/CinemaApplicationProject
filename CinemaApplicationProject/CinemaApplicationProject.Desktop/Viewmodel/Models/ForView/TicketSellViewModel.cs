@@ -122,6 +122,8 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
 
         public DelegateCommand SelectTicketUser { get; set; }
 
+        public DelegateCommand UnSelectTicketUser { get; set; }
+
         public TicketSellViewModel()
         {
             Field = new ObservableCollection<Field>();
@@ -132,6 +134,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             Rents = new List<RentViewModel>();
             Users = new ObservableCollection<TicketsUsersViewModel>();
             SelectTicketUser = new DelegateCommand(_ => ShowRent());
+            UnSelectTicketUser = new DelegateCommand(_ => UnSelect());
         }
 
         public void CalculatePrice(int price)
@@ -199,8 +202,39 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             }
         }
 
+        public void UnSelect()
+        {
+            this.Places = new List<Place>();
+            this.Price = 0;
+            foreach (var ticket in TicketsCounter)
+            {
+                ticket.Count = 0;
+            }
+            foreach (var field in this.Field)
+            {
+                var found = this.Rents.FirstOrDefault(f => f.X == field.X && f.Y == field.Y);
+                if (found != null)
+                {
+                    if (found.EmployeeId == null)
+                    {
+                        field.Background = "Orange";
+                    }
+                    else
+                    {
+                        field.Background = "Red";
+                    }
+
+                }
+                else
+                {
+                    field.Background = "White";
+                }
+            }
+        }
+
         public void ShowRent()
         {
+            UnSelect();
 
             var rentsOfUser = this.Rents.Where(m => m.GuestId == this.SelectedUser.Id && m.EmployeeId == null);
             foreach (var rent in rentsOfUser)

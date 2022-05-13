@@ -18,8 +18,8 @@ namespace CinemaApplicationProject.Model.Database
             Opinions = new HashSet<Opinions>();
         }
         
-        public ICollection<Rents> Rent { get; set; }
+        public virtual ICollection<Rents> Rent { get; set; }
         
-        public ICollection<Opinions> Opinions { get; set; }
+        public virtual ICollection<Opinions> Opinions { get; set; }
     }
 }

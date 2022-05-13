@@ -109,7 +109,7 @@
             <GroupBox Grid.Row="0" Padding="0" Background="Wheat" Margin="10,10,10,0">
                 <GroupBox.Header >
                     <Grid Background="Wheat">
-                        <Label Content="Tickets:" FontSize="24" Height="50" BorderBrush="Black" BorderThickness="3" />
+                        <Label Content="Rents:" FontSize="24" Height="50" BorderBrush="Black" BorderThickness="3" />
                     </Grid>
                 </GroupBox.Header>
                 <Border>
@@ -130,10 +130,20 @@
                                                                 AncestorType={x:Type DataGrid},
                                                                 AncestorLevel=1}}" />
                                     </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseDoubleClick">
+                                        <i:InvokeCommandAction
+                                                            Command="{Binding TicketSell.UnSelectTicketUser}"
+                                                            CommandParameter="{
+                                                            Binding Path=SelectedItem,
+                                                            RelativeSource={
+                                                                RelativeSource
+                                                                AncestorType={x:Type DataGrid},
+                                                                AncestorLevel=1}}" />
+                                    </i:EventTrigger>
                                 </i:Interaction.Triggers>
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Binding="{Binding UserName}" FontSize="24" Width="150" Foreground="Black"/>
-                                    <DataGridTextColumn Binding="{Binding Email}" FontSize="24" Width="100" Foreground="Black"/>
+                                    <DataGridTextColumn Binding="{Binding Email}" FontSize="24" Width="Auto" Foreground="Black"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Border>

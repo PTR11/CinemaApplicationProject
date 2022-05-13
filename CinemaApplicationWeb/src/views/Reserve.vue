@@ -119,7 +119,7 @@ export default {
           window.scrollTo(0,0);
         }else{
           axios
-              .post("http://localhost:7384/api/Rents/", response, {withCredentials: true})
+              .post(process.env.VUE_APP_API_ADDRESS+"/api/Rents/", response, {withCredentials: true})
               .then((result) => {
                 if(result.status === 302){
                   this.$router.push({name: 'Login', path:"/login"})
@@ -147,7 +147,7 @@ export default {
     fetchRents(){
       let rents = [];
       axios
-          .get("http://localhost:7384/api/Rents/"+this.$route.params.id)
+          .get(process.env.VUE_APP_API_ADDRESS+"/api/Rents/"+this.$route.params.id)
           .then((result) => {
             rents = result.data;
             if(rents.length !== 0){
@@ -160,7 +160,7 @@ export default {
     },
     fetchShow(){
       axios
-          .get("http://localhost:7384/api/Shows/show/"+this.$route.params.id)
+          .get(process.env.VUE_APP_API_ADDRESS+"/api/Shows/show/"+this.$route.params.id)
           .then((result) => {
             this.show = result.data;
             this.show.date = this.show.date.split("T")[0] + " "+this.show.date.split("T")[1].split(".")[0];

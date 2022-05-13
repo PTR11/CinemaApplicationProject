@@ -154,7 +154,7 @@
                                             <TextBox Grid.Row="1" PreviewTextInput="IsNumber" Grid.Column="1"  Width="400" Margin="0,10,0,10" Text="{Binding SelectedRoom.Width, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
                                             <Label Grid.Row="2" Grid.Column="0" Content="Height:" VerticalAlignment="Center"/>
                                             <TextBox Grid.Row="2" PreviewTextInput="IsNumber" Grid.Column="1"  Width="400" Margin="0,10,0,10" Text="{Binding SelectedRoom.Heigth, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
-                                            <Button Content="Update Room" Command="{Binding UpdateRoom}" Height="35" Grid.Row="3" Width="150" HorizontalAlignment="Center" Grid.ColumnSpan="2"/>
+                                            <Button Content="Update Room" Command="{Binding UpdateRoom}" Height="40" Grid.Row="3" Width="Auto" HorizontalAlignment="Center" Grid.ColumnSpan="2"/>
 
                                         </Grid>
                                     </Border>
@@ -235,7 +235,7 @@
                                             <TextBox Grid.Row="0" Grid.Column="1"  Width="400" Margin="0,10,0,10" Text="{Binding SelectedTicket.Type, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
                                             <Label Grid.Row="1" Grid.Column="0" Content="Width:" VerticalAlignment="Center"/>
                                             <TextBox Grid.Row="1" Grid.Column="1"  Width="400" Margin="0,10,0,10" Text="{Binding SelectedTicket.Price, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1" BorderBrush="Black" FontSize="24"/>
-                                            <Button Content="Update Show" Command="{Binding UpdateTicket}" Height="35" Grid.Row="2" Width="150" HorizontalAlignment="Center" Grid.ColumnSpan="2"/>
+                                            <Button Content="Update Show" Command="{Binding UpdateTicket}" Height="40" Grid.Row="2" Width="Auto" HorizontalAlignment="Center" Grid.ColumnSpan="2"/>
 
                                         </Grid>
                                     </Border>
@@ -399,10 +399,10 @@
                                                 <!--#region ActorsList -->
                                                 <Grid Grid.Column="1">
                                                     <Grid.RowDefinitions>
-                                                        <RowDefinition/>
-                                                        <RowDefinition/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition />
                                                     </Grid.RowDefinitions>
-                                                    <GroupBox Grid.Row="0" Padding="0" Margin="0,300,0,0" Height="200" VerticalAlignment="Center" Background="Wheat" Width="Auto">
+                                                    <GroupBox Grid.Row="0" Padding="0" Margin="0,450,0,0" Height="200" VerticalAlignment="Center" Background="Wheat" Width="Auto">
                                                         <GroupBox.Header >
                                                             <Grid Background="Wheat" Margin="0">
                                                                 <Label Content="Actors:" FontSize="24" Height="50"  BorderBrush="Black" BorderThickness="3" />
@@ -878,9 +878,9 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="135" />
-                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="450" />
                             </Grid.RowDefinitions>
-                            <GroupBox Padding="0" Background="Wheat" Grid.Row="0" Margin="0,0,10,0" >
+                            <GroupBox Padding="0" Background="Wheat" Grid.Row="0" Margin="0,0,0,0" >
                                 <GroupBox.Header >
                                     <Grid Background="Wheat">
                                         <Label Content="Filter:" FontSize="24" Height="50" BorderBrush="Black" BorderThickness="3" />
@@ -948,17 +948,15 @@
 
                                                 <ItemsControl.ItemTemplate >
                                                     <DataTemplate>
-                                                        <Grid Width="200">
+                                                        <Grid VerticalAlignment="Top" Margin="0">
                                                             <Grid.RowDefinitions>
                                                                 <RowDefinition Height="50"/>
                                                                 <RowDefinition/>
                                                             </Grid.RowDefinitions>
-                                                            <TextBlock Grid.Row="0" Text="{Binding Name}" FontSize="24" Foreground="Black" HorizontalAlignment="Center"/>
+                                                            <TextBlock Grid.Row="0" Margin="0" Text="{Binding Name}" FontSize="24" Foreground="Black" HorizontalAlignment="Center"/>
 
                                                             <ItemsControl Grid.Row="1" ItemsSource="{Binding Shows}" ItemTemplate="{StaticResource TicketCard}" />
                                                         </Grid>
-
-
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>
                                             </ItemsControl>
@@ -999,7 +997,7 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <!--#region ProductsSection -->
-                            <Grid Grid.Row="0" Height="550" VerticalAlignment="Top">
+                            <Grid Grid.Row="0" Height="400" VerticalAlignment="Top">
                                 <GroupBox Padding="0" Background="Wheat">
                                     <GroupBox.Header >
                                         <Grid Background="Wheat">

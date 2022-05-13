@@ -59,7 +59,7 @@ namespace CinemaApplicationProject.API.Controllers
         //To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [EnableCors("_myAllowSpecificOrigins")]
         [HttpPost]
-        public async Task<ActionResult<Rents>> PostRents(RentFromGuestDTO rfg)
+        public async Task<ActionResult<Rents>> PostRent(RentFromGuestDTO rent)
         {
             if (!ModelState.IsValid)
             {
@@ -67,22 +67,26 @@ namespace CinemaApplicationProject.API.Controllers
             }
             else
             {
-                ApplicationUser user;
+                ApplicationUser user = null;
                 if (User.Identity.IsAuthenticated)
                 {
                     user = await _userManager.FindByNameAsync(User.Identity.Name);
+                }
+                else if (rent.UserId != 0 && user == null)
+                {
+                    user = await _userManager.FindByIdAsync(rent.UserId + "");
                 }
                 else
                 {
                     ModelState.AddModelError("errors", "You need to login the reserve places!");
                     return BadRequest(ModelState); 
                 }
-                if(rfg.Places.Count == 0)
+                if(rent.Places.Count == 0)
                 {
                     ModelState.AddModelError("error", "You need choose places");
                     return BadRequest(ModelState);
                 }
-                if(!await _service.SaveRents(rfg))
+                if(!await _service.SaveRents(rent))
                 {
                     ModelState.AddModelError("error", "Something went wrong with the process");
                     return BadRequest(ModelState);

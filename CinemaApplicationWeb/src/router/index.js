@@ -7,7 +7,7 @@ import AddOpinion from '../views/AddOpinion.vue'
 import Program from '../views/Program.vue'
 import SignupComponent from '../components/SignupComponent.vue'
 import LoginComponent from '../components/LoginComponent.vue'
-import MovieDetailsComponent from '../components/MovieDetailsComponent.vue'
+import MovieDetailsComponent from '../views/MovieDetails.vue'
 
 Vue.use(VueRouter)
 

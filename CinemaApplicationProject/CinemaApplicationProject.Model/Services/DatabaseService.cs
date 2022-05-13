@@ -27,8 +27,6 @@ namespace CinemaApplicationProject.Model.Services
 
         public List<Actors> GetActors() => context.Actors.ToList();
 
-        public List<Actors> GetActorsWithMovies() => context.Actors.Include(m => m.Movies).ToList();
-
         public Actors GetActorById(int id) => context.Actors.FirstOrDefault(m => m.Id == id);
 
         public Actors GetActorsByName(String name) => context.Actors.FirstOrDefault(m => m.Name.Equals(name));
@@ -69,45 +67,10 @@ namespace CinemaApplicationProject.Model.Services
         }
         #endregion
 
-        #region BuffetSales
-
-        public List<BuffetSale> GetBuffetSales() => context.BuffetSales.ToList();
-
-        public List<BuffetSale> GetBuffetSaleByProductId(int id) => context.BuffetSales.Where(m => m.Id == id).ToList();
-
-        public int GetAverageSaleOfProductOnAWeek(int id) => context.BuffetSales.Where(m => m.Id == id && m.Date >= DateTime.Now.AddDays(-7) && m.Date <= DateTime.Now).Sum(m => m.Quantity);
-
-        public List<BuffetSale> GetBuffetSalesByEmployeeId(int id) => context.BuffetSales.Where(m => m.EmployeeId == id).ToList();
-
-        public List<BuffetSale> GetBuffetSalesOfADay() => context.BuffetSales.Where(m => m.Date.Day.Equals(DateTime.Now.Day)).ToList();
-
-        public List<BuffetSale> GetBuffetSalesOfADayByEmployeeId(int id) => context.BuffetSales.Where(m => m.Date.Day.Equals(DateTime.Now.Day) && m.EmployeeId == id).ToList();
-
-        public int GetIncomeOnLastWeek()
-        {
-            Dictionary<Products, int> tmp = new();
-
-            foreach (Products product in context.BuffetSales.Where(m => m.Date >= DateTime.Now.AddDays(-7) && m.Date <= DateTime.Now).Select(m => m.Product).Distinct())
-            {
-                int piece = context.BuffetSales.Where(m => m.Product.Equals(product) && m.Date >= DateTime.Now.AddDays(-7) && m.Date <= DateTime.Now).Count();
-                int price = context.Products.Where(m => m.Name.Equals(product.Name)).Select(m => m.Price).Single();
-                tmp.Add(product, price * price);
-            }
-
-            return tmp.Values.Sum();
-        }
-
-        #endregion
-
         #region BuffetWarehouse
         public List<BuffetWarehouse> GetWarehouse() => context.BuffetWarehouse.Include(m => m.Product).ToList();
 
         public BuffetWarehouse GetProductInWareHouse(int id) => context.BuffetWarehouse.Include(m => m.Product).FirstOrDefault(m => m.Id == id);
-
-        public int GetQuantityofProductById(int id) => context.BuffetWarehouse.FirstOrDefault(m => m.ProductId == id).Quantity;
-
-        public int GetPriceOfQuantityOfProductById(int id) => context.BuffetWarehouse.FirstOrDefault(m => m.ProductId == id).Quantity * context.Products.FirstOrDefault(m => m.Id == id).Price;
-
 
         public bool SellProducts(ProductSellingDTO dto)
         {
@@ -204,8 +167,6 @@ namespace CinemaApplicationProject.Model.Services
 
         #region EmployeePresence
 
-        public EmployeePresence GetEmployeePresenceById(int id) => context.EmployeePresence.FirstOrDefault(m => m.Id == id);
-
         public bool AddEmployeeToEmployeePresence(Employees employee, string type)
         {
             if (type.Equals("login"))
@@ -236,15 +197,10 @@ namespace CinemaApplicationProject.Model.Services
             }
         }
 
-        //public List<Employees> GetEmployeesFromPresenceByDate(DateTime date) => context.EmployeePresence.Where(m => m.Day.Date.Equals(date.Date)).Select(m => m.Employee).ToList();
-
-        //public List<Employees> GetEmployeesFromPresenceByDateAndStat(DateTime date, StatsAndPays stat) => context.EmployeePresence.Where(m => m.Day.Date.Equals(date.Date)).Select(m => m.Employee).Where(m => m.Stat.Contains(stat)).ToList();
 
         #endregion
 
         #region Movies
-
-        public Movies GetMovie(int id) => context.Movies.Include(m => m.Shows).Include(m => m.Actors).Include(m => m.Categories).FirstOrDefault(m => m.Id==id);
 
         public List<Movies> GetMovies() => context.Movies.Include(m => m.Actors).Include(m => m.Categories).ToList();
 
@@ -265,31 +221,9 @@ namespace CinemaApplicationProject.Model.Services
             return context.Movies.Include(m => m.Categories).Include(m => m.Actors).Where(m => m.Categories.Contains(cat)).ToList();
         }
 
-        public async Task UpdateMovieActors(List<Actors> actors, int movieId)
-        {
-
-            var movie = context.Movies.FirstOrDefault(m => m.Id == movieId);
-            movie.Actors.Clear();
-            var movieActors = movie.Actors.ToList();
-            foreach(var actor in movie.Actors)
-            {
-                var updated = actors.Contains(actor);
-                if (!updated)
-                {
-                    movieActors.Remove(actor);
-                }
-                actors.Remove(actor);
-            }
-            foreach (var actor in movie.Actors)
-            {
-                movie.Actors.Add(actor);
-            }
-            await context.SaveChangesAsync();
-        }
-
         public List<MoviesDTO> GetStatisticsForMovies()
         {
-            var listOfMovies = context.Movies.Include(m => m.Opinions).ToList();
+            var listOfMovies = context.Movies.Include(m => m.Opinions).ThenInclude(m => m.Guest).ToList();
             List<MoviesDTO> result = new List<MoviesDTO>(listOfMovies.Select(m => (MoviesDTO)m).ToList());
             foreach(var movie in result)
             {
@@ -302,34 +236,9 @@ namespace CinemaApplicationProject.Model.Services
         }
         #endregion
 
-        #region MoviesStatistics
-        public MoviesStatistics GetBestMovieOnWeek() => context.MoviesStatistics.Where(m => m.Date >= DateTime.Now.AddDays(-7) && m.Date <= DateTime.Now).OrderBy(m => m.AverageRating).FirstOrDefault();
-
-        public List<MoviesStatistics> GetLastWeekStatisticsOfMovies() => context.MoviesStatistics.Where(m => m.Date >= DateTime.Now.AddDays(-7) && m.Date <= DateTime.Now).ToList();
-
-        public int GetViewrsNumberLastWeek() => context.MoviesStatistics.Where(m => m.Date >= DateTime.Now.AddDays(-7) && m.Date <= DateTime.Now).Sum(m => m.ViewersNumber);
-
-        public List<MoviesStatistics> GetAllViewrsWithMovieLastWeek() => context.MoviesStatistics.Where(m => m.Date >= DateTime.Now.AddDays(-7) && m.Date <= DateTime.Now).ToList();
-
-        #endregion
-
         #region Opinions
-        public List<Opinions> GetAllOpinions() => context.Opinions.ToList();
 
         public List<Opinions> GetAllOpinionsByMovie(int id) => context.Opinions.Where(m => m.Movie.Id == id).Include(m => m.Guest).ToList();
-
-        public List<Opinions> GetAllOpinionsByUser(String username = null) => context.Opinions.Where(m => m.Guest.UserName.Equals(username ?? null)).ToList();
-
-        public Dictionary<Movies, float> GetAvarageRatingOfMovies()
-        {
-            Dictionary<Movies, float> dict = new();
-            foreach (Movies movie in context.Opinions.Select(m => m.Movie).Distinct())
-            {
-                float value = context.Opinions.Where(m => m.Movie.Equals(movie)).Sum(m => m.Ranking) / context.Opinions.Where(m => m.Movie.Equals(movie)).Count();
-                dict.Add(movie, value);
-            }
-            return dict;
-        }
 
         public async Task<Boolean> SaveOpinionAsync(OpinionsDTO rfg)
         {
@@ -372,34 +281,18 @@ namespace CinemaApplicationProject.Model.Services
             #endregion
 
         #region Products
-        public List<Products> GetAllProducts() => context.Products.ToList();
 
         public Products GetProductByName(String name) => context.Products.FirstOrDefault(m => m.Name.Equals(name));
 
         public BuffetWarehouse GetProductById(int id) => context.BuffetWarehouse.Include(m => m.Product).FirstOrDefault(m => m.Id == id);
 
-        public int GetProductPrice(String name = null) => context.Products.Where(m => m.Name.Equals(name)).Select(m => m.Price).Single();
-
-        #endregion
-
-        #region ProductsStatistics
-        public List<ProductStatistics> GetAllSellsOnLastWeek() => context.ProductStatistics.Where(m => m.Date >= DateTime.Now.AddDays(-7) && m.Date <= DateTime.Now).ToList();
-
-        public Products GetTheMostSelledItemLastWeek() => (Products)context.ProductStatistics.Where(m => m.Date >= DateTime.Now.AddDays(-7) && m.Date <= DateTime.Now).OrderBy(m => m.BuyersNumber).GroupBy(m => m.Product).Single().Select(m => m.Product);
-
-
         #endregion
 
         #region Rents
-        public List<Rents> GetAllRents() => context.Rents.ToList();
-
-        public List<Rents> GetAllSelledRents() => context.Rents.Where(m => m.Employee != null).ToList();
-
-        public List<Rents> GetAllRentsByGuestId(int id) => context.Rents.Where(m => m.GuestId == id).ToList();
 
         public List<Rents> GetAllRentsByShowId(int id) => context.Rents.Where(m => m.ShowId == id).Include(m => m.Guest).ToList();
 
-        public List<Guests> GetAllRentUserByShowId(int id) => context.Rents.Where(m => m.ShowId == id).Include(m => m.Guest).Select(m => m.Guest).Distinct().ToList();
+        public List<Guests> GetAllRentUserByShowId(int id) => context.Rents.Where(m => m.ShowId == id && m.Employee == null).Include(m => m.Guest).Select(m => m.Guest).Distinct().ToList();
         public Boolean IfReservedPlace(int showid, int x, int y) => context.Rents.Where(m => m.ShowId == showid).Where(m => m.X == x && m.Y == y).Any();
 
         public async Task<bool> SaveRents(RentFromGuestDTO rfg)
@@ -510,8 +403,6 @@ namespace CinemaApplicationProject.Model.Services
             return true;
         }
 
-
-        
         #endregion
 
         #region Rooms
@@ -529,7 +420,7 @@ namespace CinemaApplicationProject.Model.Services
             return list;
         }
 
-        public Rooms GetRoomById(int id) => context.Rooms.Where(m => m.Id == id).Single();
+        public Rooms GetRoomById(int id) => context.Rooms.FirstOrDefault(r => r.Id == id);
 
         #endregion
 
@@ -540,15 +431,24 @@ namespace CinemaApplicationProject.Model.Services
 
         public Shows GetShowById(int id) => context.Shows.Include(m => m.Room).Include(m => m.Movie).FirstOrDefault(m => m.Id == id);
 
-        public List<Shows> GetAllShowsOnNextWeek() => context.Shows.Where(m => m.Date <= DateTime.Now.AddDays(+7) && m.Date >= DateTime.Now).ToList();
-
         public List<Shows> GetAllShowsByMovieId(int id) => context.Shows.Where(m => m.MovieId == id).ToList();
 
-        public List<Shows> GetAllShowsByRoomId(int id) => context.Shows.Where(m => m.RoomId == id).ToList();
 
-        public List<DateTime> GetAvailableDates() => new List<DateTime>() { context.Shows.Where(m => m.Date.Date >= DateTime.Now.Date && m.IsActiveShow).Select(m => m.Date).OrderBy(m => m.Date).ToList().First(), context.Shows.Where(m => m.Date.Date >= DateTime.Now.Date && m.IsActiveShow).Select(m => m.Date).OrderBy(m => m.Date).ToList().Last().AddDays(1) };
+        public List<DateTime> GetAvailableDates()
+        {
+            if(context.Shows.Where(m => m.Date.Date >= DateTime.Now.Date && m.IsActiveShow).Select(m => m.Date).OrderBy(m => m.Date).ToList().Count == 0 && context.Shows.Where(m => m.Date.Date >= DateTime.Now.Date && m.IsActiveShow).Select(m => m.Date).OrderBy(m => m.Date).ToList().Count == 0)
+            {
+                return new List<DateTime>();
+            }
+            else
+            {
+                return new List<DateTime> { 
+                    context.Shows.Where(m => m.Date.Date >= DateTime.Now.Date && m.IsActiveShow).Select(m => m.Date).OrderBy(m => m.Date).ToList().First(),
+                    context.Shows.Where(m => m.Date.Date >= DateTime.Now.Date && m.IsActiveShow).Select(m => m.Date).OrderBy(m => m.Date).ToList().Last().AddDays(1) 
+                };
+            }
+        }
 
-        public String DateTimeToString(DateTime date) => date.Date.ToString("MM/dd/yyyy");
 
         public List<Movies> GetShowsByDate(String date)
         {
@@ -600,7 +500,6 @@ namespace CinemaApplicationProject.Model.Services
         #endregion
 
         #region Tickets
-        public int GetPriceOfTicketById(int id) => context.Tickets.Where(m => m.Id == id).Select(m => m.Price).Single();
 
         public List<Tickets> GetTickets() => context.Tickets.ToList();
 
@@ -634,6 +533,7 @@ namespace CinemaApplicationProject.Model.Services
             if (movieId != 0)
             {
 
+                var asd = context.Movies.Include(m => m.Categories).FirstOrDefault(m => m.Id == movieId).Categories.ToList();
                 var hasConnection = context.Movies.Include(m => m.Categories).FirstOrDefault(m => m.Id == movieId).Categories.FirstOrDefault(m => m.Id == catId);
                 if (hasConnection != null)
                 {

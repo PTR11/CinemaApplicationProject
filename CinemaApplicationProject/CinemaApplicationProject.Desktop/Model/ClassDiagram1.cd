@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="CinemaApplicationProject.Desktop.Model.Errors.NetworkException">
+    <Position X="7.75" Y="2.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Errors\NetworkException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CinemaApplicationProject.Desktop.Model.Services.MainApiService">
+    <Position X="5" Y="2.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAEAAAAAAgAAAAAAAgAgAAAAQIIAAAIA=</HashCode>
+      <FileName>Model\Services\MainApiService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CinemaApplicationProject.Desktop.Model.Services.ValidationService">
+    <Position X="10.5" Y="2.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAACAEAAACAAAAAAAgAAoAAIABAAIQAAAEAAAAAAgA=</HashCode>
+      <FileName>Model\Services\ValidationService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CinemaApplicationProject.Desktop.App">
+    <Position X="6.75" Y="5.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAEBIABgACAAQAAAAAIARQAAEAAEAAAAAOAAJIBARAA=</HashCode>
+      <FileName>App.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

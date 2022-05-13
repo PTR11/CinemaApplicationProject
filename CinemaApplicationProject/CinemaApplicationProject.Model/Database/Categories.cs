@@ -12,7 +12,7 @@ namespace CinemaApplicationProject.Model.Database
         public string Category { get; set; }
 
 
-        public ICollection<Movies> Movies { get; set; }
+        public virtual ICollection<Movies> Movies { get; set; }
 
         public override bool Equals(object obj)
         {

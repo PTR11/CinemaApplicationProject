@@ -35,7 +35,7 @@ namespace CinemaApplicationProject.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Opinions>> PostOpinions(OpinionsDTO rfg)
+        public async Task<ActionResult<OpinionsDTO>> PostOpinion(OpinionsDTO opinion)
         {
             if (!ModelState.IsValid)
             {
@@ -43,18 +43,21 @@ namespace CinemaApplicationProject.API.Controllers
             }
             else
             {
-                ApplicationUser user;
+                ApplicationUser user = null;
                 if (User.Identity.IsAuthenticated)
                 {
                     user = await _userManager.FindByNameAsync(User.Identity.Name);
+                }else if(opinion.GuestId != 0 && user == null)
+                {
+                    user = await _userManager.FindByIdAsync(opinion.GuestId+"");
                 }
                 else
                 {
-                    ModelState.AddModelError("", "You need to login the reserve places!");
+                    ModelState.AddModelError("", "You need to login for add opinion places!");
                     return BadRequest(ModelState);
                 }
                 
-                if (!await _service.SaveOpinionAsync(rfg))
+                if (!await _service.SaveOpinionAsync(opinion))
                 {
                     ModelState.AddModelError("", "Something went wrong with the process");
                     return BadRequest(ModelState);

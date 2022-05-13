@@ -38,6 +38,7 @@
 
 <script>
 import axios from "axios";
+import {mapState} from "vuex";
 
 export default {
   data() {
@@ -47,13 +48,20 @@ export default {
       categories: [""],
     };
   },
+  computed:
+      mapState({
+        selectedCategory: (state) => state.selectedCategory,
+        searchText: (state) => state.searchText
+      }),
   mounted() {
     this.fetchCategories();
+    this.category = this.$store.getters.getCategory;
+    this.search = this.$store.getters.getText;
   },
   methods: {
     fetchCategories(){
       axios
-          .get("http://localhost:7384/api/Categories/all")
+          .get(process.env.VUE_APP_API_ADDRESS+"/api/Categories/all")
           .then((result) => {
             result.data.map(e => e.category).forEach(x => this.categories.push(x))
           });

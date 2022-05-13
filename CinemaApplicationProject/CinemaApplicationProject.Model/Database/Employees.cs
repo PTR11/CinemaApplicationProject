@@ -21,14 +21,14 @@ namespace CinemaApplicationProject.Model.Database
 
         public String Birthday { get; set; }
 
-        public ICollection<EmployeePresence> Presence { get; set; }
+        public virtual ICollection<EmployeePresence> Presence { get; set; }
 
-        public ICollection<StatsAndPays> Stat { get; set; }
+        public virtual ICollection<StatsAndPays> Stat { get; set; }
 
-        public ICollection<EmployeesStats> UserRole { get; set; }
+        public virtual ICollection<EmployeesStats> UserRole { get; set; }
 
-        public ICollection<Rents> Rent { get; set; }
+        public virtual ICollection<Rents> Rent { get; set; }
 
-        public ICollection<BuffetSale> BuffetSale { get; set; }
+        public virtual ICollection<BuffetSale> BuffetSale { get; set; }
     }
 }

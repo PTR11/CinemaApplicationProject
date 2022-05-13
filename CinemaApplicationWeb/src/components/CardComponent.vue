@@ -1,5 +1,5 @@
 <template>
-  <b-card :img-src="element.image" center img-alt="Card image" img-left class="mb-3 bg-warning text-dark h-25 border-dark rounded-30 mh-10">
+  <b-card :img-src="element.image" center img-alt="Card image" img-left img-width="200" class="mb-3 bg-warning text-dark h-25 border-dark rounded-30 mh-10">
     <b-card-title >
       <router-link :to="'movie/'+element.id" class="text-dark text-decoration-none">
         <div >{{ element.title }} <span v-if="element.length != nil">({{ element.length }} min)</span></div>

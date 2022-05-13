@@ -24,7 +24,7 @@ namespace CinemaApplicationProject.Model.Database
         [DataType(DataType.DateTime)]
         public DateTime DateTime { get; set; }
 
-        public Movies Movie { get; set; }
-        public Guests Guest { get; set; }
+        public virtual Movies Movie { get; set; }
+        public virtual Guests Guest { get; set; }
     }
 }

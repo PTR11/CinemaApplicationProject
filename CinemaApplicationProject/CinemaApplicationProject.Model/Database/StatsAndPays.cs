@@ -21,6 +21,6 @@ namespace CinemaApplicationProject.Model.Database
 
         public int Salary { get; set; }
 
-        public ICollection<EmployeesStats> UserRole { get; set; }
+        public virtual ICollection<EmployeesStats> UserRole { get; set; }
     }
 }

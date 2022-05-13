@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Assets\doksi.jpg" />
     <None Remove="View\Images\emptyPlace.png" />
     <None Remove="View\Images\reservedPlace.png" />
     <None Remove="View\Pages\doksi.jpg" />
@@ -46,10 +45,7 @@
 	  <ProjectReference Include="..\CinemaApplicationProject.Model\CinemaApplicationProject.Model.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Resource Include="Assets\doksi.jpg">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Resource>
-	  <Resource Include="View\Pages\doksi.jpg" />
+	  <Folder Include="View\Pages\" />
 	</ItemGroup>
 
 </Project>

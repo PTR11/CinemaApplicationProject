@@ -31,16 +31,10 @@ namespace CinemaApplicationProject.API.Controllers
             return _service.GetActors().Select(m => (ActorsDTO)m).ToList();
         }
 
-        [HttpGet("movie/{id}")]
-        public ActionResult<IEnumerable<ActorsDTO>> GetActorsByMovieId(int id)
-        {
-            return _service.GetActorsByMovie(id).Select(m => (ActorsDTO)m).ToList();
-        }
-
 
         // GET: api/Actors/5
         [HttpGet("{id}")]
-        public ActionResult<Actors> GetActor(int id)
+        public ActionResult<ActorsDTO> GetActor(int id)
         {
             var actors = _service.GetActorById(id);
 
@@ -49,50 +43,36 @@ namespace CinemaApplicationProject.API.Controllers
                 return NotFound();
             }
 
-            return actors;
-        }
-
-        // PUT: api/Actors/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public IActionResult PutActors(int id, ActorsDTO actors)
-        {
-            if (id != actors.Id)
-            {
-                return BadRequest();
-            }
-
-            DatabaseManipulation.UpdateElementAsync((Actors)actors);
-            return NoContent();
+            return (ActorsDTO)actors;
         }
 
         // POST: api/Actors
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public ActionResult<Actors> PostActors(ActorsDTO actors)
+        public ActionResult<ActorsDTO> PostActor(ActorsDTO actors)
         {
             
-            Actors actor = (Actors)actors;
+            Actors act = (Actors)actors;
 
             Actors find = _service.GetActorsByName(actors.Name);
             if(find == null)
             {
-                var entity = DatabaseManipulation.AddElement(actor);
+                var entity = DatabaseManipulation.AddElement(act);
                 if (entity == null)
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError);
                 }
-                actor = entity;
+                act = entity;
             }
-            _service.ConnectMovieWithActor(actors.MovieId, actor.Id);
-            return CreatedAtAction(nameof(GetActor), new { id = actor.Id }, (ActorsDTO)actor);
+            _service.ConnectMovieWithActor(actors.MovieId, act.Id);
+            return CreatedAtAction(nameof(GetActor), new { id = act.Id }, (ActorsDTO)act);
         }
 
 
 
         // DELETE: api/Actors/5
         [HttpDelete("{movieId}/{id}")]
-        public IActionResult DeleteActors(int movieId,int id)
+        public IActionResult DeleteActor(int movieId,int id)
         {
             var actors = _service.GetActorById(id);
             if (actors == null)
@@ -109,7 +89,7 @@ namespace CinemaApplicationProject.API.Controllers
             _service.DeleteActorFromMovie(movieId, id);
             
 
-            return NoContent();
+            return Ok();
         }
     }
 }
