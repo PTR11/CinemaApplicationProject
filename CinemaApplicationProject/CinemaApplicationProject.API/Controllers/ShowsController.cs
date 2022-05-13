@@ -95,18 +95,27 @@ namespace CinemaApplicationProject.API.Controllers
         [HttpPost]
         public ActionResult<Shows> PostShow(ShowsDTO shows)
         {
-            var s = (Shows)shows;
-            s.IsActiveShow =  true;
-            var show = DatabaseManipulation.AddElement(s);
-
-            if (show == null)
+            if(_service.IsRoomFree(shows.RoomId, shows.Date))
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                var s = (Shows)shows;
+                s.IsActiveShow = true;
+                var show = DatabaseManipulation.AddElement(s);
+                if (show == null)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError);
+                }
+                else
+                {
+                    return CreatedAtAction(nameof(GetShowById), new { id = show.Id }, (ShowsDTO)show);
+                }
             }
             else
             {
-                return CreatedAtAction(nameof(GetShowById), new { id = show.Id }, (ShowsDTO)show);
+                return BadRequest();
             }
+            
+
+           
         }
 
         // DELETE: api/Shows/5

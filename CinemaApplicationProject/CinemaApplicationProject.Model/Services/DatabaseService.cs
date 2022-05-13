@@ -420,6 +420,21 @@ namespace CinemaApplicationProject.Model.Services
             return list;
         }
 
+        public bool IsRoomFree(int id, DateTime date)
+        {
+            var room = context.Rooms.Include(m => m.Shows).ThenInclude(m => m.Movie).FirstOrDefault(r => r.Id == id);
+            foreach(var show in room.Shows.Where(s => s.Date.Date == date.Date))
+            {
+                var start = show.Date;
+                var end = start.AddMinutes(show.Movie.Length);
+                if(start < date && date < end)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public Rooms GetRoomById(int id) => context.Rooms.FirstOrDefault(r => r.Id == id);
 
         #endregion

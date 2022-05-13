@@ -41,7 +41,7 @@ namespace CinemaApplicationProject.APITest
             
 
             _service = new DatabaseService(_context, userManager);
-            _controller = new EmployeeController(userManager,_service);
+            _controller = new EmployeeController(userManager,null,_service);
 
             var claimsIdentity = new ClaimsIdentity(new List<Claim>
             {

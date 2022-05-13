@@ -7,9 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="View\Pages\**" />
+    <EmbeddedResource Remove="View\Pages\**" />
+    <None Remove="View\Pages\**" />
+    <Page Remove="View\Pages\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="View\Images\emptyPlace.png" />
     <None Remove="View\Images\reservedPlace.png" />
-    <None Remove="View\Pages\doksi.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,9 +49,6 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\CinemaApplicationProject.Model\CinemaApplicationProject.Model.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="View\Pages\" />
 	</ItemGroup>
 
 </Project>

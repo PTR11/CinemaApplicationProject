@@ -94,6 +94,8 @@ namespace CinemaApplicationProject.Model.Services
 
         public Rooms GetRoomById(int id);
 
+        public bool IsRoomFree(int id, DateTime date);
+
         #endregion
 
         #region Shows
