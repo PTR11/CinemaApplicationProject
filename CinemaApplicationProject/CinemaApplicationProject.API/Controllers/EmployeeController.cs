@@ -27,13 +27,15 @@ namespace CinemaApplicationProject.API.Controllers
             _signInManager = signInManager;
             _service = service;
             _userManager = userManager;
+            DatabaseManipulation.context = _service.GetContext();
         }
 
-        public EmployeeController(UserManager<ApplicationUser> userManager,  IDatabaseService service)
-        {
-            _service = service;
-            _userManager = userManager;
-        }
+        //public EmployeeController(UserManager<ApplicationUser> userManager,  IDatabaseService service)
+        //{
+        //    _service = service;
+        //    _userManager = userManager;
+        //    DatabaseManipulation.context = _service.GetContext();
+        //}
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EmployeesDTO>>> GetEmployees()
@@ -161,11 +163,7 @@ namespace CinemaApplicationProject.API.Controllers
             {
                 return NotFound();
             }
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            if (user.Id == id)
-            {
-                return BadRequest();
-            }
+            
             DatabaseManipulation.DeleteElement(employee);
 
             return Ok();

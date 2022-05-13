@@ -67,10 +67,14 @@ namespace CinemaApplicationProject.API.Controllers
             }
             else
             {
-                ApplicationUser user;
+                ApplicationUser user = null;
                 if (User.Identity.IsAuthenticated)
                 {
                     user = await _userManager.FindByNameAsync(User.Identity.Name);
+                }
+                else if (rent.UserId != 0 && user == null)
+                {
+                    user = await _userManager.FindByIdAsync(rent.UserId + "");
                 }
                 else
                 {

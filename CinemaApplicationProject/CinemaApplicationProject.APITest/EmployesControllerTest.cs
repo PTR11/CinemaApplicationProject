@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace CinemaApplicationProject.APITest
@@ -65,7 +66,7 @@ namespace CinemaApplicationProject.APITest
         }
 
         [Fact]
-        public async void GetMoviesTest()
+        public async void GetEmployeesTest()
         {
             var result = await _controller.GetEmployees();
 
@@ -75,6 +76,52 @@ namespace CinemaApplicationProject.APITest
 
             Assert.Equal(1, content.Count());
         }
+        [Fact]
+        public void DeleteEmployee()
+        {
+            var mCount = _context.Employees.Count();
+            var result = _controller.DeleteUserAsync(1);
 
+            var objectResult = Assert.IsAssignableFrom<Task<IActionResult>>(result);
+            Assert.Equal(mCount - 1, _context.Employees.Count());
+        }
+
+        [Fact]
+        public void PutEmployee()
+        {
+            EmployeesDTO user = new EmployeesDTO()
+            {
+                Id = 1,
+                Name = "perec",
+                UserName = "sajtos",
+            };
+
+
+            var result = _controller.PutUser(1, user);
+            Assert.IsAssignableFrom<OkResult>(result.Result);
+            Assert.Equal("perec", _context.Employees.FirstOrDefault(b => b.Id == 1).Name);
+            Assert.Equal("sajtos", _context.Employees.FirstOrDefault(b => b.Id == 1).UserName);
+        }
+
+        [Fact]
+        public void PostEmployee()
+        {
+            EmployeesDTO user = new EmployeesDTO()
+            {
+                Id = 4,
+                Name = "kakaos csiga",
+                UserName = "asd",
+                Password = "Almafa123"
+            };
+
+            var count = _context.Employees.Count();
+
+            var result = _controller.PostUser(user);
+
+            var objectResult = Assert.IsAssignableFrom <Task<ActionResult<EmployeesDTO>>>(result);
+            //Assert.IsAssignableFrom<EmployeesDTO>(objectResult.Value);
+            Assert.Equal(count + 1, _context.Employees.Count());
+
+        }
     }
 }

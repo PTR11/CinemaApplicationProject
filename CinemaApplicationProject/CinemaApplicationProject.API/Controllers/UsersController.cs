@@ -11,6 +11,7 @@ using CinemaApplicationProject.Model.Services;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Principal;
 
 namespace CinemaApplicationProject.API.Controllers
 {
@@ -30,12 +31,12 @@ namespace CinemaApplicationProject.API.Controllers
             _service = service;
             DatabaseManipulation.context = _service.GetContext();
         }
-        public UsersController(UserManager<ApplicationUser> userManager, IDatabaseService service)
+        /*public UsersController(UserManager<ApplicationUser> userManager, IDatabaseService service)
         {
             _userManager = userManager;
             _service = service;
             DatabaseManipulation.context = _service.GetContext();
-        }
+        }*/
 
         
 
@@ -60,6 +61,9 @@ namespace CinemaApplicationProject.API.Controllers
                         //Expires = HttpContext.Current.Session.Timout,
                         SameSite = SameSiteMode.Lax
                     });
+                    var identity = new System.Security.Principal.GenericIdentity(user.UserName);
+                    var principal = new GenericPrincipal(identity, new string[0]);
+                    HttpContext.User = principal;
 
                     return Ok(tmp);
                     //return RedirectService.RedirectMethod("Successfully logged in", HttpStatusCode.Redirect, new Uri("http://localhost:8080/"));
