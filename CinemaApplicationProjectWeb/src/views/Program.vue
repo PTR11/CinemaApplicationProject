@@ -3,7 +3,7 @@
     <div v-if="loading" class="text-center">
       <b-spinner style="width: 3rem; height: 3rem;" variant="warning" label="Text Centered"></b-spinner>
     </div>
-    <div v-else class="mx-auto col-sm-7">
+    <div v-else class="col-sm-7 mx-auto p-10">
       <Datepicker/>
       <Errorcard v-if="error.length != 0" :error-message="error" class="mx-auto d-flex p-2"></Errorcard>
       <Card

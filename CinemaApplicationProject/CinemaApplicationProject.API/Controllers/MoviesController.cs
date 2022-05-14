@@ -112,6 +112,8 @@ namespace CinemaApplicationProject.API.Controllers
             {
                 Id = movies.Id,
                 Title = movies.Title,
+                Director = movies.Director,
+                Image = movies.Image,
                 Actors = new List<ActorsDTO>(),
                 Categories = new List<CategoriesDTO>(),
                 Length = movies.Length,
@@ -128,7 +130,7 @@ namespace CinemaApplicationProject.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
-            foreach(var actor in tmp.Actors)
+            foreach(var actor in movies.Actors)
             {
                 if(actor.Id == 0)
                 {
@@ -142,7 +144,7 @@ namespace CinemaApplicationProject.API.Controllers
                 _service.ConnectMovieWithActor(movie.Id, actor.Id);
             }
 
-            foreach (var category in tmp.Categories)
+            foreach (var category in movies.Categories)
             {
                 if (category.Id == 0)
                 {

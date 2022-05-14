@@ -22,11 +22,11 @@ namespace CinemaApplicationProject.Model.Services
                 context.Add(element);
                 context.SaveChanges();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException e)
             {
                 return null;
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException e)
             {
                 return null;
             }

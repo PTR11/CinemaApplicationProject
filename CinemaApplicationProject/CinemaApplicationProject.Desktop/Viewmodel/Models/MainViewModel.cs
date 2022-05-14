@@ -63,7 +63,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         private bool _addTicket = false;
 
-        private bool _addShow = false;
+        public bool _addShow = false;
 
         private bool _addUser = false;
 
@@ -133,8 +133,6 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         private StatsViewModel _newRole;
 
         public List<ShowViewModel> _list;
-
-        public String name = "faszom";
 
         private String _selectedRoleOfUser;
 
@@ -340,6 +338,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
 
         public event EventHandler<bool> MovieDetailsVisible;
         public event EventHandler<bool> ShowDetailsVisible;
+        public event EventHandler<bool> ShowAddDetailsVisible;
         public event EventHandler<bool> RoomDetailsVisible;
         public event EventHandler<bool> TicketDetailsVisible;
         public event EventHandler<bool> UserDetailsVisible;
@@ -392,7 +391,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
         public DelegateCommand ActualWeek { get; set; }
         public DelegateCommand NextWeek { get; set; }
 
-
+        public DelegateCommand DeleteShowCommand { get; set; }
         public MainViewModel()
         {
             Validation = new ValidationService();
@@ -414,10 +413,10 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             AddNewRole = new DelegateCommand(_ => !(NewRole is null), async _ => await AddRole());
 
             TicketSearch = new DelegateCommand(_ => FilterTicketRooms());
-
+            DeleteShowCommand = new DelegateCommand(async _ => await DeleteShow());
             //Add new entity completly
             AddNewMovie = new DelegateCommand(_ => Adder(SelectedMovie = new MovieViewModel(), ref _addMovie, MovieDetailsVisible));
-            AddNewShow = new DelegateCommand(_ => Adder(SelectedShow = new ShowViewModel(), ref _addShow, ShowDetailsVisible));
+            AddNewShow = new DelegateCommand(_ => Adder(SelectedShow = new ShowViewModel(), ref _addShow, ShowAddDetailsVisible));
             AddNewRoom = new DelegateCommand(_ => Adder(SelectedRoom = new RoomViewModel(), ref _addRoom, RoomDetailsVisible));
             AddNewTicket = new DelegateCommand(_ => Adder(SelectedTicket = new TicketViewModel(), ref _addTicket, TicketDetailsVisible));
             AddNewUser = new DelegateCommand(_ => Adder(SelectedUser = new EmployeeViewModel(), ref _addUser, UserDetailsVisible));
@@ -597,7 +596,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
                         {
                             showsForMovieFilter.Add(show);
                         }
-                        if (date != DateTime.Now.Date && show.Date.Date == date.Date)
+                        if (show.Date.Date == date.Date)
                         {
                             showsForDateFilter.Add(show);
                         }
@@ -1108,6 +1107,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
             updatetedShow.RoomId = Rooms.FirstOrDefault(m => m.Name.Equals(updatetedShow.RoomName)).Id;
             var dto = (ShowsDTO)updatetedShow;
             SelectedShow = new ShowViewModel();
+            ShowDetailsVisible?.Invoke(this, false);
             return dto;
         }
 
@@ -1305,11 +1305,20 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
                     SelectedShow.MovieId = movie.Id;
                     SelectedShow.RoomId = room.Id;
                     var showDTO = (ShowsDTO)SelectedShow;
-
                     SelectedShow.Id = await AddEntity("api/Shows", showDTO);
                     SelectedShow = new ShowViewModel();
+                    _addShow = false;
+                    ShowDetailsVisible?.Invoke(this, false);
                 }
             }
+        }
+
+        public async Task DeleteShow()
+        {
+            await this.DeleteEntity("api/Shows", SelectedShow.Id, this.LoadInit);
+            SelectedShow = new ShowViewModel();
+            
+            this.ShowVisibility(false);
         }
 
         private async Task AddCreatedMovie()
@@ -1432,22 +1441,6 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models
                     await method.Invoke();
                 }
             }
-        }
-
-
-        private async Task UpdateSelectedItem<X>(bool adder, Func<Task> createMethod, bool condition, Func<X> setup, string route, params Func<Task>[] loadMethods) where X : RespondDTO
-        {
-            if (adder)
-            {
-                await createMethod();
-            }
-            else if (condition)
-            {
-                var dto = setup();
-                await UpdateEntity(route, dto);
-            }
-            await Loads(loadMethods);
-
         }
 
         private async Task UpdateSelectedItem<X>(bool adder, Func<Task> createMethod, (bool, String) validation, Func<X> setup, string route, params Func<Task>[] loadMethods) where X : RespondDTO

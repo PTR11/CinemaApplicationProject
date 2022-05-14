@@ -42,7 +42,7 @@ namespace CinemaApplicationProject.Desktop.Model.Services
         {
             _validationString = "";
             if (movie.Title.Length == 0) _validationString += "Missing Title\n";
-            if (movie.Director.Length == 0) _validationString += "Missing Director\n";
+            if (movie.Director == null) _validationString += "Missing Director\n";
             if (movie.Trailer.Length == 0) _validationString += "Missing Trailer\n";
             if (movie.Actors.Count == 0) _validationString += "Missing Actors\n";
             if (movie.Categories.Count == 0) _validationString += "Missing Categories\n";

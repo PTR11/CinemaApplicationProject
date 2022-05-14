@@ -25,11 +25,12 @@
                 active-class="orange accent-4 white--text"
                 column
             >
-              <router-link :to="'reserve/'+1" class="text-decoration-none">
+
               <v-chip v-for="ti in element.shows" :key="ti.date">
+                <router-link :to="'reserve/'+ti.id" class="text-decoration-none text-dark">
                 {{ timeChange(ti.date) }}
+                </router-link>
               </v-chip>
-              </router-link>
             </v-chip-group>
           </div>
 

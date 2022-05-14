@@ -66,7 +66,7 @@
             <GroupBox Padding="0" Background="Wheat">
                 <GroupBox.Header >
                     <Grid Background="Wheat">
-                        <Label Content="Movies:" FontSize="24" Height="50" BorderBrush="Black" BorderThickness="3" />
+                        <Label Content="Opinions:" FontSize="24" Height="50" BorderBrush="Black" BorderThickness="3" />
                     </Grid>
                 </GroupBox.Header>
                 <Border>
@@ -78,9 +78,9 @@
                                                 Foreground="{x:Null}" SelectedItem="{Binding SelectedMovie}">
 
                                 <DataGrid.Columns >
-                                    <DataGridTextColumn Binding="{Binding UserName}" FontSize="24" Width="*" Foreground="Black"/>
-                                    <DataGridTextColumn Binding="{Binding Comment}" FontSize="24" Width="*" Foreground="Black"/>
-                                    <DataGridTextColumn Binding="{Binding Stars }" FontSize="24" Width="*" Foreground="Black"/>
+                                    <DataGridTextColumn Binding="{Binding UserName}" FontSize="24" Width="Auto" Foreground="Black"/>
+                                    <DataGridTextColumn Binding="{Binding Stars }" FontSize="24" Width="100" Foreground="Black"/>
+                                    <DataGridTextColumn Binding="{Binding Comment}" FontSize="24" Width="Auto" Foreground="Black"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Border>

@@ -105,6 +105,7 @@ namespace CinemaApplicationProject.Desktop.Viewmodel.Models.ForView
             MovieId = rhs.MovieId;
             RoomId = rhs.RoomId;
             Date = rhs.Date;
+            DeleteShow = rhs.DeleteShow;
         }
 
         public static explicit operator ShowViewModel(ShowsDTO dto) => new ShowViewModel
