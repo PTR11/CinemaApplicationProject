@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+  cinemaapplicationproject.api:
+    image: ${DOCKER_REGISTRY-}cinemaapplicationprojectapi
+    build:
+      context: .
+      dockerfile: CinemaApplicationProject.API/Dockerfile
+    ports:
+        - "80:80"
+  sqldb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+        - SA_PASSWORD=2Secure*Password2
+        - ACCEPT_EULA=Y
+    ports:
+        - "1440:1433"
